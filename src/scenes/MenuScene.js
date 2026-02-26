@@ -70,7 +70,7 @@ export class MenuScene extends Phaser.Scene {
     const offsetX = (width - gridW) / 2 + cellSize / 2;
     const maxUnlocked = this.progression.getMaxUnlockedLevel();
 
-    // Scroll container for levels
+    // Band labels keyed by level number
     const bandLabels = [
       { level: 1, label: 'Synthesis' },
       { level: 11, label: 'Decomposition' },
@@ -81,25 +81,33 @@ export class MenuScene extends Phaser.Scene {
 
     let currentBandIdx = 0;
     let yOffset = startY;
+    let col = 0; // track column independently
 
     equationsData.forEach((eq, i) => {
       // Check if we need a band label
       if (currentBandIdx < bandLabels.length && eq.level === bandLabels[currentBandIdx].level) {
-        if (i > 0) yOffset += 10;
+        // If we are mid-row, finish the row first
+        if (col > 0) {
+          yOffset += cellSize;
+          col = 0;
+        }
+        if (i > 0) yOffset += 6;
         this.add.text(offsetX - cellSize / 2 + 5, yOffset, bandLabels[currentBandIdx].label, {
           fontFamily: 'monospace',
           fontSize: '11px',
           color: '#6666aa'
         });
-        yOffset += 18;
+        yOffset += 20;
         currentBandIdx++;
       }
 
-      const col = i % cols;
       const x = offsetX + col * cellSize;
       const y = yOffset;
 
-      if (col === cols - 1) {
+      // Advance to next column; wrap row when full
+      col++;
+      if (col >= cols) {
+        col = 0;
         yOffset += cellSize;
       }
 
