@@ -235,33 +235,35 @@ export class BootScene extends Phaser.Scene {
 
     // Active / filled slot
     {
+      const pad = 2;
+      const TS = S + pad * 2;
       const g = this.make.graphics({ add: false });
 
-      // Glow behind
+      // Glow behind (fills entire padded texture)
       g.fillStyle(0x3355aa, 0.25);
-      g.fillRoundedRect(-2, -2, S + 4, S + 4, 10);
+      g.fillRoundedRect(0, 0, TS, TS, 10);
 
-      // Base
+      // Base (inset by pad)
       g.fillStyle(0x2a2a5a, 1);
-      g.fillRoundedRect(0, 0, S, S, 8);
+      g.fillRoundedRect(pad, pad, S, S, 8);
 
       // Top bevel
       g.fillStyle(0x3a3a70, 1);
-      g.fillRoundedRect(1, 1, S - 2, S / 2, 8);
+      g.fillRoundedRect(pad + 1, pad + 1, S - 2, S / 2, 8);
 
       // Inner face
       g.fillStyle(0x303066, 1);
-      g.fillRoundedRect(3, 3, S - 6, S - 6, 6);
+      g.fillRoundedRect(pad + 3, pad + 3, S - 6, S - 6, 6);
 
       // Top edge shine
       g.fillStyle(0x88aaff, 0.12);
-      g.fillRoundedRect(4, 3, S - 8, 5, 4);
+      g.fillRoundedRect(pad + 4, pad + 3, S - 8, 5, 4);
 
       // Border
       g.lineStyle(2, 0x7799ee, 0.8);
-      g.strokeRoundedRect(0, 0, S, S, 8);
+      g.strokeRoundedRect(pad, pad, S, S, 8);
 
-      g.generateTexture('coeff_slot_active', S + 4, S + 4);
+      g.generateTexture('coeff_slot_active', TS, TS);
       g.destroy();
     }
   }
@@ -604,7 +606,7 @@ export class BootScene extends Phaser.Scene {
   // 8. OVERWORLD PLAYER — detailed flask character
   // ───────────────────────────────────────────
   _genOverworldPlayer() {
-    const S = 40;
+    const S = 38;
     const g = this.make.graphics({ add: false });
     const cx = S / 2;
 
@@ -615,80 +617,80 @@ export class BootScene extends Phaser.Scene {
     // ---- Flask body ----
     // Dark outline
     g.fillStyle(0x006633, 1);
-    g.fillRoundedRect(8, 14, 24, 20, 6);
+    g.fillRoundedRect(7, 12, 24, 20, 6);
 
     // Main body fill
     g.fillStyle(0x00cc66, 1);
-    g.fillRoundedRect(9, 15, 22, 18, 5);
+    g.fillRoundedRect(8, 13, 22, 18, 5);
 
     // Body shading — left lighter
     g.fillStyle(0x00ee77, 0.5);
-    g.fillRoundedRect(10, 15, 10, 16, 4);
+    g.fillRoundedRect(9, 13, 10, 16, 4);
 
     // Body shading — right darker
     g.fillStyle(0x000000, 0.12);
-    g.fillRoundedRect(22, 16, 8, 16, 4);
+    g.fillRoundedRect(21, 14, 8, 16, 4);
 
     // Liquid level line
     g.fillStyle(0x00ff88, 0.4);
-    g.fillRoundedRect(11, 24, 18, 7, 3);
+    g.fillRoundedRect(10, 22, 18, 7, 3);
 
     // Bubble highlights in liquid
     g.fillStyle(0xffffff, 0.35);
-    g.fillCircle(15, 27, 2);
-    g.fillCircle(22, 25, 1.5);
-    g.fillCircle(18, 29, 1);
+    g.fillCircle(14, 25, 2);
+    g.fillCircle(21, 23, 1.5);
+    g.fillCircle(17, 27, 1);
 
     // ---- Flask neck ----
     g.fillStyle(0x00bb55, 1);
-    g.fillRect(14, 7, 12, 9);
+    g.fillRect(13, 5, 12, 9);
     // Neck shading
     g.fillStyle(0x00dd66, 0.5);
-    g.fillRect(14, 7, 5, 9);
+    g.fillRect(13, 5, 5, 9);
 
-    // ---- Cork / cap ----
+    // ---- Cork / cap (flush to top) ----
     g.fillStyle(0xcc8833, 1);
-    g.fillRoundedRect(12, 2, 16, 7, 3);
+    g.fillRoundedRect(11, 0, 16, 7, 3);
     // Cork wood grain lines
     g.fillStyle(0xddaa55, 0.5);
-    g.fillRect(14, 3, 12, 1);
-    g.fillRect(14, 6, 12, 1);
+    g.fillRect(13, 1, 12, 1);
+    g.fillRect(13, 4, 12, 1);
     // Cork highlight
     g.fillStyle(0xeebb66, 0.4);
-    g.fillRoundedRect(13, 2, 14, 3, 2);
+    g.fillRoundedRect(12, 0, 14, 3, 2);
 
     // ---- Face ----
     // Eyes (white + black pupil + highlight)
-    for (const ex of [15, 24]) {
+    for (const ex of [14, 23]) {
       g.fillStyle(0xffffff, 1);
-      g.fillCircle(ex, 20, 3);
+      g.fillCircle(ex, 18, 3);
       g.fillStyle(0x1a1a2e, 1);
-      g.fillCircle(ex + 0.5, 20.5, 1.8);
+      g.fillCircle(ex + 0.5, 18.5, 1.8);
       g.fillStyle(0xffffff, 0.8);
-      g.fillCircle(ex - 0.5, 19.5, 0.8);
+      g.fillCircle(ex - 0.5, 17.5, 0.8);
     }
 
     // Mouth (small smile)
     g.lineStyle(1.5, 0x006633, 1);
     g.beginPath();
-    g.arc(cx, 23, 3, Phaser.Math.DegToRad(20), Phaser.Math.DegToRad(160), false);
+    g.arc(cx, 21, 3, Phaser.Math.DegToRad(20), Phaser.Math.DegToRad(160), false);
     g.strokePath();
 
     // ---- Feet ----
     // Left shoe
     g.fillStyle(0x005522, 1);
-    g.fillRoundedRect(9, 33, 8, 5, 2);
+    g.fillRoundedRect(8, 31, 8, 5, 2);
     g.fillStyle(0x007733, 0.5);
-    g.fillRoundedRect(9, 33, 8, 2, 2);
+    g.fillRoundedRect(8, 31, 8, 2, 2);
     // Right shoe
     g.fillStyle(0x005522, 1);
-    g.fillRoundedRect(23, 33, 8, 5, 2);
+    g.fillRoundedRect(22, 31, 8, 5, 2);
     g.fillStyle(0x007733, 0.5);
-    g.fillRoundedRect(23, 33, 8, 2, 2);
+    g.fillRoundedRect(22, 31, 8, 2, 2);
 
     // ---- Specular shine on flask body ----
     g.fillStyle(0xffffff, 0.18);
-    g.fillRoundedRect(11, 16, 4, 10, 2);
+    g.fillRoundedRect(10, 14, 4, 10, 2);
 
     g.generateTexture('player_flask', S, S);
     g.destroy();
@@ -698,7 +700,9 @@ export class BootScene extends Phaser.Scene {
   // 9. OVERWORLD NODES — crystal/gem style
   // ───────────────────────────────────────────
   _genOverworldNodes() {
-    const S = 36, cx = S / 2, cy = S / 2, R = 15;
+    const R = 15;
+    const TEX = 50; // texture size (R + glow + margin, centered)
+    const cx = TEX / 2, cy = TEX / 2;
 
     const buildNode = (key, baseCol, ringCol, ringAlpha, glowCol) => {
       const g = this.make.graphics({ add: false });
@@ -741,7 +745,7 @@ export class BootScene extends Phaser.Scene {
       g.lineStyle(0.5, this._lighten(ringCol, 50), ringAlpha * 0.3);
       g.strokeCircle(cx, cy, R - 3);
 
-      g.generateTexture(key, S + 14, S + 14); // extra room for glow
+      g.generateTexture(key, TEX, TEX);
       g.destroy();
     };
 
@@ -752,7 +756,9 @@ export class BootScene extends Phaser.Scene {
 
     // Boss node — bigger, red, with skull-like marks
     {
-      const BS = 44, bcx = BS / 2, bcy = BS / 2, BR = 19;
+      const BR = 19;
+      const BTEX = 64; // texture size for boss node (centered)
+      const bcx = BTEX / 2, bcy = BTEX / 2;
       const g = this.make.graphics({ add: false });
 
       // Red glow
@@ -803,7 +809,7 @@ export class BootScene extends Phaser.Scene {
         g.fillCircle(bcx + ox - 0.5, bcy + oy - 0.5, 1.5);
       }
 
-      g.generateTexture('node_boss', BS + 20, BS + 20);
+      g.generateTexture('node_boss', BTEX, BTEX);
       g.destroy();
     }
   }

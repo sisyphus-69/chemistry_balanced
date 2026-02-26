@@ -161,13 +161,13 @@ export class MenuScene extends Phaser.Scene {
 
     // ---- Player sprite ----
     const startNode = this.nodes[this.currentNodeIdx];
-    this.player = this.add.image(startNode.x, startNode.y - 24, 'player_flask')
+    this.player = this.add.image(startNode.x, startNode.y - 18, 'player_flask')
       .setOrigin(0.5, 1);
 
     // Gentle bob animation
     this.tweens.add({
       targets: this.player,
-      y: startNode.y - 28,
+      y: startNode.y - 22,
       duration: 800,
       yoyo: true,
       repeat: -1,
@@ -297,7 +297,7 @@ export class MenuScene extends Phaser.Scene {
     this.tweens.add({
       targets: this.player,
       x: target.x,
-      y: target.y - 24,
+      y: target.y - 18,
       duration: 200,
       ease: 'Sine.easeInOut',
       onComplete: () => {
@@ -305,7 +305,7 @@ export class MenuScene extends Phaser.Scene {
         // Restart bob
         this.tweens.add({
           targets: this.player,
-          y: target.y - 28,
+          y: target.y - 22,
           duration: 800,
           yoyo: true,
           repeat: -1,
@@ -354,7 +354,7 @@ export class MenuScene extends Phaser.Scene {
         const finalNode = this.nodes[this.currentNodeIdx];
         this.tweens.add({
           targets: this.player,
-          y: finalNode.y - 28,
+          y: finalNode.y - 22,
           duration: 800,
           yoyo: true,
           repeat: -1,
@@ -372,7 +372,7 @@ export class MenuScene extends Phaser.Scene {
       this.tweens.add({
         targets: this.player,
         x: node.x,
-        y: node.y - 24,
+        y: node.y - 18,
         duration: 120,
         ease: 'Linear',
         onComplete: () => walkStep(stepIdx + 1)
