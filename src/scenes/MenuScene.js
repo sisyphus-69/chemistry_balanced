@@ -1,11 +1,13 @@
 import Phaser from 'phaser';
 import { ProgressionSystem } from '../systems/ProgressionSystem.js';
+import { soundManager } from '../systems/SoundManager.js';
+import { PIXEL_FONT } from '../ui/PixelText.js';
+import { REGIONS, getRegionForLevel, getRegionIndex } from '../data/regions.js';
 import equationsData from '../data/equations.json';
 
 /**
- * MenuScene — Super Mario World-style overworld map.
- * The player controls a flask character that walks along a winding path
- * between level nodes. Press Enter or click a node to start that level.
+ * MenuScene — RPG-style region map.
+ * Shows ONE region at a time (10 nodes). Players switch between unlocked regions.
  */
 export class MenuScene extends Phaser.Scene {
   constructor() {
@@ -16,11 +18,10 @@ export class MenuScene extends Phaser.Scene {
     this.progression = data.progression || new ProgressionSystem();
     this.playerMoving = false;
     this.currentNodeIdx = data.startNode ?? this._findStartNode();
+    this.currentRegionIdx = getRegionIndex(equationsData[this.currentNodeIdx]?.level || 1);
+    if (this.currentRegionIdx < 0) this.currentRegionIdx = 0;
   }
 
-  /**
-   * Find the best starting node — highest unlocked incomplete, or last completed.
-   */
   _findStartNode() {
     const maxUnlocked = this.progression.getMaxUnlockedLevel();
     let best = 0;
@@ -28,7 +29,7 @@ export class MenuScene extends Phaser.Scene {
       const eq = equationsData[i];
       if (eq.level > maxUnlocked) break;
       const done = this.progression.getLevelData(eq.id);
-      if (!done) return i; // first uncompleted unlocked
+      if (!done) return i;
       best = i;
     }
     return best;
@@ -36,75 +37,94 @@ export class MenuScene extends Phaser.Scene {
 
   create() {
     const { width, height } = this.cameras.main;
-    const maxUnlocked = this.progression.getMaxUnlockedLevel();
+    this._buildRegionMap(width, height);
+    this._buildHUD(width, height);
+    this._buildInfoPanel(width, height);
+    this._updateInfoPanel();
 
-    // ---- Build winding path positions ----
-    this.nodes = this._buildMapPath(width, height);
+    // Keyboard controls
+    this.cursors = this.input.keyboard.createCursorKeys();
+    this.enterKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ENTER);
+    this.spaceKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
+    this.lastMoveTime = 0;
+  }
 
-    // World container that we'll scroll with the camera
-    this.mapContainer = this.add.container(0, 0);
+  update(time) {
+    if (this.playerMoving) return;
+    if (this.settingsPanel) return;
 
-    // Background
-    this.add.rectangle(width / 2, height / 2, width, height, 0x0f0f1e).setScrollFactor(0);
+    const debounce = 180;
 
-    // Draw decorative background elements (subtle grid lines)
-    const bgGfx = this.add.graphics().setScrollFactor(0);
-    bgGfx.lineStyle(1, 0x1a1a30, 0.3);
-    for (let gx = 0; gx < width; gx += 60) {
-      bgGfx.lineBetween(gx, 0, gx, height);
-    }
-    for (let gy = 0; gy < height; gy += 60) {
-      bgGfx.lineBetween(0, gy, width, gy);
-    }
-
-    // ---- Draw path lines between nodes ----
-    const pathGfx = this.add.graphics();
-    for (let i = 0; i < this.nodes.length - 1; i++) {
-      const a = this.nodes[i];
-      const b = this.nodes[i + 1];
-      // Draw dotted path
-      const dist = Phaser.Math.Distance.Between(a.x, a.y, b.x, b.y);
-      const dots = Math.floor(dist / 10);
-      for (let d = 0; d < dots; d++) {
-        const t = d / dots;
-        const dx = Phaser.Math.Linear(a.x, b.x, t);
-        const dy = Phaser.Math.Linear(a.y, b.y, t);
-        const unlocked = equationsData[i + 1].level <= maxUnlocked;
-        pathGfx.fillStyle(unlocked ? 0x555577 : 0x2a2a3a, unlocked ? 0.8 : 0.3);
-        pathGfx.fillCircle(dx, dy, 2);
+    if (time - this.lastMoveTime > debounce) {
+      if (this.cursors.right.isDown || this.cursors.down.isDown) {
+        this._movePlayerToNode(this.currentNodeIdx + 1);
+        this.lastMoveTime = time;
+      } else if (this.cursors.left.isDown || this.cursors.up.isDown) {
+        this._movePlayerToNode(this.currentNodeIdx - 1);
+        this.lastMoveTime = time;
       }
     }
 
-    // ---- Draw region banners ----
-    const regions = [
-      { level: 1,  label: 'Synthesis',          color: '#00ff88' },
-      { level: 11, label: 'Decomposition',      color: '#ff8844' },
-      { level: 16, label: 'Single Replacement',  color: '#44aaff' },
-      { level: 21, label: 'Double Replacement',  color: '#ff44aa' },
-      { level: 27, label: 'Combustion & Mixed',  color: '#ffdd44' }
-    ];
+    if (Phaser.Input.Keyboard.JustDown(this.enterKey) || Phaser.Input.Keyboard.JustDown(this.spaceKey)) {
+      this._enterCurrentLevel();
+    }
+  }
 
-    regions.forEach(region => {
-      const nodeIdx = equationsData.findIndex(eq => eq.level === region.level);
-      if (nodeIdx < 0) return;
-      const node = this.nodes[nodeIdx];
-      this.add.image(node.x, node.y - 36, 'region_banner').setOrigin(0.5);
-      this.add.text(node.x, node.y - 36, region.label, {
-        fontFamily: 'monospace', fontSize: '10px', color: region.color
-      }).setOrigin(0.5);
-    });
+  // ─────────────────────────────────────────────
+  // REGION MAP — shows 10 nodes for the current region
+  // ─────────────────────────────────────────────
+  _buildRegionMap(width, height) {
+    const region = REGIONS[this.currentRegionIdx];
+    if (!region) return;
 
-    // ---- Draw level nodes ----
+    const maxUnlocked = this.progression.getMaxUnlockedLevel();
+
+    // Region-themed background
+    this.add.rectangle(width / 2, height / 2, width, height, region.palette.bg);
+
+    // Background decorations
+    this._drawDecorations(width, height, region);
+
+    // Draw path lines between nodes
+    const pathGfx = this.add.graphics();
+    const regionEqs = equationsData.filter(eq => eq.level >= region.levels[0] && eq.level <= region.levels[1]);
+
+    for (let i = 0; i < region.nodes.length - 1; i++) {
+      const a = region.nodes[i];
+      const b = region.nodes[i + 1];
+      const ax = a.x * width, ay = a.y * height;
+      const bx = b.x * width, by = b.y * height;
+
+      const dist = Phaser.Math.Distance.Between(ax, ay, bx, by);
+      const dots = Math.floor(dist / 12);
+      const nextEq = regionEqs[i + 1];
+      const unlocked = nextEq && nextEq.level <= maxUnlocked;
+
+      for (let d = 0; d < dots; d++) {
+        const t = d / dots;
+        const dx = Phaser.Math.Linear(ax, bx, t);
+        const dy = Phaser.Math.Linear(ay, by, t);
+        pathGfx.fillStyle(unlocked ? region.palette.pathDot : region.palette.path, unlocked ? 0.7 : 0.25);
+        pathGfx.fillRect(Math.round(dx) - 1, Math.round(dy) - 1, 3, 3);
+      }
+    }
+
+    // Draw level nodes
     this.nodeSprites = [];
     this.nodeLabels = [];
+    this.regionEqs = regionEqs;
 
-    equationsData.forEach((eq, i) => {
-      const node = this.nodes[i];
+    regionEqs.forEach((eq, i) => {
+      if (i >= region.nodes.length) return;
+      const nodePos = region.nodes[i];
+      const x = nodePos.x * width;
+      const y = nodePos.y * height;
       const unlocked = eq.level <= maxUnlocked;
       const completed = this.progression.getLevelData(eq.id);
-      const isCurrent = i === this.currentNodeIdx;
+      const globalIdx = equationsData.findIndex(e => e.id === eq.id);
+      const isCurrent = globalIdx === this.currentNodeIdx;
 
-      // Choose node texture
+      // Choose texture
       let texKey = 'node_locked';
       if (!unlocked) {
         texKey = 'node_locked';
@@ -118,40 +138,38 @@ export class MenuScene extends Phaser.Scene {
         texKey = 'node_normal';
       }
 
-      const sprite = this.add.image(node.x, node.y, texKey).setOrigin(0.5);
+      const sprite = this.add.image(x, y, texKey).setOrigin(0.5);
       if (eq.boss && unlocked) sprite.setScale(1.15);
 
-      // Level number on node
-      const label = this.add.text(node.x, node.y, `${eq.level}`, {
-        fontFamily: 'monospace',
-        fontSize: eq.boss ? '13px' : '12px',
-        color: unlocked ? '#ffffff' : '#333355',
-        fontStyle: eq.boss ? 'bold' : 'normal'
+      // Level number
+      const label = this.add.text(x, y, `${eq.level}`, {
+        fontFamily: PIXEL_FONT,
+        fontSize: eq.boss ? '8px' : '7px',
+        color: unlocked ? '#ffffff' : '#333355'
       }).setOrigin(0.5);
 
       // Stars below node
       if (completed) {
         for (let s = 0; s < 3; s++) {
           this.add.image(
-            node.x - 10 + s * 10,
-            node.y + 20,
+            x - 10 + s * 10, y + 22,
             s < completed.stars ? 'star_filled' : 'star_empty'
-          ).setScale(0.45);
+          ).setScale(0.4);
         }
       }
 
       // Boss label
       if (eq.boss && unlocked) {
-        this.add.text(node.x, node.y - 22, 'BOSS', {
-          fontFamily: 'monospace', fontSize: '7px', color: '#ff4444', fontStyle: 'bold'
+        this.add.text(x, y - 22, 'BOSS', {
+          fontFamily: PIXEL_FONT, fontSize: '5px', color: '#ff4444'
         }).setOrigin(0.5);
       }
 
-      // Click to move player to this node
+      // Click to move
       if (unlocked) {
         sprite.setInteractive({ useHandCursor: true });
         sprite.on('pointerdown', () => {
-          this._movePlayerToNode(i);
+          this._movePlayerToNode(globalIdx);
         });
       }
 
@@ -159,153 +177,179 @@ export class MenuScene extends Phaser.Scene {
       this.nodeLabels.push(label);
     });
 
-    // ---- Player sprite ----
-    const startNode = this.nodes[this.currentNodeIdx];
-    this.player = this.add.image(startNode.x, startNode.y - 18, 'player_flask')
-      .setOrigin(0.5, 1);
+    // Player sprite
+    const currentEq = equationsData[this.currentNodeIdx];
+    const regionLocalIdx = regionEqs.findIndex(eq => eq.id === currentEq?.id);
+    const startNodePos = region.nodes[regionLocalIdx >= 0 ? regionLocalIdx : 0];
+    const px = startNodePos.x * width;
+    const py = startNodePos.y * height;
 
-    // Gentle bob animation
+    this.player = this.add.image(px, py - 18, 'player_flask').setOrigin(0.5, 1);
+
     this.tweens.add({
       targets: this.player,
-      y: startNode.y - 22,
+      y: py - 22,
       duration: 800,
       yoyo: true,
       repeat: -1,
       ease: 'Sine.easeInOut'
     });
 
-    // ---- HUD (fixed to camera) ----
-    this._buildHUD(width, height);
+    // Region name banner
+    this.add.text(width / 2, 50, region.name, {
+      fontFamily: PIXEL_FONT, fontSize: '12px', color: region.palette.accentHex
+    }).setOrigin(0.5);
 
-    // ---- Level info panel at bottom ----
-    this._buildInfoPanel(width, height);
-    this._updateInfoPanel();
-
-    // ---- Keyboard controls ----
-    this.cursors = this.input.keyboard.createCursorKeys();
-    this.enterKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ENTER);
-    this.spaceKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
-
-    // Camera follows player
-    this.cameras.main.startFollow(this.player, true, 0.08, 0.08);
-    this.cameras.main.setDeadzone(100, 50);
-
-    // Set camera bounds to cover the full map
-    const bounds = this._getMapBounds();
-    this.cameras.main.setBounds(
-      bounds.minX - 80, bounds.minY - 80,
-      bounds.maxX - bounds.minX + 160,
-      bounds.maxY - bounds.minY + 160
-    );
-
-    // Track input for left/right navigation
-    this.lastMoveTime = 0;
-
-    // Highlight current node
-    this._highlightCurrentNode();
+    this.add.text(width / 2, 68, region.subtitle, {
+      fontFamily: PIXEL_FONT, fontSize: '6px', color: region.palette.text
+    }).setOrigin(0.5);
   }
 
-  update(time) {
-    if (this.playerMoving) return;
-    if (this.settingsPanel) return;
+  _drawDecorations(width, height, region) {
+    const gfx = this.add.graphics();
 
-    const debounce = 180; // ms between moves
-
-    // Arrow keys: move to adjacent node
-    if (time - this.lastMoveTime > debounce) {
-      if (this.cursors.right.isDown || this.cursors.down.isDown) {
-        this._movePlayerToNode(this.currentNodeIdx + 1);
-        this.lastMoveTime = time;
-      } else if (this.cursors.left.isDown || this.cursors.up.isDown) {
-        this._movePlayerToNode(this.currentNodeIdx - 1);
-        this.lastMoveTime = time;
+    if (region.decorations === 'lab') {
+      // Green hexagon pattern
+      gfx.lineStyle(1, region.palette.path, 0.15);
+      for (let x = 40; x < width; x += 80) {
+        for (let y = 40; y < height; y += 70) {
+          const ox = (Math.floor(y / 70) % 2) * 40;
+          this._drawHexagon(gfx, x + ox, y, 20);
+        }
+      }
+      // Test tube accents
+      gfx.fillStyle(region.palette.accent, 0.06);
+      gfx.fillRect(20, height * 0.3, 6, 40);
+      gfx.fillRect(width - 26, height * 0.5, 6, 35);
+    } else if (region.decorations === 'volcanic') {
+      // Lava cracks
+      gfx.lineStyle(1, region.palette.accent, 0.1);
+      for (let i = 0; i < 8; i++) {
+        const sx = Phaser.Math.Between(50, width - 50);
+        const sy = Phaser.Math.Between(100, height - 100);
+        gfx.lineBetween(sx, sy, sx + Phaser.Math.Between(-30, 30), sy + Phaser.Math.Between(-20, 20));
+      }
+      // Flame spots
+      gfx.fillStyle(region.palette.accent, 0.05);
+      for (let i = 0; i < 5; i++) {
+        gfx.fillRect(Phaser.Math.Between(30, width - 30), Phaser.Math.Between(80, height - 80), 4, 8);
+      }
+    } else if (region.decorations === 'ice') {
+      // Crystal accents
+      gfx.fillStyle(region.palette.accent, 0.05);
+      for (let i = 0; i < 6; i++) {
+        const cx = Phaser.Math.Between(40, width - 40);
+        const cy = Phaser.Math.Between(80, height - 80);
+        gfx.fillRect(cx - 1, cy - 8, 3, 16);
+        gfx.fillRect(cx - 4, cy - 2, 9, 4);
+      }
+      // Snowflakes
+      gfx.fillStyle(0xffffff, 0.04);
+      for (let i = 0; i < 12; i++) {
+        gfx.fillRect(Phaser.Math.Between(20, width - 20), Phaser.Math.Between(60, height - 60), 2, 2);
+      }
+    } else if (region.decorations === 'circuit') {
+      // Circuit grid lines
+      gfx.lineStyle(1, region.palette.path, 0.12);
+      for (let x = 60; x < width; x += 100) {
+        gfx.lineBetween(x, 80, x, height - 80);
+      }
+      for (let y = 100; y < height; y += 80) {
+        gfx.lineBetween(60, y, width - 60, y);
+      }
+      // Spark dots
+      gfx.fillStyle(region.palette.accent, 0.08);
+      for (let i = 0; i < 8; i++) {
+        gfx.fillRect(Phaser.Math.Between(50, width - 50), Phaser.Math.Between(90, height - 90), 3, 3);
+      }
+    } else if (region.decorations === 'dark') {
+      // Purple wisps
+      gfx.fillStyle(region.palette.accent, 0.04);
+      for (let i = 0; i < 10; i++) {
+        const wx = Phaser.Math.Between(30, width - 30);
+        const wy = Phaser.Math.Between(80, height - 80);
+        gfx.fillRect(wx, wy, 2, 6);
+        gfx.fillRect(wx - 2, wy + 2, 6, 2);
+      }
+      // Skull-like dots
+      gfx.fillStyle(0xffffff, 0.03);
+      for (let i = 0; i < 5; i++) {
+        const sx = Phaser.Math.Between(40, width - 40);
+        const sy = Phaser.Math.Between(90, height - 90);
+        gfx.fillRect(sx - 2, sy, 2, 2);
+        gfx.fillRect(sx + 1, sy, 2, 2);
+        gfx.fillRect(sx - 1, sy + 3, 3, 1);
       }
     }
+  }
 
-    // Enter / Space: start the level at current node
-    if (Phaser.Input.Keyboard.JustDown(this.enterKey) || Phaser.Input.Keyboard.JustDown(this.spaceKey)) {
-      this._enterCurrentLevel();
+  _drawHexagon(gfx, cx, cy, r) {
+    gfx.beginPath();
+    for (let i = 0; i < 6; i++) {
+      const angle = Phaser.Math.DegToRad(60 * i - 30);
+      const x = cx + r * Math.cos(angle);
+      const y = cy + r * Math.sin(angle);
+      if (i === 0) gfx.moveTo(x, y);
+      else gfx.lineTo(x, y);
     }
+    gfx.closePath();
+    gfx.strokePath();
   }
 
-  /**
-   * Build a winding snaking path for the map nodes.
-   * Snakes left-to-right, then right-to-left, in rows.
-   */
-  _buildMapPath(viewW, viewH) {
-    const nodes = [];
-    const nodesPerRow = 5;
-    const hSpacing = 120;
-    const vSpacing = 90;
-    const startX = 116;
-    const startY = 150;
-
-    const totalRows = Math.ceil(equationsData.length / nodesPerRow);
-
-    equationsData.forEach((eq, i) => {
-      const row = Math.floor(i / nodesPerRow);
-      const col = i % nodesPerRow;
-      const goingRight = row % 2 === 0;
-
-      const actualCol = goingRight ? col : (nodesPerRow - 1 - col);
-      const x = startX + actualCol * hSpacing;
-      const y = startY + row * vSpacing;
-
-      nodes.push({ x, y, eq, index: i });
-    });
-
-    return nodes;
-  }
-
-  _getMapBounds() {
-    let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
-    this.nodes.forEach(n => {
-      if (n.x < minX) minX = n.x;
-      if (n.y < minY) minY = n.y;
-      if (n.x > maxX) maxX = n.x;
-      if (n.y > maxY) maxY = n.y;
-    });
-    return { minX, minY, maxX, maxY };
-  }
-
+  // ─────────────────────────────────────────────
+  // PLAYER MOVEMENT
+  // ─────────────────────────────────────────────
   _movePlayerToNode(targetIdx) {
     if (this.playerMoving) return;
-    if (targetIdx < 0 || targetIdx >= this.nodes.length) return;
+    if (targetIdx < 0 || targetIdx >= equationsData.length) return;
 
-    // Can only move to unlocked nodes
     const targetEq = equationsData[targetIdx];
     if (targetEq.level > this.progression.getMaxUnlockedLevel()) return;
 
-    // Can only move to adjacent nodes (one step at a time)
+    // Check if target is in a different region
+    const targetRegionIdx = getRegionIndex(targetEq.level);
+    if (targetRegionIdx !== this.currentRegionIdx) {
+      // Switch region and rebuild
+      this.currentNodeIdx = targetIdx;
+      this.currentRegionIdx = targetRegionIdx;
+      this.scene.restart({ progression: this.progression, startNode: targetIdx });
+      return;
+    }
+
     const diff = Math.abs(targetIdx - this.currentNodeIdx);
     if (diff === 0) return;
 
-    // If clicking a non-adjacent node, walk through each node in sequence
     if (diff > 1) {
       this._walkPath(targetIdx);
       return;
     }
 
     this.playerMoving = true;
-    const prev = this.currentNodeIdx;
     this.currentNodeIdx = targetIdx;
-    const target = this.nodes[targetIdx];
 
-    // Stop bob tween, move, restart bob
+    const region = REGIONS[this.currentRegionIdx];
+    const { width, height } = this.cameras.main;
+    const regionEqs = this.regionEqs;
+    const localIdx = regionEqs.findIndex(eq => eq.id === targetEq.id);
+    if (localIdx < 0 || localIdx >= region.nodes.length) {
+      this.playerMoving = false;
+      return;
+    }
+    const target = region.nodes[localIdx];
+
     this.tweens.killTweensOf(this.player);
 
     this.tweens.add({
       targets: this.player,
-      x: target.x,
-      y: target.y - 18,
+      x: target.x * width,
+      y: target.y * height - 18,
       duration: 200,
       ease: 'Sine.easeInOut',
       onComplete: () => {
         this.playerMoving = false;
-        // Restart bob
         this.tweens.add({
           targets: this.player,
-          y: target.y - 22,
+          y: target.y * height - 22,
           duration: 800,
           yoyo: true,
           repeat: -1,
@@ -317,17 +361,12 @@ export class MenuScene extends Phaser.Scene {
     });
   }
 
-  /**
-   * Walk through multiple nodes in sequence to reach a distant target.
-   */
   _walkPath(targetIdx) {
     if (this.playerMoving) return;
 
     const maxUnlocked = this.progression.getMaxUnlockedLevel();
-    // Clamp target to furthest unlocked
     let clampedTarget = targetIdx;
     if (equationsData[clampedTarget].level > maxUnlocked) {
-      // Find the last unlocked index before target
       for (let i = targetIdx; i >= 0; i--) {
         if (equationsData[i].level <= maxUnlocked) {
           clampedTarget = i;
@@ -336,6 +375,15 @@ export class MenuScene extends Phaser.Scene {
       }
     }
     if (clampedTarget === this.currentNodeIdx) return;
+
+    // Check if target is in different region
+    const targetRegionIdx = getRegionIndex(equationsData[clampedTarget].level);
+    if (targetRegionIdx !== this.currentRegionIdx) {
+      this.currentNodeIdx = clampedTarget;
+      this.currentRegionIdx = targetRegionIdx;
+      this.scene.restart({ progression: this.progression, startNode: clampedTarget });
+      return;
+    }
 
     this.playerMoving = true;
     const direction = clampedTarget > this.currentNodeIdx ? 1 : -1;
@@ -348,18 +396,24 @@ export class MenuScene extends Phaser.Scene {
 
     this.tweens.killTweensOf(this.player);
 
+    const { width, height } = this.cameras.main;
+    const region = REGIONS[this.currentRegionIdx];
+
     const walkStep = (stepIdx) => {
       if (stepIdx >= steps.length) {
         this.playerMoving = false;
-        const finalNode = this.nodes[this.currentNodeIdx];
-        this.tweens.add({
-          targets: this.player,
-          y: finalNode.y - 22,
-          duration: 800,
-          yoyo: true,
-          repeat: -1,
-          ease: 'Sine.easeInOut'
-        });
+        const finalLocalIdx = this.regionEqs.findIndex(eq => eq.id === equationsData[this.currentNodeIdx]?.id);
+        if (finalLocalIdx >= 0 && finalLocalIdx < region.nodes.length) {
+          const fn = region.nodes[finalLocalIdx];
+          this.tweens.add({
+            targets: this.player,
+            y: fn.y * height - 22,
+            duration: 800,
+            yoyo: true,
+            repeat: -1,
+            ease: 'Sine.easeInOut'
+          });
+        }
         this._highlightCurrentNode();
         this._updateInfoPanel();
         return;
@@ -367,12 +421,19 @@ export class MenuScene extends Phaser.Scene {
 
       const nextIdx = steps[stepIdx];
       this.currentNodeIdx = nextIdx;
-      const node = this.nodes[nextIdx];
+      const eq = equationsData[nextIdx];
+      const localIdx = this.regionEqs.findIndex(e => e.id === eq.id);
+      if (localIdx < 0 || localIdx >= region.nodes.length) {
+        // Crossed region boundary
+        this.playerMoving = false;
+        return;
+      }
+      const node = region.nodes[localIdx];
 
       this.tweens.add({
         targets: this.player,
-        x: node.x,
-        y: node.y - 18,
+        x: node.x * width,
+        y: node.y * height - 18,
         duration: 120,
         ease: 'Linear',
         onComplete: () => walkStep(stepIdx + 1)
@@ -384,13 +445,16 @@ export class MenuScene extends Phaser.Scene {
 
   _highlightCurrentNode() {
     const maxUnlocked = this.progression.getMaxUnlockedLevel();
+    const regionEqs = this.regionEqs;
 
     this.nodeSprites.forEach((sprite, i) => {
-      const eq = equationsData[i];
+      if (i >= regionEqs.length) return;
+      const eq = regionEqs[i];
       const unlocked = eq.level <= maxUnlocked;
       const completed = this.progression.getLevelData(eq.id);
+      const globalIdx = equationsData.findIndex(e => e.id === eq.id);
 
-      if (i === this.currentNodeIdx) {
+      if (globalIdx === this.currentNodeIdx) {
         sprite.setTexture('node_current');
         if (eq.boss) sprite.setScale(1.15);
         else sprite.setScale(1);
@@ -415,118 +479,160 @@ export class MenuScene extends Phaser.Scene {
     if (!eq) return;
     if (eq.level > this.progression.getMaxUnlockedLevel()) return;
 
-    // Flash the node
-    const sprite = this.nodeSprites[this.currentNodeIdx];
-    this.tweens.add({
-      targets: sprite,
-      scaleX: 1.4, scaleY: 1.4,
-      duration: 150,
-      yoyo: true,
-      onComplete: () => {
-        const sceneKey = eq.boss ? 'BossScene' : 'GameScene';
-        this.scene.start(sceneKey, {
-          equation: eq,
-          progression: this.progression
-        });
-      }
-    });
+    const sprite = this.nodeSprites[this.regionEqs.findIndex(e => e.id === eq.id)];
+    if (sprite) {
+      this.tweens.add({
+        targets: sprite,
+        scaleX: 1.4, scaleY: 1.4,
+        duration: 150,
+        yoyo: true,
+        onComplete: () => {
+          const sceneKey = eq.boss ? 'BossScene' : 'GameScene';
+          this.scene.start(sceneKey, {
+            equation: eq,
+            progression: this.progression
+          });
+        }
+      });
+    } else {
+      const sceneKey = eq.boss ? 'BossScene' : 'GameScene';
+      this.scene.start(sceneKey, {
+        equation: eq,
+        progression: this.progression
+      });
+    }
   }
 
+  // ─────────────────────────────────────────────
+  // HUD
+  // ─────────────────────────────────────────────
   _buildHUD(width, height) {
-    // Fixed HUD container
     const rank = this.progression.getRank();
     const nextRank = this.progression.getNextRank();
     const xp = this.progression.getXP();
 
-    // Title bar background
-    const titleBarHeight = 70;
-    const titleBar = this.add.graphics().setScrollFactor(0).setDepth(99);
-    titleBar.fillStyle(0x1a1a2e, 0.92);
-    titleBar.fillRect(0, 0, width, titleBarHeight);
-    titleBar.lineStyle(2, 0x2a2a44, 0.6);
-    titleBar.lineBetween(0, titleBarHeight, width, titleBarHeight);
+    // Title bar
+    const titleBar = this.add.graphics();
+    titleBar.fillStyle(0x0d0d1e, 0.9);
+    titleBar.fillRect(0, 0, width, 40);
+    titleBar.fillStyle(0x333366, 0.3);
+    titleBar.fillRect(0, 39, width, 1);
 
-    // Left side container - Title & Rank
-    const leftPadding = 24;
-    const topPadding = 16;
+    // Title
+    this.add.text(16, 10, 'ChemQuest', {
+      fontFamily: PIXEL_FONT, fontSize: '10px', color: '#00ff88'
+    });
 
-    // Title (top-left)
-    this.add.text(leftPadding, topPadding, 'ChemQuest', {
-      fontFamily: 'monospace', fontSize: '18px', color: '#00ff88', fontStyle: 'bold'
-    }).setScrollFactor(0).setDepth(100);
+    // Rank
+    this.add.text(16, 26, rank.title, {
+      fontFamily: PIXEL_FONT, fontSize: '5px', color: '#ffdd44'
+    });
 
-    // Rank (below title)
-    this.add.text(leftPadding, topPadding + 28, rank.title, {
-      fontFamily: 'monospace', fontSize: '10px', color: '#ffdd44'
-    }).setScrollFactor(0).setDepth(100);
-
-    // Right side container - XP & Streak
-    const rightPadding = 24;
-
-    // XP bar (top right)
+    // XP bar
     if (nextRank) {
-      const barW = 140, barH = 8;
-      const barX = width - barW - rightPadding;
-      const barY = topPadding;
+      const barW = 120, barH = 6;
+      const barX = width - barW - 16;
+      const barY = 10;
       const pct = Math.min(1, (xp - rank.xp) / (nextRank.xp - rank.xp));
 
-      const xpBg = this.add.graphics().setScrollFactor(0).setDepth(100);
+      const xpBg = this.add.graphics();
       xpBg.fillStyle(0x333355, 1);
-      xpBg.fillRoundedRect(barX, barY, barW, barH, 4);
+      xpBg.fillRect(barX, barY, barW, barH);
 
-      const xpFill = this.add.graphics().setScrollFactor(0).setDepth(100);
+      const xpFill = this.add.graphics();
       xpFill.fillStyle(0x00ff88, 1);
-      xpFill.fillRoundedRect(barX, barY, barW * pct, barH, 4);
+      xpFill.fillRect(barX, barY, barW * pct, barH);
 
-      this.add.text(width - rightPadding, barY + 16, `${xp} XP`, {
-        fontFamily: 'monospace', fontSize: '10px', color: '#aaaacc'
-      }).setOrigin(1, 0).setScrollFactor(0).setDepth(100);
+      this.add.text(width - 16, barY + 12, `${xp} XP`, {
+        fontFamily: PIXEL_FONT, fontSize: '5px', color: '#aaaacc'
+      }).setOrigin(1, 0);
     }
 
     // Streak
     const streak = this.progression.getStreak();
     if (streak > 0) {
-      this.add.text(width - rightPadding, topPadding + 36, `Streak: ${streak}`, {
-        fontFamily: 'monospace', fontSize: '10px',
+      this.add.text(width - 16, 28, `Streak: ${streak}`, {
+        fontFamily: PIXEL_FONT, fontSize: '5px',
         color: streak >= 5 ? '#ff6644' : '#ffdd44'
-      }).setOrigin(1, 0).setScrollFactor(0).setDepth(100);
+      }).setOrigin(1, 0);
+    }
+
+    // Region navigation arrows
+    const region = REGIONS[this.currentRegionIdx];
+    const maxUnlocked = this.progression.getMaxUnlockedLevel();
+
+    // Left arrow (previous region)
+    if (this.currentRegionIdx > 0) {
+      const prevBtn = this.add.text(20, height - 20, '< Prev Region', {
+        fontFamily: PIXEL_FONT, fontSize: '6px', color: '#8888aa'
+      }).setOrigin(0, 1).setInteractive({ useHandCursor: true });
+      prevBtn.on('pointerdown', () => {
+        const prevRegion = REGIONS[this.currentRegionIdx - 1];
+        const firstEq = equationsData.find(eq => eq.level === prevRegion.levels[0]);
+        if (firstEq) {
+          const idx = equationsData.findIndex(e => e.id === firstEq.id);
+          this.currentNodeIdx = idx;
+          this.currentRegionIdx = this.currentRegionIdx - 1;
+          this.scene.restart({ progression: this.progression, startNode: idx });
+        }
+      });
+    }
+
+    // Right arrow (next region)
+    if (this.currentRegionIdx < REGIONS.length - 1) {
+      const nextRegion = REGIONS[this.currentRegionIdx + 1];
+      const nextUnlocked = nextRegion.levels[0] <= maxUnlocked;
+      if (nextUnlocked) {
+        const nextBtn = this.add.text(width - 20, height - 20, 'Next Region >', {
+          fontFamily: PIXEL_FONT, fontSize: '6px', color: '#8888aa'
+        }).setOrigin(1, 1).setInteractive({ useHandCursor: true });
+        nextBtn.on('pointerdown', () => {
+          const firstEq = equationsData.find(eq => eq.level === nextRegion.levels[0]);
+          if (firstEq) {
+            const idx = equationsData.findIndex(e => e.id === firstEq.id);
+            this.currentNodeIdx = idx;
+            this.currentRegionIdx = this.currentRegionIdx + 1;
+            this.scene.restart({ progression: this.progression, startNode: idx });
+          }
+        });
+      }
     }
 
     // Settings button
-    const settingsBtn = this.add.text(24, height - 28, '[Settings]', {
-      fontFamily: 'monospace', fontSize: '11px', color: '#6666aa'
-    }).setScrollFactor(0).setDepth(100).setInteractive({ useHandCursor: true });
+    const settingsBtn = this.add.text(width / 2, height - 8, '[Settings]', {
+      fontFamily: PIXEL_FONT, fontSize: '5px', color: '#6666aa'
+    }).setOrigin(0.5, 1).setInteractive({ useHandCursor: true });
     settingsBtn.on('pointerdown', () => this._toggleSettings());
 
     // Controls hint
-    this.add.text(width / 2, height - 18, 'Arrow keys to move  |  Enter to play', {
-      fontFamily: 'monospace', fontSize: '10px', color: '#555577'
-    }).setOrigin(0.5, 1).setScrollFactor(0).setDepth(100);
+    this.add.text(width / 2, height - 20, 'Arrow keys to move | Enter to play', {
+      fontFamily: PIXEL_FONT, fontSize: '5px', color: '#555577'
+    }).setOrigin(0.5, 1);
   }
 
   _buildInfoPanel(width, height) {
-    // Info panel at the bottom showing current level details
-    const panelH = 60;
-    const panelY = height - panelH - 32;
+    const panelH = 50;
+    const panelY = height - panelH - 30;
 
-    this.infoBg = this.add.graphics().setScrollFactor(0).setDepth(99);
-    this.infoBg.fillStyle(0x1a1a2e, 0.92);
-    this.infoBg.fillRoundedRect(width / 2 - 220, panelY, 440, panelH, 10);
-    this.infoBg.lineStyle(2, 0x2a2a44, 0.6);
-    this.infoBg.strokeRoundedRect(width / 2 - 220, panelY, 440, panelH, 10);
+    this.infoBg = this.add.graphics();
+    this.infoBg.fillStyle(0x0d0d1e, 0.92);
+    this.infoBg.fillRect(width / 2 - 200, panelY, 400, panelH);
+    this.infoBg.fillStyle(0x333366, 0.4);
+    this.infoBg.fillRect(width / 2 - 200, panelY, 400, 2);
+    this.infoBg.fillRect(width / 2 - 200, panelY + panelH - 2, 400, 2);
 
-    this.infoTitle = this.add.text(width / 2, panelY + 14, '', {
-      fontFamily: 'monospace', fontSize: '14px', color: '#ffffff', fontStyle: 'bold'
-    }).setOrigin(0.5).setScrollFactor(0).setDepth(100);
+    this.infoTitle = this.add.text(width / 2, panelY + 12, '', {
+      fontFamily: PIXEL_FONT, fontSize: '8px', color: '#ffffff'
+    }).setOrigin(0.5);
 
-    this.infoSub = this.add.text(width / 2, panelY + 36, '', {
-      fontFamily: 'monospace', fontSize: '10px', color: '#aaaacc'
-    }).setOrigin(0.5).setScrollFactor(0).setDepth(100);
+    this.infoSub = this.add.text(width / 2, panelY + 30, '', {
+      fontFamily: PIXEL_FONT, fontSize: '5px', color: '#aaaacc'
+    }).setOrigin(0.5);
 
     this.infoStars = [];
     for (let s = 0; s < 3; s++) {
-      const star = this.add.image(width / 2 + 170 + s * 16, panelY + 16, 'star_empty')
-        .setScale(0.6).setScrollFactor(0).setDepth(100);
+      const star = this.add.image(width / 2 + 155 + s * 14, panelY + 14, 'star_empty')
+        .setScale(0.5);
       this.infoStars.push(star);
     }
   }
@@ -543,9 +649,7 @@ export class MenuScene extends Phaser.Scene {
     const diffLabel = eq.difficulty ? eq.difficulty.charAt(0).toUpperCase() + eq.difficulty.slice(1) : '';
 
     this.infoTitle.setText(
-      unlocked
-        ? `Level ${eq.level}${bossTag}`
-        : `Level ${eq.level}: LOCKED`
+      unlocked ? `Level ${eq.level}${bossTag}` : `Level ${eq.level}: LOCKED`
     );
     this.infoTitle.setColor(unlocked ? (eq.boss ? '#ff6644' : '#ffffff') : '#444466');
 
@@ -556,11 +660,7 @@ export class MenuScene extends Phaser.Scene {
     );
 
     this.infoStars.forEach((star, s) => {
-      if (completed && s < completed.stars) {
-        star.setTexture('star_filled');
-      } else {
-        star.setTexture('star_empty');
-      }
+      star.setTexture(completed && s < completed.stars ? 'star_filled' : 'star_empty');
     });
   }
 
@@ -575,9 +675,8 @@ export class MenuScene extends Phaser.Scene {
     const cx = width / 2;
     const cy = height / 2;
     const settings = this.progression.getSettings();
-    const D = 200; // depth for all settings elements
+    const D = 200;
 
-    // Track all elements so we can destroy them together
     this.settingsPanel = [];
 
     const _add = (obj) => {
@@ -593,35 +692,38 @@ export class MenuScene extends Phaser.Scene {
       }
     };
 
-    // Full-screen blocker so clicks don't pass through
+    // Full-screen blocker
     const blocker = _add(
-      this.add.zone(cx, cy, width, height)
-        .setInteractive()
+      this.add.zone(cx, cy, width, height).setInteractive()
     );
-    blocker.on('pointerdown', () => {}); // swallow clicks
+    blocker.on('pointerdown', () => {});
 
     // Panel background
     const bg = _add(this.add.graphics());
     bg.fillStyle(0x000000, 0.6);
     bg.fillRect(0, 0, width, height);
-    bg.fillStyle(0x1a1a2e, 0.98);
-    bg.fillRoundedRect(cx - 160, cy - 110, 320, 220, 12);
-    bg.lineStyle(2, 0x5555aa, 0.8);
-    bg.strokeRoundedRect(cx - 160, cy - 110, 320, 220, 12);
+    bg.fillStyle(0x0d0d1a, 0.98);
+    bg.fillRect(cx - 160, cy - 100, 320, 200);
+    // Border
+    bg.fillStyle(0x333366, 1);
+    bg.fillRect(cx - 160, cy - 100, 320, 2);
+    bg.fillRect(cx - 160, cy + 98, 320, 2);
+    bg.fillRect(cx - 160, cy - 100, 2, 200);
+    bg.fillRect(cx + 158, cy - 100, 2, 200);
 
     // Title
-    _add(this.add.text(cx, cy - 88, 'Settings', {
-      fontFamily: 'monospace', fontSize: '18px', color: '#ffffff', fontStyle: 'bold'
+    _add(this.add.text(cx, cy - 80, 'Settings', {
+      fontFamily: PIXEL_FONT, fontSize: '10px', color: '#ffffff'
     }).setOrigin(0.5));
 
     // Separator
     const sep = _add(this.add.graphics());
-    sep.lineStyle(1, 0x3344aa, 0.3);
-    sep.lineBetween(cx - 140, cy - 65, cx + 140, cy - 65);
+    sep.fillStyle(0x333366, 0.3);
+    sep.fillRect(cx - 140, cy - 60, 280, 1);
 
     // Colorblind toggle
-    const cbText = _add(this.add.text(cx - 130, cy - 40, `Colorblind Mode: ${settings.colorblindMode ? 'ON' : 'OFF'}`, {
-      fontFamily: 'monospace', fontSize: '13px', color: '#aaaacc'
+    const cbText = _add(this.add.text(cx - 130, cy - 35, `Colorblind Mode: ${settings.colorblindMode ? 'ON' : 'OFF'}`, {
+      fontFamily: PIXEL_FONT, fontSize: '7px', color: '#aaaacc'
     }).setInteractive({ useHandCursor: true }));
     cbText.on('pointerdown', () => {
       settings.colorblindMode = !settings.colorblindMode;
@@ -632,20 +734,20 @@ export class MenuScene extends Phaser.Scene {
     cbText.on('pointerout', () => cbText.setColor('#aaaacc'));
 
     // Reset progress
-    const resetBtn = _add(this.add.text(cx, cy + 40, '[ Reset All Progress ]', {
-      fontFamily: 'monospace', fontSize: '12px', color: '#ff4444'
+    const resetBtn = _add(this.add.text(cx, cy + 30, '[ Reset All Progress ]', {
+      fontFamily: PIXEL_FONT, fontSize: '7px', color: '#ff4444'
     }).setOrigin(0.5).setInteractive({ useHandCursor: true }));
     resetBtn.on('pointerdown', () => {
       this.progression.resetAll();
-      this.settingsPanel = null; // prevent double-destroy
+      this.settingsPanel = null;
       this.scene.restart({ progression: this.progression });
     });
     resetBtn.on('pointerover', () => resetBtn.setColor('#ff6666'));
     resetBtn.on('pointerout', () => resetBtn.setColor('#ff4444'));
 
     // Close button
-    const closeBtn = _add(this.add.text(cx + 140, cy - 98, '\u2715', {
-      fontFamily: 'monospace', fontSize: '18px', color: '#ff6666'
+    const closeBtn = _add(this.add.text(cx + 140, cy - 88, 'X', {
+      fontFamily: PIXEL_FONT, fontSize: '10px', color: '#ff6666'
     }).setOrigin(0.5).setInteractive({ useHandCursor: true }));
     closeBtn.on('pointerdown', destroyPanel);
     closeBtn.on('pointerover', () => closeBtn.setColor('#ff9999'));

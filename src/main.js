@@ -10,12 +10,10 @@ const config = {
   parent: 'game-container',
   width: 800,
   height: 600,
-  backgroundColor: '#1a1a2e',
+  backgroundColor: '#0d0d1a',
   scale: {
     mode: Phaser.Scale.FIT,
     autoCenter: Phaser.Scale.CENTER_BOTH,
-    min: { width: 400, height: 300 },
-    max: { width: 1600, height: 1200 }
   },
   scene: [BootScene, MenuScene, GameScene, BossScene, ResultScene],
   physics: {

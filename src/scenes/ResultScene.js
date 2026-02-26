@@ -1,22 +1,12 @@
 import Phaser from 'phaser';
 import { ScoringSystem } from '../systems/ScoringSystem.js';
 import { soundManager } from '../systems/SoundManager.js';
+import { PIXEL_FONT } from '../ui/PixelText.js';
 import equationsData from '../data/equations.json';
 
 /**
- * ResultScene — Polished post-level results with sequenced animations.
- *
- * Timeline (ms):
- *   0      Background fade-in, ambient particles begin
- *   0-400  Title drops in with elastic bounce
- *   200    Equation badge fades in
- *   600+   Stars reveal one-by-one (rotate + scale + burst)
- *   1400   Stats card slides up, rows stagger in with count-up
- *   2200   XP amount pops in (count-up from 0)
- *   2500   XP bar fills with glow sweep
- *   2800   Rank badge fades in
- *   3000   Streak banner flies in (if applicable)
- *   3400   Buttons slide up from below
+ * ResultScene — RPG-styled post-level results with sequenced animations.
+ * All text uses pixel font, all shapes use hard pixel edges.
  */
 export class ResultScene extends Phaser.Scene {
   constructor() {
@@ -39,60 +29,40 @@ export class ResultScene extends Phaser.Scene {
     const { width, height } = this.cameras.main;
     const cx = width / 2;
 
-    // ── Background ──────────────────────────────
-    this.add.rectangle(cx, height / 2, width, height, 0x1a1a2e);
+    // Background
+    this.add.rectangle(cx, height / 2, width, height, 0x0d0d1a);
 
-    // Subtle radial vignette overlay
-    const vignette = this.add.graphics();
-    vignette.fillStyle(0x000000, 0.25);
-    vignette.fillRect(0, 0, width, height);
-    vignette.fillStyle(0x1a1a2e, 1);
-    vignette.fillCircle(cx, height * 0.35, 380);
-
-    // ── Ambient floating particles ──────────────
+    // Ambient particles
     this._startAmbientParticles(width, height);
 
     // ── 1. TITLE ────────────────────────────────
     const titleY = 48;
     const title = this.add.text(cx, titleY - 60, 'Level Complete!', {
-      fontFamily: 'monospace', fontSize: '30px', color: '#00ff88', fontStyle: 'bold'
+      fontFamily: PIXEL_FONT, fontSize: '14px', color: '#00ff88'
     }).setOrigin(0.5).setAlpha(0);
 
-    // Title glow (duplicate behind, blurred via scale + alpha)
-    const titleGlow = this.add.text(cx, titleY - 60, 'Level Complete!', {
-      fontFamily: 'monospace', fontSize: '30px', color: '#00ff88'
-    }).setOrigin(0.5).setAlpha(0).setScale(1.05);
-
     this.tweens.add({
-      targets: [title, titleGlow],
-      y: titleY, alpha: { value: 1, duration: 300 },
+      targets: title,
+      y: titleY, alpha: 1,
       duration: 500, ease: 'Back.easeOut'
-    });
-    // Glow pulse loop
-    this.tweens.add({
-      targets: titleGlow,
-      alpha: { from: 0.3, to: 0.08 },
-      scaleX: { from: 1.05, to: 1.12 },
-      scaleY: { from: 1.05, to: 1.12 },
-      duration: 1200, yoyo: true, repeat: -1, delay: 500
     });
 
     // ── 2. EQUATION BADGE ───────────────────────
-    const badgeY = 88;
+    const badgeY = 80;
+    const badgeW = 320, badgeH = 28;
     const badgeBg = this.add.graphics();
-    const badgeW = 300, badgeH = 30;
     badgeBg.fillStyle(0x222244, 0.8);
-    badgeBg.fillRoundedRect(cx - badgeW / 2, badgeY - badgeH / 2, badgeW, badgeH, 6);
-    badgeBg.lineStyle(1, 0x4444aa, 0.4);
-    badgeBg.strokeRoundedRect(cx - badgeW / 2, badgeY - badgeH / 2, badgeW, badgeH, 6);
+    badgeBg.fillRect(cx - badgeW / 2, badgeY - badgeH / 2, badgeW, badgeH);
+    badgeBg.fillStyle(0x4444aa, 0.3);
+    badgeBg.fillRect(cx - badgeW / 2, badgeY - badgeH / 2, badgeW, 2);
     badgeBg.setAlpha(0);
 
     const eqText = this.add.text(cx, badgeY, this.equation.display, {
-      fontFamily: 'monospace', fontSize: '15px', color: '#bbbbee'
+      fontFamily: PIXEL_FONT, fontSize: '8px', color: '#bbbbee'
     }).setOrigin(0.5).setAlpha(0);
 
-    const lvlBadge = this.add.text(cx - badgeW / 2 + 12, badgeY, `Lv.${this.equation.level}`, {
-      fontFamily: 'monospace', fontSize: '10px', color: '#6677bb'
+    const lvlBadge = this.add.text(cx - badgeW / 2 + 10, badgeY, `Lv.${this.equation.level}`, {
+      fontFamily: PIXEL_FONT, fontSize: '6px', color: '#6677bb'
     }).setOrigin(0, 0.5).setAlpha(0);
 
     this.tweens.add({
@@ -101,7 +71,7 @@ export class ResultScene extends Phaser.Scene {
     });
 
     // ── 3. STARS ────────────────────────────────
-    const starY = 140;
+    const starY = 125;
     const starSpacing = 52;
     const starObjs = [];
 
@@ -113,10 +83,8 @@ export class ResultScene extends Phaser.Scene {
         .setScale(0).setOrigin(0.5).setAngle(-180);
 
       starObjs.push(star);
-
       const baseDelay = 600 + i * 250;
 
-      // Spin + pop in
       this.tweens.add({
         targets: star,
         scaleX: 2.5, scaleY: 2.5,
@@ -128,7 +96,6 @@ export class ResultScene extends Phaser.Scene {
           if (filled) soundManager.starReveal();
         },
         onComplete: () => {
-          // Settle to final size with gentle bounce
           this.tweens.add({
             targets: star,
             scaleX: 2, scaleY: 2,
@@ -138,7 +105,6 @@ export class ResultScene extends Phaser.Scene {
         }
       });
 
-      // Burst particles for filled stars
       if (filled && this.textures.exists('particle_gold')) {
         this.time.delayedCall(baseDelay + 100, () => {
           const emitter = this.add.particles(sx, starY, 'particle_gold', {
@@ -155,7 +121,7 @@ export class ResultScene extends Phaser.Scene {
       }
     }
 
-    // Continuous subtle pulse on filled stars
+    // Pulse on filled stars
     this.time.delayedCall(1400, () => {
       starObjs.forEach((s, i) => {
         if (i < this.stars) {
@@ -171,16 +137,26 @@ export class ResultScene extends Phaser.Scene {
     });
 
     // ── 4. STATS CARD ───────────────────────────
-    const cardY = 185;
-    const cardW = 320, cardH = 130;
+    const cardY = 175;
+    const cardW = 320, cardH = 115;
     const cardX = cx - cardW / 2;
 
-    // Card background
     const cardBg = this.add.graphics();
-    cardBg.fillStyle(0x12122a, 0.92);
-    cardBg.fillRoundedRect(cardX, cardY, cardW, cardH, 10);
-    cardBg.lineStyle(1.5, 0x3344aa, 0.35);
-    cardBg.strokeRoundedRect(cardX, cardY, cardW, cardH, 10);
+    cardBg.fillStyle(0x0d0d1a, 0.95);
+    cardBg.fillRect(cardX, cardY, cardW, cardH);
+    // Border
+    cardBg.fillStyle(0x333366, 0.6);
+    cardBg.fillRect(cardX, cardY, cardW, 2);
+    cardBg.fillRect(cardX, cardY + cardH - 2, cardW, 2);
+    cardBg.fillRect(cardX, cardY, 2, cardH);
+    cardBg.fillRect(cardX + cardW - 2, cardY, 2, cardH);
+    // Corner accents
+    cardBg.fillStyle(0x5555aa, 0.5);
+    cardBg.fillRect(cardX, cardY, 4, 4);
+    cardBg.fillRect(cardX + cardW - 4, cardY, 4, 4);
+    cardBg.fillRect(cardX, cardY + cardH - 4, 4, 4);
+    cardBg.fillRect(cardX + cardW - 4, cardY + cardH - 4, 4, 4);
+
     cardBg.setAlpha(0).setY(20);
 
     this.tweens.add({
@@ -196,14 +172,14 @@ export class ResultScene extends Phaser.Scene {
       { label: 'Lowest Terms', value: this.isLowest ? 'Yes' : 'No', numVal: null, suffix: '' }
     ];
 
-    const rowH = 26;
-    const rowStartY = cardY + 14;
+    const rowH = 24;
+    const rowStartY = cardY + 10;
 
     stats.forEach((stat, i) => {
       const ry = rowStartY + i * rowH;
       const staggerDelay = 1500 + i * 120;
 
-      // Alternating row stripe
+      // Alternating stripe
       if (i % 2 === 0) {
         const stripe = this.add.graphics();
         stripe.fillStyle(0xffffff, 0.03);
@@ -212,27 +188,26 @@ export class ResultScene extends Phaser.Scene {
         this.tweens.add({ targets: stripe, alpha: 1, duration: 200, delay: staggerDelay });
       }
 
-      // Separator dots
-      const dots = this.add.text(cx - 10, ry + rowH / 2, '··········', {
-        fontFamily: 'monospace', fontSize: '10px', color: '#333355'
+      // Dots separator
+      const dots = this.add.text(cx - 10, ry + rowH / 2, '..........', {
+        fontFamily: PIXEL_FONT, fontSize: '5px', color: '#333355'
       }).setOrigin(0.5).setAlpha(0);
 
-      // Label (left)
-      const label = this.add.text(cardX + 20, ry + rowH / 2, stat.label, {
-        fontFamily: 'monospace', fontSize: '13px', color: '#7788bb'
+      // Label
+      const label = this.add.text(cardX + 16, ry + rowH / 2, stat.label, {
+        fontFamily: PIXEL_FONT, fontSize: '7px', color: '#7788bb'
       }).setOrigin(0, 0.5).setAlpha(0).setX(cardX - 20);
 
-      // Value (right)
+      // Value
       const isSpecial = stat.label === 'Lowest Terms';
       const valColor = isSpecial ? (this.isLowest ? '#00ff88' : '#ff6644') : '#ffffff';
-      const val = this.add.text(cardX + cardW - 20, ry + rowH / 2, stat.numVal !== null ? '0' : stat.value, {
-        fontFamily: 'monospace', fontSize: '14px', color: valColor, fontStyle: 'bold'
+      const val = this.add.text(cardX + cardW - 16, ry + rowH / 2, stat.numVal !== null ? '0' : stat.value, {
+        fontFamily: PIXEL_FONT, fontSize: '8px', color: valColor
       }).setOrigin(1, 0.5).setAlpha(0);
 
-      // Slide label in from left
       this.tweens.add({
         targets: label,
-        x: cardX + 20, alpha: 1,
+        x: cardX + 16, alpha: 1,
         duration: 300, delay: staggerDelay, ease: 'Cubic.easeOut'
       });
       this.tweens.add({
@@ -241,7 +216,6 @@ export class ResultScene extends Phaser.Scene {
         duration: 200, delay: staggerDelay + 100
       });
 
-      // Count-up animation for numeric values
       if (stat.numVal !== null && stat.numVal > 0) {
         this.tweens.addCounter({
           from: 0, to: stat.numVal,
@@ -254,43 +228,22 @@ export class ResultScene extends Phaser.Scene {
       }
     });
 
-    // Card bottom accent line
-    const accent = this.add.graphics();
-    accent.fillStyle(0x00ff88, 0.3);
-    accent.fillRect(cardX + 10, cardY + cardH - 3, 0, 2);
-    this.tweens.add({
-      targets: accent,
-      scaleX: 1, duration: 600, delay: 1600,
-      onUpdate: (tween) => {
-        accent.clear();
-        accent.fillStyle(0x00ff88, 0.3);
-        accent.fillRect(cardX + 10, cardY + cardH - 3, (cardW - 20) * tween.getValue(), 2);
-      }
-    });
-
     // ── 5. XP AMOUNT ────────────────────────────
-    const xpY = cardY + cardH + 28;
+    const xpY = cardY + cardH + 24;
 
-    const xpLabel = this.add.text(cx, xpY - 8, 'EXPERIENCE GAINED', {
-      fontFamily: 'monospace', fontSize: '9px', color: '#555577'
+    const xpLabel = this.add.text(cx, xpY - 6, 'EXPERIENCE GAINED', {
+      fontFamily: PIXEL_FONT, fontSize: '5px', color: '#555577'
     }).setOrigin(0.5).setAlpha(0);
 
     const xpText = this.add.text(cx, xpY + 14, '+0 XP', {
-      fontFamily: 'monospace', fontSize: '26px', color: '#ffdd44', fontStyle: 'bold'
+      fontFamily: PIXEL_FONT, fontSize: '14px', color: '#ffdd44'
     }).setOrigin(0.5).setScale(0);
 
-    // XP glow behind number
-    const xpGlow = this.add.text(cx, xpY + 14, `+${this.xp} XP`, {
-      fontFamily: 'monospace', fontSize: '26px', color: '#ffdd44'
-    }).setOrigin(0.5).setAlpha(0).setScale(1.1);
-
-    // Label fade in
     this.tweens.add({
       targets: xpLabel, alpha: 0.8,
       duration: 300, delay: 2200
     });
 
-    // XP pop-in
     this.tweens.add({
       targets: xpText,
       scaleX: 1, scaleY: 1,
@@ -298,46 +251,34 @@ export class ResultScene extends Phaser.Scene {
       onStart: () => soundManager.xpGain()
     });
 
-    // Count up XP
     this.tweens.addCounter({
       from: 0, to: this.xp,
       duration: 600, delay: 2350,
       onUpdate: (tween) => {
         xpText.setText(`+${Math.floor(tween.getValue())} XP`);
-      },
-      onComplete: () => {
-        // Flash the glow
-        xpGlow.setAlpha(0.4).setScale(1.1);
-        this.tweens.add({
-          targets: xpGlow,
-          alpha: 0, scaleX: 1.3, scaleY: 1.3,
-          duration: 500
-        });
       }
     });
 
     // ── 6. STREAK BANNER ────────────────────────
     let streakBannerH = 0;
     if (this.streak >= 3) {
-      streakBannerH = 30;
-      const streakY = xpY + 42;
+      streakBannerH = 28;
+      const streakY = xpY + 36;
       const streakLabel = ScoringSystem.getStreakLabel(this.streak);
       const streakColor = this.streak >= 10 ? '#ff4444' : this.streak >= 5 ? '#ff8844' : '#ffdd44';
 
-      // Banner bg
-      const bannerW = 220;
+      const bannerW = 200;
       const streakBg = this.add.graphics();
       streakBg.fillStyle(Phaser.Display.Color.HexStringToColor(streakColor).color, 0.1);
-      streakBg.fillRoundedRect(cx - bannerW / 2, streakY - 12, bannerW, 24, 12);
-      streakBg.lineStyle(1, Phaser.Display.Color.HexStringToColor(streakColor).color, 0.4);
-      streakBg.strokeRoundedRect(cx - bannerW / 2, streakY - 12, bannerW, 24, 12);
+      streakBg.fillRect(cx - bannerW / 2, streakY - 10, bannerW, 20);
+      streakBg.fillStyle(Phaser.Display.Color.HexStringToColor(streakColor).color, 0.3);
+      streakBg.fillRect(cx - bannerW / 2, streakY - 10, bannerW, 1);
       streakBg.setAlpha(0).setX(-50);
 
       const streakText = this.add.text(cx, streakY, `${streakLabel}  ${this.streak}x streak`, {
-        fontFamily: 'monospace', fontSize: '12px', color: streakColor, fontStyle: 'bold'
+        fontFamily: PIXEL_FONT, fontSize: '7px', color: streakColor
       }).setOrigin(0.5).setAlpha(0).setX(cx - 50);
 
-      // Slide in from left
       this.tweens.add({
         targets: streakBg,
         x: 0, alpha: 1,
@@ -351,14 +292,13 @@ export class ResultScene extends Phaser.Scene {
     }
 
     // ── 7. XP BAR + RANK ────────────────────────
-    const barSectionY = xpY + 52 + streakBannerH;
+    const barSectionY = xpY + 46 + streakBannerH;
     const rank = this.progression.getRank();
     const nextRank = this.progression.getNextRank();
     const xpTotal = this.progression.getXP();
 
-    // Rank title
     const rankText = this.add.text(cx, barSectionY, rank.title, {
-      fontFamily: 'monospace', fontSize: '12px', color: '#aabb99', fontStyle: 'bold'
+      fontFamily: PIXEL_FONT, fontSize: '7px', color: '#aabb99'
     }).setOrigin(0.5).setAlpha(0);
 
     this.tweens.add({
@@ -367,18 +307,18 @@ export class ResultScene extends Phaser.Scene {
     });
 
     if (nextRank) {
-      const barW = 280, barH = 12;
+      const barW = 260, barH = 10;
       const barX = cx - barW / 2;
-      const barTopY = barSectionY + 16;
+      const barTopY = barSectionY + 14;
       const pct = Math.min(1, (xpTotal - rank.xp) / (nextRank.xp - rank.xp));
       const prevPct = Math.max(0, Math.min(1, (xpTotal - this.xp - rank.xp) / (nextRank.xp - rank.xp)));
 
       // Bar track
       const trackBg = this.add.graphics();
-      trackBg.fillStyle(0x222244, 1);
-      trackBg.fillRoundedRect(barX, barTopY, barW, barH, 6);
-      trackBg.lineStyle(1, 0x3344aa, 0.3);
-      trackBg.strokeRoundedRect(barX, barTopY, barW, barH, 6);
+      trackBg.fillStyle(0x111122, 1);
+      trackBg.fillRect(barX, barTopY, barW, barH);
+      trackBg.fillStyle(0x333355, 0.5);
+      trackBg.fillRect(barX, barTopY, barW, 1);
       trackBg.setAlpha(0);
 
       this.tweens.add({
@@ -386,17 +326,15 @@ export class ResultScene extends Phaser.Scene {
         duration: 200, delay: 2850
       });
 
-      // Bar fill (animated from previous to current)
+      // Bar fill
       const fillBar = this.add.graphics().setAlpha(0);
       this.tweens.add({
         targets: fillBar, alpha: 1,
         duration: 100, delay: 2900
       });
 
-      // Draw the initial state
       this._drawXpBar(fillBar, barX, barTopY, barW, barH, prevPct);
 
-      // Animate the fill
       this.tweens.addCounter({
         from: prevPct, to: pct,
         duration: 800, delay: 2950,
@@ -406,34 +344,9 @@ export class ResultScene extends Phaser.Scene {
         }
       });
 
-      // Bar glow sweep (sheen effect over the bar)
-      const sheen = this.add.graphics().setAlpha(0);
-      this.tweens.add({
-        targets: sheen, alpha: 1,
-        duration: 100, delay: 3000
-      });
-      this.tweens.addCounter({
-        from: 0, to: 1,
-        duration: 600, delay: 3200,
-        ease: 'Sine.easeInOut',
-        onUpdate: (tween) => {
-          sheen.clear();
-          const sweepX = barX + barW * tween.getValue();
-          const sw = 40;
-          sheen.fillStyle(0xffffff, 0.15);
-          sheen.fillRect(
-            Math.max(barX, sweepX - sw / 2), barTopY + 1,
-            Math.min(sw, barW * pct - (sweepX - sw / 2 - barX)), barH - 2
-          );
-        },
-        onComplete: () => {
-          sheen.clear();
-        }
-      });
-
       // XP counter text
-      const xpCounter = this.add.text(cx, barTopY + barH + 12, `${xpTotal - this.xp} / ${nextRank.xp} XP`, {
-        fontFamily: 'monospace', fontSize: '10px', color: '#7788aa'
+      const xpCounter = this.add.text(cx, barTopY + barH + 8, `${xpTotal - this.xp} / ${nextRank.xp} XP`, {
+        fontFamily: PIXEL_FONT, fontSize: '5px', color: '#7788aa'
       }).setOrigin(0.5).setAlpha(0);
 
       this.tweens.add({
@@ -441,7 +354,6 @@ export class ResultScene extends Phaser.Scene {
         duration: 200, delay: 2900
       });
 
-      // Count up the XP counter text
       this.tweens.addCounter({
         from: xpTotal - this.xp, to: xpTotal,
         duration: 800, delay: 2950,
@@ -452,21 +364,21 @@ export class ResultScene extends Phaser.Scene {
     }
 
     // ── 8. BUTTONS ──────────────────────────────
-    const btnY = height - 55;
-    const btnW = 150, btnH = 40;
+    const btnY = height - 45;
+    const btnW = 150, btnH = 36;
 
-    // Next Level button
+    // Next Level
     this._buildButton(
       cx + 85, btnY, btnW, btnH,
-      'Next Level \u25B6', 0x00884a, 0x00aa55, 0x44dd88,
+      'Next Level >', 0x006633, 0x00884a, 0x44dd88,
       3400,
       () => { soundManager.buttonPress(); this._nextLevel(); }
     );
 
-    // Level Select button
+    // Level Select
     this._buildButton(
       cx - 85, btnY, btnW, btnH,
-      '\u25C0 Levels', 0x333355, 0x444466, 0x6666aa,
+      '< Levels', 0x222244, 0x333355, 0x6666aa,
       3500,
       () => {
         soundManager.buttonPress();
@@ -474,7 +386,7 @@ export class ResultScene extends Phaser.Scene {
       }
     );
 
-    // ── 9. CELEBRATORY PARTICLE RAIN ────────────
+    // ── 9. CELEBRATORY PARTICLES ────────────────
     if (this.textures.exists('particle_gold') && this.stars >= 2) {
       this.time.delayedCall(600, () => {
         const emitter = this.add.particles(cx, -10, 'particle_gold', {
@@ -494,7 +406,6 @@ export class ResultScene extends Phaser.Scene {
       });
     }
 
-    // Green sparkle bursts for 3-star
     if (this.stars === 3 && this.textures.exists('particle_green')) {
       for (let b = 0; b < 3; b++) {
         this.time.delayedCall(1300 + b * 400, () => {
@@ -520,15 +431,12 @@ export class ResultScene extends Phaser.Scene {
   _drawXpBar(graphics, x, y, w, h, pct) {
     graphics.clear();
     if (pct <= 0) return;
-    const fillW = Math.max(4, w * pct);
+    const fillW = Math.max(2, w * pct);
 
-    // Main fill
     graphics.fillStyle(0x00cc66, 1);
-    graphics.fillRoundedRect(x + 2, y + 2, fillW - 4, h - 4, 4);
-
-    // Lighter top highlight
-    graphics.fillStyle(0x00ff88, 0.4);
-    graphics.fillRoundedRect(x + 3, y + 2, fillW - 6, (h - 4) / 2, { tl: 4, tr: 4, bl: 0, br: 0 });
+    graphics.fillRect(x + 1, y + 1, fillW - 2, h - 2);
+    graphics.fillStyle(0x00ff88, 0.3);
+    graphics.fillRect(x + 1, y + 1, fillW - 2, 3);
   }
 
   _buildButton(cx, cy, w, h, label, darkCol, baseCol, accentCol, delay, onClick) {
@@ -537,25 +445,28 @@ export class ResultScene extends Phaser.Scene {
     // Shadow
     const shadow = this.add.graphics();
     shadow.fillStyle(0x000000, 0.3);
-    shadow.fillRoundedRect(-w / 2 + 2, -h / 2 + 3, w, h, 10);
+    shadow.fillRect(-w / 2 + 2, -h / 2 + 2, w, h);
     container.add(shadow);
 
     // Body
     const body = this.add.graphics();
     body.fillStyle(darkCol, 1);
-    body.fillRoundedRect(-w / 2, -h / 2, w, h, 10);
+    body.fillRect(-w / 2, -h / 2, w, h);
     body.fillStyle(baseCol, 1);
-    body.fillRoundedRect(-w / 2 + 1, -h / 2 + 1, w - 2, h - 2, 9);
-    // Top shine
-    body.fillStyle(0xffffff, 0.07);
-    body.fillRoundedRect(-w / 2 + 4, -h / 2 + 2, w - 8, h / 3, 6);
+    body.fillRect(-w / 2 + 2, -h / 2 + 2, w - 4, h - 4);
+    // Top bevel
+    body.fillStyle(accentCol, 0.2);
+    body.fillRect(-w / 2 + 2, -h / 2 + 2, w - 4, 3);
     // Border
-    body.lineStyle(1, accentCol, 0.4);
-    body.strokeRoundedRect(-w / 2, -h / 2, w, h, 10);
+    body.fillStyle(accentCol, 0.4);
+    body.fillRect(-w / 2, -h / 2, w, 1);
+    body.fillRect(-w / 2, h / 2 - 1, w, 1);
+    body.fillRect(-w / 2, -h / 2, 1, h);
+    body.fillRect(w / 2 - 1, -h / 2, 1, h);
     container.add(body);
 
     const text = this.add.text(0, 0, label, {
-      fontFamily: 'monospace', fontSize: '13px', color: '#ffffff', fontStyle: 'bold'
+      fontFamily: PIXEL_FONT, fontSize: '8px', color: '#ffffff'
     }).setOrigin(0.5);
     container.add(text);
 
@@ -563,14 +474,12 @@ export class ResultScene extends Phaser.Scene {
     const zone = this.add.zone(0, 0, w, h).setInteractive({ useHandCursor: true });
     container.add(zone);
 
-    // Hover effects
     zone.on('pointerover', () => {
       this.tweens.add({
         targets: container,
         scaleX: 1.05, scaleY: 1.05,
         duration: 100
       });
-      text.setColor('#ffffff');
     });
     zone.on('pointerout', () => {
       this.tweens.add({
@@ -598,7 +507,6 @@ export class ResultScene extends Phaser.Scene {
   }
 
   _startAmbientParticles(width, height) {
-    // Soft floating particles in background
     if (this.textures.exists('particle_twinkle')) {
       this.add.particles(width / 2, height / 2, 'particle_twinkle', {
         speed: { min: 5, max: 15 },
