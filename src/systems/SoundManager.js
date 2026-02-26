@@ -158,6 +158,86 @@ export class SoundManager {
     this._noise(0.04, 0.3);
     this._tone(600, 0.05, 'square', 0.15);
   }
+
+  /** Heartbeat — classic lub-DUB double thump */
+  heartbeat(intensity = 0.5) {
+    if (!this._enabled) return;
+    const ctx = this._ensureCtx();
+    const t = ctx.currentTime;
+    const vol = this._volume * intensity;
+
+    // Lub (softer, lower)
+    const osc1 = ctx.createOscillator();
+    const g1 = ctx.createGain();
+    osc1.type = 'sine';
+    osc1.frequency.setValueAtTime(55, t);
+    osc1.frequency.exponentialRampToValueAtTime(35, t + 0.12);
+    g1.gain.setValueAtTime(0, t);
+    g1.gain.linearRampToValueAtTime(vol * 0.7, t + 0.02);
+    g1.gain.exponentialRampToValueAtTime(0.001, t + 0.15);
+    osc1.connect(g1);
+    g1.connect(ctx.destination);
+    osc1.start(t);
+    osc1.stop(t + 0.2);
+
+    // DUB (louder, slightly higher) — 0.15s after lub
+    const osc2 = ctx.createOscillator();
+    const g2 = ctx.createGain();
+    osc2.type = 'sine';
+    osc2.frequency.setValueAtTime(65, t + 0.15);
+    osc2.frequency.exponentialRampToValueAtTime(40, t + 0.30);
+    g2.gain.setValueAtTime(0, t + 0.15);
+    g2.gain.linearRampToValueAtTime(vol, t + 0.17);
+    g2.gain.exponentialRampToValueAtTime(0.001, t + 0.35);
+    osc2.connect(g2);
+    g2.connect(ctx.destination);
+    osc2.start(t + 0.15);
+    osc2.stop(t + 0.4);
+
+    // Sub-bass thud for chest-feel
+    const osc3 = ctx.createOscillator();
+    const g3 = ctx.createGain();
+    osc3.type = 'sine';
+    osc3.frequency.setValueAtTime(30, t + 0.15);
+    g3.gain.setValueAtTime(0, t + 0.15);
+    g3.gain.linearRampToValueAtTime(vol * 0.4, t + 0.17);
+    g3.gain.exponentialRampToValueAtTime(0.001, t + 0.30);
+    osc3.connect(g3);
+    g3.connect(ctx.destination);
+    osc3.start(t + 0.15);
+    osc3.stop(t + 0.35);
+  }
+
+  /** Low rumble for boss tension */
+  bossRumble() {
+    if (!this._enabled) return;
+    const ctx = this._ensureCtx();
+    const t = ctx.currentTime;
+    const osc = ctx.createOscillator();
+    const g = ctx.createGain();
+    osc.type = 'sawtooth';
+    osc.frequency.setValueAtTime(40, t);
+    osc.frequency.linearRampToValueAtTime(50, t + 0.5);
+    g.gain.setValueAtTime(this._volume * 0.15, t);
+    g.gain.exponentialRampToValueAtTime(0.001, t + 0.6);
+    osc.connect(g);
+    g.connect(ctx.destination);
+    osc.start(t);
+    osc.stop(t + 0.65);
+  }
+
+  /** Warning alarm blip for low time */
+  bossWarning() {
+    this._tone(800, 0.08, 'square', 0.3);
+    setTimeout(() => this._tone(800, 0.08, 'square', 0.3), 120);
+  }
+
+  /** Impact thud when boss takes damage */
+  bossImpact() {
+    this._noise(0.15, 0.6);
+    this._tone(80, 0.2, 'sine', 0.6);
+    setTimeout(() => this._tone(60, 0.15, 'sine', 0.4), 50);
+  }
 }
 
 /** Shared singleton */
