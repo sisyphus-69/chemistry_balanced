@@ -80,7 +80,7 @@ export class MenuScene extends Phaser.Scene {
       { level: 1,  label: 'Synthesis',          color: '#00ff88' },
       { level: 11, label: 'Decomposition',      color: '#ff8844' },
       { level: 16, label: 'Single Replacement',  color: '#44aaff' },
-      { level: 21, label: 'aryanasdasdasd',  color: '#ff44aa' },
+      { level: 21, label: 'Double Replacement',  color: '#ff44aa' },
       { level: 27, label: 'Combustion & Mixed',  color: '#ffdd44' }
     ];
 
