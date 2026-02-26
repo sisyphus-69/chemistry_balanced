@@ -237,8 +237,8 @@ export class MenuScene extends Phaser.Scene {
     const nodesPerRow = 5;
     const hSpacing = 120;
     const vSpacing = 90;
-    const startX = 100;
-    const startY = 80;
+    const startX = 116;
+    const startY = 150;
 
     const totalRows = Math.ceil(equationsData.length / nodesPerRow);
 
@@ -438,80 +438,95 @@ export class MenuScene extends Phaser.Scene {
     const nextRank = this.progression.getNextRank();
     const xp = this.progression.getXP();
 
+    // Title bar background
+    const titleBarHeight = 70;
+    const titleBar = this.add.graphics().setScrollFactor(0).setDepth(99);
+    titleBar.fillStyle(0x1a1a2e, 0.92);
+    titleBar.fillRect(0, 0, width, titleBarHeight);
+    titleBar.lineStyle(2, 0x2a2a44, 0.6);
+    titleBar.lineBetween(0, titleBarHeight, width, titleBarHeight);
+
+    // Left side container - Title & Rank
+    const leftPadding = 24;
+    const topPadding = 16;
+
     // Title (top-left)
-    this.add.text(12, 8, 'ChemQuest', {
+    this.add.text(leftPadding, topPadding, 'ChemQuest', {
       fontFamily: 'monospace', fontSize: '18px', color: '#00ff88', fontStyle: 'bold'
     }).setScrollFactor(0).setDepth(100);
 
     // Rank (below title)
-    this.add.text(12, 28, rank.title, {
+    this.add.text(leftPadding, topPadding + 28, rank.title, {
       fontFamily: 'monospace', fontSize: '10px', color: '#ffdd44'
     }).setScrollFactor(0).setDepth(100);
 
+    // Right side container - XP & Streak
+    const rightPadding = 24;
+
     // XP bar (top right)
     if (nextRank) {
-      const barW = 120, barH = 6;
-      const barX = width - barW - 12;
-      const barY = 12;
+      const barW = 140, barH = 8;
+      const barX = width - barW - rightPadding;
+      const barY = topPadding;
       const pct = Math.min(1, (xp - rank.xp) / (nextRank.xp - rank.xp));
 
       const xpBg = this.add.graphics().setScrollFactor(0).setDepth(100);
       xpBg.fillStyle(0x333355, 1);
-      xpBg.fillRoundedRect(barX, barY, barW, barH, 3);
+      xpBg.fillRoundedRect(barX, barY, barW, barH, 4);
 
       const xpFill = this.add.graphics().setScrollFactor(0).setDepth(100);
       xpFill.fillStyle(0x00ff88, 1);
-      xpFill.fillRoundedRect(barX, barY, barW * pct, barH, 3);
+      xpFill.fillRoundedRect(barX, barY, barW * pct, barH, 4);
 
-      this.add.text(barX + barW, barY + 12, `${xp} XP`, {
-        fontFamily: 'monospace', fontSize: '9px', color: '#aaaacc'
+      this.add.text(width - rightPadding, barY + 16, `${xp} XP`, {
+        fontFamily: 'monospace', fontSize: '10px', color: '#aaaacc'
       }).setOrigin(1, 0).setScrollFactor(0).setDepth(100);
     }
 
     // Streak
     const streak = this.progression.getStreak();
     if (streak > 0) {
-      this.add.text(width - 12, 32, `Streak: ${streak}`, {
+      this.add.text(width - rightPadding, topPadding + 36, `Streak: ${streak}`, {
         fontFamily: 'monospace', fontSize: '10px',
         color: streak >= 5 ? '#ff6644' : '#ffdd44'
       }).setOrigin(1, 0).setScrollFactor(0).setDepth(100);
     }
 
     // Settings button
-    const settingsBtn = this.add.text(12, height - 18, '[Settings]', {
-      fontFamily: 'monospace', fontSize: '10px', color: '#6666aa'
+    const settingsBtn = this.add.text(24, height - 28, '[Settings]', {
+      fontFamily: 'monospace', fontSize: '11px', color: '#6666aa'
     }).setScrollFactor(0).setDepth(100).setInteractive({ useHandCursor: true });
     settingsBtn.on('pointerdown', () => this._toggleSettings());
 
     // Controls hint
-    this.add.text(width / 2, height - 10, 'Arrow keys to move  |  Enter to play', {
-      fontFamily: 'monospace', fontSize: '9px', color: '#444466'
+    this.add.text(width / 2, height - 18, 'Arrow keys to move  |  Enter to play', {
+      fontFamily: 'monospace', fontSize: '10px', color: '#555577'
     }).setOrigin(0.5, 1).setScrollFactor(0).setDepth(100);
   }
 
   _buildInfoPanel(width, height) {
     // Info panel at the bottom showing current level details
-    const panelH = 52;
-    const panelY = height - panelH - 22;
+    const panelH = 60;
+    const panelY = height - panelH - 32;
 
     this.infoBg = this.add.graphics().setScrollFactor(0).setDepth(99);
-    this.infoBg.fillStyle(0x1a1a2e, 0.9);
-    this.infoBg.fillRoundedRect(width / 2 - 190, panelY, 380, panelH, 8);
-    this.infoBg.lineStyle(1, 0x3333555, 0.5);
-    this.infoBg.strokeRoundedRect(width / 2 - 190, panelY, 380, panelH, 8);
+    this.infoBg.fillStyle(0x1a1a2e, 0.92);
+    this.infoBg.fillRoundedRect(width / 2 - 220, panelY, 440, panelH, 10);
+    this.infoBg.lineStyle(2, 0x2a2a44, 0.6);
+    this.infoBg.strokeRoundedRect(width / 2 - 220, panelY, 440, panelH, 10);
 
-    this.infoTitle = this.add.text(width / 2, panelY + 12, '', {
-      fontFamily: 'monospace', fontSize: '13px', color: '#ffffff', fontStyle: 'bold'
+    this.infoTitle = this.add.text(width / 2, panelY + 14, '', {
+      fontFamily: 'monospace', fontSize: '14px', color: '#ffffff', fontStyle: 'bold'
     }).setOrigin(0.5).setScrollFactor(0).setDepth(100);
 
-    this.infoSub = this.add.text(width / 2, panelY + 30, '', {
+    this.infoSub = this.add.text(width / 2, panelY + 36, '', {
       fontFamily: 'monospace', fontSize: '10px', color: '#aaaacc'
     }).setOrigin(0.5).setScrollFactor(0).setDepth(100);
 
     this.infoStars = [];
     for (let s = 0; s < 3; s++) {
-      const star = this.add.image(width / 2 + 160 + s * 14, panelY + 14, 'star_empty')
-        .setScale(0.55).setScrollFactor(0).setDepth(100);
+      const star = this.add.image(width / 2 + 190 + s * 16, panelY + 16, 'star_empty')
+        .setScale(0.6).setScrollFactor(0).setDepth(100);
       this.infoStars.push(star);
     }
   }
