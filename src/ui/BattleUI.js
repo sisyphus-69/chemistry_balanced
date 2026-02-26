@@ -42,7 +42,7 @@ export class BattleUI {
 
       const btn = scene.add.image(x, y, `token_${n}`).setScale(0.9);
       const numText = scene.add.text(x, y, n.toString(), {
-        fontFamily: PIXEL_FONT, fontSize: '12px', color: numColor
+        fontFamily: PIXEL_FONT, fontSize: '16px', color: numColor
       }).setOrigin(0.5);
 
       btn.setInteractive({ useHandCursor: true, draggable: true });
@@ -62,7 +62,7 @@ export class BattleUI {
       btn.on('drag', (pointer) => {
         if (!dragSprite) {
           dragSprite = scene.add.text(pointer.x, pointer.y, n.toString(), {
-            fontFamily: PIXEL_FONT, fontSize: '14px', color: '#00ff88',
+            fontFamily: PIXEL_FONT, fontSize: '20px', color: '#00ff88',
             backgroundColor: '#2a2a4a', padding: { x: 6, y: 3 }
           }).setOrigin(0.5);
         }

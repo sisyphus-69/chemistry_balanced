@@ -38,7 +38,7 @@ export class ResultScene extends Phaser.Scene {
     // ── 1. TITLE ────────────────────────────────
     const titleY = 48;
     const title = this.add.text(cx, titleY - 60, 'Level Complete!', {
-      fontFamily: PIXEL_FONT, fontSize: '14px', color: '#00ff88'
+      fontFamily: PIXEL_FONT, fontSize: '24px', color: '#00ff88'
     }).setOrigin(0.5).setAlpha(0);
 
     this.tweens.add({
@@ -58,11 +58,11 @@ export class ResultScene extends Phaser.Scene {
     badgeBg.setAlpha(0);
 
     const eqText = this.add.text(cx, badgeY, this.equation.display, {
-      fontFamily: PIXEL_FONT, fontSize: '8px', color: '#bbbbee'
+      fontFamily: PIXEL_FONT, fontSize: '14px', color: '#bbbbee'
     }).setOrigin(0.5).setAlpha(0);
 
     const lvlBadge = this.add.text(cx - badgeW / 2 + 10, badgeY, `Lv.${this.equation.level}`, {
-      fontFamily: PIXEL_FONT, fontSize: '6px', color: '#6677bb'
+      fontFamily: PIXEL_FONT, fontSize: '10px', color: '#6677bb'
     }).setOrigin(0, 0.5).setAlpha(0);
 
     this.tweens.add({
@@ -190,19 +190,19 @@ export class ResultScene extends Phaser.Scene {
 
       // Dots separator
       const dots = this.add.text(cx - 10, ry + rowH / 2, '..........', {
-        fontFamily: PIXEL_FONT, fontSize: '5px', color: '#333355'
+        fontFamily: PIXEL_FONT, fontSize: '8px', color: '#333355'
       }).setOrigin(0.5).setAlpha(0);
 
       // Label
       const label = this.add.text(cardX + 16, ry + rowH / 2, stat.label, {
-        fontFamily: PIXEL_FONT, fontSize: '7px', color: '#7788bb'
+        fontFamily: PIXEL_FONT, fontSize: '10px', color: '#7788bb'
       }).setOrigin(0, 0.5).setAlpha(0).setX(cardX - 20);
 
       // Value
       const isSpecial = stat.label === 'Lowest Terms';
       const valColor = isSpecial ? (this.isLowest ? '#00ff88' : '#ff6644') : '#ffffff';
       const val = this.add.text(cardX + cardW - 16, ry + rowH / 2, stat.numVal !== null ? '0' : stat.value, {
-        fontFamily: PIXEL_FONT, fontSize: '8px', color: valColor
+        fontFamily: PIXEL_FONT, fontSize: '14px', color: valColor
       }).setOrigin(1, 0.5).setAlpha(0);
 
       this.tweens.add({
@@ -232,11 +232,11 @@ export class ResultScene extends Phaser.Scene {
     const xpY = cardY + cardH + 24;
 
     const xpLabel = this.add.text(cx, xpY - 6, 'EXPERIENCE GAINED', {
-      fontFamily: PIXEL_FONT, fontSize: '5px', color: '#555577'
+      fontFamily: PIXEL_FONT, fontSize: '10px', color: '#555577'
     }).setOrigin(0.5).setAlpha(0);
 
-    const xpText = this.add.text(cx, xpY + 14, '+0 XP', {
-      fontFamily: PIXEL_FONT, fontSize: '14px', color: '#ffdd44'
+    const xpText = this.add.text(cx, xpY + 16, '+0 XP', {
+      fontFamily: PIXEL_FONT, fontSize: '24px', color: '#ffdd44'
     }).setOrigin(0.5).setScale(0);
 
     this.tweens.add({
@@ -276,7 +276,7 @@ export class ResultScene extends Phaser.Scene {
       streakBg.setAlpha(0).setX(-50);
 
       const streakText = this.add.text(cx, streakY, `${streakLabel}  ${this.streak}x streak`, {
-        fontFamily: PIXEL_FONT, fontSize: '7px', color: streakColor
+        fontFamily: PIXEL_FONT, fontSize: '12px', color: streakColor
       }).setOrigin(0.5).setAlpha(0).setX(cx - 50);
 
       this.tweens.add({
@@ -298,7 +298,7 @@ export class ResultScene extends Phaser.Scene {
     const xpTotal = this.progression.getXP();
 
     const rankText = this.add.text(cx, barSectionY, rank.title, {
-      fontFamily: PIXEL_FONT, fontSize: '7px', color: '#aabb99'
+      fontFamily: PIXEL_FONT, fontSize: '12px', color: '#aabb99'
     }).setOrigin(0.5).setAlpha(0);
 
     this.tweens.add({
@@ -345,8 +345,8 @@ export class ResultScene extends Phaser.Scene {
       });
 
       // XP counter text
-      const xpCounter = this.add.text(cx, barTopY + barH + 8, `${xpTotal - this.xp} / ${nextRank.xp} XP`, {
-        fontFamily: PIXEL_FONT, fontSize: '5px', color: '#7788aa'
+      const xpCounter = this.add.text(cx, barTopY + barH + 12, `${xpTotal - this.xp} / ${nextRank.xp} XP`, {
+        fontFamily: PIXEL_FONT, fontSize: '10px', color: '#7788aa'
       }).setOrigin(0.5).setAlpha(0);
 
       this.tweens.add({
@@ -466,7 +466,7 @@ export class ResultScene extends Phaser.Scene {
     container.add(body);
 
     const text = this.add.text(0, 0, label, {
-      fontFamily: PIXEL_FONT, fontSize: '8px', color: '#ffffff'
+      fontFamily: PIXEL_FONT, fontSize: '14px', color: '#ffffff'
     }).setOrigin(0.5);
     container.add(text);
 

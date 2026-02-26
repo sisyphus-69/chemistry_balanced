@@ -69,7 +69,7 @@ export class ProfessorAurum {
 
     this.dialogueText = this.scene.add.text(textX, -boxH / 2 + 12, '', {
       fontFamily: PIXEL_FONT,
-      fontSize: '7px',
+      fontSize: '10px',
       color: textColor,
       wordWrap: { width: textW },
       lineSpacing: 4
@@ -79,11 +79,11 @@ export class ProfessorAurum {
     // Name plate
     const namePlate = this.scene.add.text(-boxW / 2 + 78, -boxH / 2 - 8, 'Prof. Aurum', {
       fontFamily: PIXEL_FONT,
-      fontSize: '6px',
+      fontSize: '8px',
       color: '#ddaa44',
-      backgroundColor: '#0d0d1a',
+      backgroundColor: '#1a1a2e',
       padding: { x: 4, y: 2 }
-    });
+    }).setOrigin(0, 1);
     this.container.add(namePlate);
 
     // Typewriter effect

@@ -123,7 +123,7 @@ export class BootScene extends Phaser.Scene {
   }
 
   // ───────────────────────────────────────────
-  // 1. ELEMENT ORBS — flat pixel circles with outline
+  // 1. ELEMENT ORBS — clustered glowing pixel orbs
   // ───────────────────────────────────────────
   _genElementOrbs() {
     const elements = {
@@ -138,23 +138,41 @@ export class BootScene extends Phaser.Scene {
     };
 
     const S = 36;
-    const cx = S / 2, cy = S / 2, R = 14;
+    const cx = S / 2, cy = S / 2, R = 12; // slightly smaller base radius
 
     for (const [sym, baseCol] of Object.entries(elements)) {
       const g = this.make.graphics({ add: false });
 
-      // 1px outline
-      this._pxCircle(g, cx, cy, R, this._darken(baseCol, 60));
+      // Core orb (Base fill)
+      this._pxCircle(g, cx, cy, R, baseCol);
+      
+      // Secondary clustered orb (top-right)
+      this._pxCircle(g, cx + 6, cy - 4, R * 0.6, baseCol);
+      // Tertiary clustered orb (bottom-left)
+      this._pxCircle(g, cx - 5, cy + 5, R * 0.7, baseCol);
 
-      // Base fill
+      // Dark outlines for cluster definition
+      this._pxCircle(g, cx, cy, R, this._darken(baseCol, 40));
+      this._pxCircle(g, cx + 6, cy - 4, R * 0.6, this._darken(baseCol, 40));
+      this._pxCircle(g, cx - 5, cy + 5, R * 0.7, this._darken(baseCol, 40));
+
+      // Re-fill cores to cover inner outlines
       this._pxCircle(g, cx, cy, R - 1, baseCol);
+      this._pxCircle(g, cx + 6, cy - 4, R * 0.6 - 1, baseCol);
+      this._pxCircle(g, cx - 5, cy + 5, R * 0.7 - 1, baseCol);
 
-      // Highlight pixel (top-left)
-      this._px(g, cx - 5, cy - 5, 2, 2, 0xffffff, 0.7);
-      this._px(g, cx - 3, cy - 6, 2, 1, 0xffffff, 0.5);
+      // Highlights for each cluster component
+      // Main
+      this._px(g, cx - 4, cy - 4, 3, 3, 0xffffff, 0.7);
+      // Top-right
+      this._px(g, cx + 4, cy - 6, 2, 2, 0xffffff, 0.7);
+      // Bottom-left
+      this._px(g, cx - 7, cy + 3, 2, 2, 0xffffff, 0.7);
 
-      // Darker bottom-right
-      this._px(g, cx + 3, cy + 4, 3, 2, this._darken(baseCol, 40), 0.5);
+      // Glow effect (ambient light behind cluster)
+      const glowR = R * 1.5;
+      g.fillStyle(baseCol, 0.15);
+      g.fillCircle(cx, cy, glowR);
 
       g.generateTexture(`orb_${sym}`, S, S);
       g.destroy();
@@ -246,76 +264,58 @@ export class BootScene extends Phaser.Scene {
   }
 
   // ───────────────────────────────────────────
-  // 4. BALANCE SCALE — simplified pixel art
+  // 4. BATTLE PLATFORMS (Replaces old medieval scale)
   // ───────────────────────────────────────────
   _genScale() {
-    // Base
+    // Base (Optional/Hidden in new layout but kept for compatibility)
     {
       const W = 220, H = 110;
       const g = this.make.graphics({ add: false });
-      const cx = W / 2;
-
-      // Pedestal
-      this._px(g, cx - 50, H - 14, 100, 14, 0x3d3d5c);
-      this._px(g, cx - 40, H - 22, 80, 8, 0x4a4a6e);
-      this._px(g, cx - 30, H - 28, 60, 6, 0x555580);
-
-      // Pillar
-      this._px(g, cx - 5, 30, 10, H - 56, 0x555580);
-      this._px(g, cx - 5, 30, 4, H - 56, 0x6666aa, 0.4);
-
-      // Decorative rings
-      this._px(g, cx - 7, 34, 14, 2, 0x7777aa);
-      this._px(g, cx - 7, H - 34, 14, 2, 0x7777aa);
-
-      // Fulcrum circle
-      this._pxCircle(g, cx, 26, 10, 0x7777aa);
-      this._pxCircle(g, cx, 26, 7, 0x8888bb);
-      // Gem
-      this._pxCircle(g, cx, 26, 3, 0x00ccff);
-      this._px(g, cx - 1, 24, 2, 2, 0xffffff, 0.6);
-
       g.generateTexture('scale_base', W, H);
       g.destroy();
     }
 
-    // Beam
+    // Beam (Optional/Hidden)
     {
       const W = 320, H = 16;
       const g = this.make.graphics({ add: false });
-      const cy = H / 2;
-
-      // Main beam
-      this._px(g, 0, cy - 3, W, 6, 0x6a6a90);
-      this._px(g, 0, cy - 3, W, 2, 0x8888bb, 0.5);
-
-      // Rivets
-      for (let rx = 20; rx < W; rx += 30) {
-        this._px(g, rx - 1, cy - 1, 3, 3, 0x9999bb);
-        this._px(g, rx - 1, cy - 1, 1, 1, 0xbbbbdd, 0.6);
-      }
-
-      // Brackets
-      for (const bx of [18, W - 18]) {
-        this._px(g, bx - 3, cy - 4, 6, 10, 0x7777aa);
-        this._px(g, bx - 3, cy - 4, 6, 1, 0x9999cc, 0.5);
-      }
-
       g.generateTexture('scale_beam', W, H);
       g.destroy();
     }
 
-    // Pans
+    // Platform (Cylindrical pseudo-3D pedestal)
     {
-      const W = 110, H = 18;
+      const W = 160, H = 80;
       const g = this.make.graphics({ add: false });
+      const cx = W / 2, cy = H / 2;
 
-      this._px(g, 4, 4, W - 8, H - 6, 0x887744);
-      this._px(g, 6, 4, W - 12, 2, 0xddcc88, 0.5);
-      this._px(g, 8, 6, W - 16, H - 10, 0xccbb77, 0.5);
-      // Border
-      this._px(g, 4, 4, W - 8, 1, 0xccbb77);
-      this._px(g, 4, H - 3, W - 8, 1, 0x665533);
+      // Bottom shadow
+      g.fillStyle(0x000000, 0.6);
+      g.fillEllipse(cx, cy + 15, 140, 40);
+
+      // Main cylinder body
+      g.fillStyle(0x112233, 1);
+      g.fillRect(cx - 65, cy - 10, 130, 20);
+      g.fillEllipse(cx, cy + 10, 130, 30); // Bottom curve
+
+      // Cylinder dark shading (left/right)
+      g.fillStyle(0x0a111a, 0.6);
+      g.fillRect(cx - 65, cy - 10, 20, 20);
+      g.fillEllipse(cx - 55, cy + 10, 20, 20);
+      g.fillRect(cx + 45, cy - 10, 20, 20);
+      g.fillEllipse(cx + 55, cy + 10, 20, 20);
+
+      // Glowing rim light (cyan)
+      g.fillStyle(0x00ff88, 0.8);
+      g.fillEllipse(cx, cy - 8, 134, 34);
+
+      // Top surface
+      g.fillStyle(0x1a2e3a, 1);
+      g.fillEllipse(cx, cy - 10, 130, 30);
+
+      // Inner glowing ring on top surface
+      g.lineStyle(2, 0x00ff88, 0.4);
+      g.strokeEllipse(cx, cy - 10, 110, 24);
 
       g.generateTexture('scale_pan', W, H);
       g.destroy();
@@ -528,73 +528,98 @@ export class BootScene extends Phaser.Scene {
   }
 
   // ───────────────────────────────────────────
-  // 9. OVERWORLD NODES — pixel RPG location icons
+  // 9. OVERWORLD NODES — Pokeball-esque buttons
   // ───────────────────────────────────────────
   _genOverworldNodes() {
     const TEX = 50;
     const cx = TEX / 2, cy = TEX / 2;
 
-    const buildNode = (key, baseCol, borderCol, glowCol) => {
+    const buildNode = (key, baseCol, borderCol, accentCol) => {
       const g = this.make.graphics({ add: false });
 
-      // Optional glow
-      if (glowCol) {
-        this._pxCircle(g, cx, cy, 18, glowCol, 0.12);
-      }
-
       // Shadow
-      this._pxCircle(g, cx + 1, cy + 1, 14, 0x000000, 0.3);
+      this._pxCircle(g, cx, cy + 2, 16, 0x000000, 0.4);
 
-      // Base circle
-      this._pxCircle(g, cx, cy, 14, this._darken(baseCol, 20));
-      this._pxCircle(g, cx, cy, 12, baseCol);
+      // Outer rim
+      this._pxCircle(g, cx, cy, 16, borderCol);
 
-      // Highlight
-      this._px(g, cx - 5, cy - 5, 3, 2, this._lighten(baseCol, 50), 0.4);
+      // Top half (colored)
+      g.beginPath();
+      g.arc(cx, cy, 14, Math.PI, 0, false);
+      g.fillStyle(baseCol);
+      g.fill();
 
-      // Border ring
-      this._pxOutlineCircle(g, cx, cy, 14, borderCol);
+      // Bottom half (grey/metallic)
+      g.beginPath();
+      g.arc(cx, cy, 14, 0, Math.PI, false);
+      g.fillStyle(0x888899);
+      g.fill();
+
+      // Horizontal separator
+      this._px(g, cx - 14, cy - 1, 28, 3, borderCol);
+
+      // Center button outer
+      this._pxCircle(g, cx, cy, 6, borderCol);
+      // Center button inner
+      this._pxCircle(g, cx, cy, 4, accentCol || 0xffffff);
+
+      // Top highlight
+      g.beginPath();
+      g.arc(cx, cy, 12, Math.PI + 0.2, -0.2, false);
+      g.lineStyle(2, 0xffffff, 0.4);
+      g.strokePath();
 
       g.generateTexture(key, TEX, TEX);
       g.destroy();
     };
 
-    buildNode('node_normal',   0x2a2a4a, 0x5555aa, null);
-    buildNode('node_complete', 0x1a3a2a, 0x00ff88, 0x00ff88);
-    buildNode('node_current',  0x2a2a5a, 0x00ccff, 0x00ccff);
-    buildNode('node_locked',   0x1a1a2a, 0x333355, null);
+    buildNode('node_normal',   0x4455aa, 0x222233, 0x6677cc);
+    buildNode('node_complete', 0x00cc88, 0x113322, 0x88ffcc);
+    buildNode('node_current',  0x0088ff, 0x112244, 0x88ddff);
+    buildNode('node_locked',   0x444455, 0x222222, 0x555566);
 
-    // Boss node — bigger
+    // Boss node — bigger, spiky, red Pokeball
     {
       const BTEX = 64;
       const bcx = BTEX / 2, bcy = BTEX / 2;
       const g = this.make.graphics({ add: false });
 
       // Red glow
-      this._pxCircle(g, bcx, bcy, 24, 0xff4444, 0.1);
+      this._pxCircle(g, bcx, bcy, 24, 0xff4444, 0.2);
 
       // Shadow
-      this._pxCircle(g, bcx + 1, bcy + 1, 18, 0x000000, 0.3);
+      this._pxCircle(g, bcx, bcy + 2, 18, 0x000000, 0.4);
 
-      // Base
-      this._pxCircle(g, bcx, bcy, 18, 0x3a1111);
-      this._pxCircle(g, bcx, bcy, 16, 0x551a1a);
+      // Outer rim
+      this._pxCircle(g, bcx, bcy, 18, 0x441111);
 
-      // Cross marks
-      for (let i = -4; i <= 4; i++) {
-        this._px(g, bcx + i, bcy + i, 2, 2, 0xff2222, 0.35);
-        this._px(g, bcx + i, bcy - i, 2, 2, 0xff2222, 0.35);
-      }
+      // Top half (Dark Red)
+      g.beginPath();
+      g.arc(bcx, bcy, 16, Math.PI, 0, false);
+      g.fillStyle(0xcc2222);
+      g.fill();
 
-      // Border
-      this._pxOutlineCircle(g, bcx, bcy, 18, 0xff4444, 0.9);
+      // Bottom half (Dark grey)
+      g.beginPath();
+      g.arc(bcx, bcy, 16, 0, Math.PI, false);
+      g.fillStyle(0x666677);
+      g.fill();
+
+      // Horizontal separator
+      this._px(g, bcx - 16, bcy - 2, 32, 4, 0x441111);
+
+      // Center button outer
+      this._pxCircle(g, bcx, bcy, 8, 0x441111);
+      // Center button inner
+      this._pxCircle(g, bcx, bcy, 5, 0xff4444);
+      this._pxCircle(g, bcx, bcy, 2, 0xffffff);
 
       // Spiky accents
       for (let a = 0; a < 4; a++) {
         const angle = (a * 90 + 45) * Math.PI / 180;
         const ox = Math.round(Math.cos(angle) * 20);
         const oy = Math.round(Math.sin(angle) * 20);
-        this._px(g, bcx + ox - 1, bcy + oy - 1, 3, 3, 0xff4444, 0.7);
+        this._px(g, bcx + ox - 2, bcy + oy - 2, 5, 5, 0xff4444, 0.8);
       }
 
       g.generateTexture('node_boss', BTEX, BTEX);
@@ -735,16 +760,36 @@ export class BootScene extends Phaser.Scene {
       const W = 760, H = 80;
       const g = this.make.graphics({ add: false });
 
-      // Outer border
-      this._px(g, 0, 0, W, H, 0x222244);
-      // Inner fill
-      this._px(g, 2, 2, W - 4, H - 4, 0x0d0d1a);
-      // Top bevel
-      this._px(g, 2, 2, W - 4, 2, 0x333366);
-      // Bottom bevel
-      this._px(g, 2, H - 4, W - 4, 2, 0x111133);
-      // Inner frame
-      this._px(g, 4, 4, W - 8, H - 8, 0x111128, 0.9);
+      // Outer dark border (rounded corners simulated)
+      this._px(g, 4, 0, W - 8, H, 0x111111);
+      this._px(g, 0, 4, W, H - 8, 0x111111);
+      this._px(g, 2, 2, W - 4, H - 4, 0x111111);
+
+      // Main thick metallic body
+      this._px(g, 4, 2, W - 8, H - 4, 0x3a3a4a);
+      this._px(g, 2, 4, W - 4, H - 8, 0x3a3a4a);
+
+      // Top/Left highlight (emboss)
+      this._px(g, 6, 2, W - 12, 2, 0x5a5a6a);
+      this._px(g, 2, 6, 2, H - 12, 0x5a5a6a);
+      this._px(g, 4, 4, 2, 2, 0x5a5a6a);
+
+      // Bottom/Right shadow
+      this._px(g, 6, H - 4, W - 12, 2, 0x222233);
+      this._px(g, W - 4, 6, 2, H - 12, 0x222233);
+      this._px(g, W - 6, H - 6, 2, 2, 0x222233);
+
+      // Inner dark screen area
+      const innerX = 16, innerY = 16;
+      const innerW = W - 32, innerH = H - 32;
+      this._px(g, innerX, innerY, innerW, innerH, 0x0a0a1a);
+      
+      // Inner shadow (inset)
+      this._px(g, innerX, innerY, innerW, 2, 0x000000);
+      this._px(g, innerX, innerY, 2, innerH, 0x000000);
+      // Inner highlight
+      this._px(g, innerX, innerY + innerH - 2, innerW, 2, 0x2a2a3a);
+      this._px(g, innerX + innerW - 2, innerY, 2, innerH, 0x2a2a3a);
 
       g.generateTexture('dialogue_box', W, H);
       g.destroy();
@@ -752,15 +797,45 @@ export class BootScene extends Phaser.Scene {
 
     // Control panel background
     {
-      const W = 800, H = 240;
+      const W = 800, H = 160;
       const g = this.make.graphics({ add: false });
 
-      this._px(g, 0, 0, W, H, 0x0a0a1a);
-      // Top border
-      this._px(g, 0, 0, W, 3, 0x333366);
-      this._px(g, 0, 3, W, 1, 0x222244, 0.5);
-      // Inner subtle
-      this._px(g, 0, 4, W, H - 4, 0x0d0d1e, 0.9);
+      // Panel sits at bottom, so top needs rounding/emboss
+      this._px(g, 0, 10, W, H - 10, 0x3a3a4a);
+      this._px(g, 10, 0, W - 20, H, 0x3a3a4a);
+      this._px(g, 4, 4, W - 8, H - 4, 0x3a3a4a);
+
+      // Outer black stroke for top edge
+      this._px(g, 10, 0, W - 20, 2, 0x111111);
+      this._px(g, 4, 2, 6, 2, 0x111111);
+      this._px(g, W - 10, 2, 6, 2, 0x111111);
+      this._px(g, 2, 4, 2, 6, 0x111111);
+      this._px(g, W - 4, 4, 2, 6, 0x111111);
+      this._px(g, 0, 10, 2, H - 10, 0x111111);
+      this._px(g, W - 2, 10, 2, H - 10, 0x111111);
+
+      // Top highlight
+      this._px(g, 10, 2, W - 20, 2, 0x5a5a6a);
+      this._px(g, 6, 4, 4, 2, 0x5a5a6a);
+      this._px(g, 4, 6, 2, 4, 0x5a5a6a);
+      this._px(g, 2, 10, 2, W - 10, 0x5a5a6a);
+
+      // Decorative bolts (corners)
+      this._px(g, 12, 12, 6, 6, 0x222233);
+      this._px(g, 14, 14, 2, 2, 0x111111);
+      this._px(g, W - 18, 12, 6, 6, 0x222233);
+      this._px(g, W - 16, 14, 2, 2, 0x111111);
+
+      // Inner screen area (where buttons go)
+      const innerX = 30, innerY = 30;
+      const innerW = W - 60, innerH = H - 40;
+      this._px(g, innerX, innerY, innerW, innerH, 0x16161c);
+      
+      // Screen shadow/highlight
+      this._px(g, innerX, innerY, innerW, 2, 0x05050a);
+      this._px(g, innerX, innerY, 2, innerH, 0x05050a);
+      this._px(g, innerX, innerY + innerH - 2, innerW, 2, 0x2a2a3a);
+      this._px(g, innerX + innerW - 2, innerY, 2, innerH, 0x2a2a3a);
 
       g.generateTexture('control_panel', W, H);
       g.destroy();

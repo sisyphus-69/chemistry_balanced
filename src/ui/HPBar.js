@@ -28,7 +28,7 @@ export class HPBar {
 
     // Element symbol
     this.symText = scene.add.text(x + 18, y, element, {
-      fontFamily: PIXEL_FONT, fontSize: '7px', color: orbColor || '#ffffff'
+      fontFamily: PIXEL_FONT, fontSize: '10px', color: orbColor || '#ffffff'
     }).setOrigin(0, 0.5);
 
     // Bar background
@@ -45,12 +45,12 @@ export class HPBar {
 
     // Count text: "L : R"
     this.countText = scene.add.text(barX + barWidth + 8, y, '0 : 0', {
-      fontFamily: PIXEL_FONT, fontSize: '7px', color: '#ffffff'
+      fontFamily: PIXEL_FONT, fontSize: '10px', color: '#ffffff'
     }).setOrigin(0, 0.5);
 
     // Status icon
     this.statusText = scene.add.text(barX + barWidth + 65, y, '', {
-      fontFamily: PIXEL_FONT, fontSize: '8px', color: '#ffffff'
+      fontFamily: PIXEL_FONT, fontSize: '12px', color: '#ffffff'
     }).setOrigin(0.5);
 
     // Flash bar for balance-achieved effect

@@ -144,7 +144,7 @@ export class MenuScene extends Phaser.Scene {
       // Level number
       const label = this.add.text(x, y, `${eq.level}`, {
         fontFamily: PIXEL_FONT,
-        fontSize: eq.boss ? '8px' : '7px',
+        fontSize: eq.boss ? '12px' : '10px',
         color: unlocked ? '#ffffff' : '#333355'
       }).setOrigin(0.5);
 
@@ -161,7 +161,7 @@ export class MenuScene extends Phaser.Scene {
       // Boss label
       if (eq.boss && unlocked) {
         this.add.text(x, y - 22, 'BOSS', {
-          fontFamily: PIXEL_FONT, fontSize: '5px', color: '#ff4444'
+          fontFamily: PIXEL_FONT, fontSize: '8px', color: '#ff4444'
         }).setOrigin(0.5);
       }
 
@@ -197,11 +197,11 @@ export class MenuScene extends Phaser.Scene {
 
     // Region name banner
     this.add.text(width / 2, 50, region.name, {
-      fontFamily: PIXEL_FONT, fontSize: '12px', color: region.palette.accentHex
+      fontFamily: PIXEL_FONT, fontSize: '16px', color: region.palette.accentHex
     }).setOrigin(0.5);
 
-    this.add.text(width / 2, 68, region.subtitle, {
-      fontFamily: PIXEL_FONT, fontSize: '6px', color: region.palette.text
+    this.add.text(width / 2, 70, region.subtitle, {
+      fontFamily: PIXEL_FONT, fontSize: '10px', color: region.palette.text
     }).setOrigin(0.5);
   }
 
@@ -209,18 +209,37 @@ export class MenuScene extends Phaser.Scene {
     const gfx = this.add.graphics();
 
     if (region.decorations === 'lab') {
-      // Green hexagon pattern
-      gfx.lineStyle(1, region.palette.path, 0.15);
-      for (let x = 40; x < width; x += 80) {
+      // Split biome: left green lab, right dark corrupted
+      const midX = width / 2 + 50;
+
+      // Left side - Lab
+      gfx.fillStyle(0x0f1a15, 1);
+      gfx.fillRect(0, 0, midX, height);
+      
+      // Right side - Corrupted
+      gfx.fillStyle(0x150a1a, 1);
+      gfx.fillRect(midX, 0, width - midX, height);
+
+      // Center divider
+      gfx.lineStyle(4, 0x333344, 1);
+      gfx.lineBetween(midX, 0, midX, height);
+
+      // Green hexagon pattern (Left)
+      gfx.lineStyle(1, 0x00ff88, 0.15);
+      for (let x = 40; x < midX; x += 80) {
         for (let y = 40; y < height; y += 70) {
           const ox = (Math.floor(y / 70) % 2) * 40;
-          this._drawHexagon(gfx, x + ox, y, 20);
+          if (x + ox < midX) this._drawHexagon(gfx, x + ox, y, 20);
         }
       }
-      // Test tube accents
-      gfx.fillStyle(region.palette.accent, 0.06);
-      gfx.fillRect(20, height * 0.3, 6, 40);
-      gfx.fillRect(width - 26, height * 0.5, 6, 35);
+
+      // Purple rocky pattern (Right)
+      gfx.fillStyle(0xff44aa, 0.05);
+      for (let i = 0; i < 20; i++) {
+        const px = Phaser.Math.Between(midX + 20, width - 20);
+        const py = Phaser.Math.Between(20, height - 20);
+        gfx.fillTriangle(px, py, px + 15, py + 20, px - 10, py + 15);
+      }
     } else if (region.decorations === 'volcanic') {
       // Lava cracks
       gfx.lineStyle(1, region.palette.accent, 0.1);
@@ -520,12 +539,12 @@ export class MenuScene extends Phaser.Scene {
 
     // Title
     this.add.text(16, 10, 'ChemQuest', {
-      fontFamily: PIXEL_FONT, fontSize: '10px', color: '#00ff88'
+      fontFamily: PIXEL_FONT, fontSize: '14px', color: '#00ff88'
     });
 
     // Rank
-    this.add.text(16, 26, rank.title, {
-      fontFamily: PIXEL_FONT, fontSize: '5px', color: '#ffdd44'
+    this.add.text(16, 28, rank.title, {
+      fontFamily: PIXEL_FONT, fontSize: '10px', color: '#ffdd44'
     });
 
     // XP bar
@@ -544,7 +563,7 @@ export class MenuScene extends Phaser.Scene {
       xpFill.fillRect(barX, barY, barW * pct, barH);
 
       this.add.text(width - 16, barY + 12, `${xp} XP`, {
-        fontFamily: PIXEL_FONT, fontSize: '5px', color: '#aaaacc'
+        fontFamily: PIXEL_FONT, fontSize: '8px', color: '#aaaacc'
       }).setOrigin(1, 0);
     }
 
@@ -552,7 +571,7 @@ export class MenuScene extends Phaser.Scene {
     const streak = this.progression.getStreak();
     if (streak > 0) {
       this.add.text(width - 16, 28, `Streak: ${streak}`, {
-        fontFamily: PIXEL_FONT, fontSize: '5px',
+        fontFamily: PIXEL_FONT, fontSize: '8px',
         color: streak >= 5 ? '#ff6644' : '#ffdd44'
       }).setOrigin(1, 0);
     }
@@ -564,7 +583,7 @@ export class MenuScene extends Phaser.Scene {
     // Left arrow (previous region)
     if (this.currentRegionIdx > 0) {
       const prevBtn = this.add.text(20, height - 20, '< Prev Region', {
-        fontFamily: PIXEL_FONT, fontSize: '6px', color: '#8888aa'
+        fontFamily: PIXEL_FONT, fontSize: '10px', color: '#8888aa'
       }).setOrigin(0, 1).setInteractive({ useHandCursor: true });
       prevBtn.on('pointerdown', () => {
         const prevRegion = REGIONS[this.currentRegionIdx - 1];
@@ -584,7 +603,7 @@ export class MenuScene extends Phaser.Scene {
       const nextUnlocked = nextRegion.levels[0] <= maxUnlocked;
       if (nextUnlocked) {
         const nextBtn = this.add.text(width - 20, height - 20, 'Next Region >', {
-          fontFamily: PIXEL_FONT, fontSize: '6px', color: '#8888aa'
+          fontFamily: PIXEL_FONT, fontSize: '10px', color: '#8888aa'
         }).setOrigin(1, 1).setInteractive({ useHandCursor: true });
         nextBtn.on('pointerdown', () => {
           const firstEq = equationsData.find(eq => eq.level === nextRegion.levels[0]);
@@ -600,13 +619,13 @@ export class MenuScene extends Phaser.Scene {
 
     // Settings button
     const settingsBtn = this.add.text(width / 2, height - 8, '[Settings]', {
-      fontFamily: PIXEL_FONT, fontSize: '5px', color: '#6666aa'
+      fontFamily: PIXEL_FONT, fontSize: '10px', color: '#6666aa'
     }).setOrigin(0.5, 1).setInteractive({ useHandCursor: true });
     settingsBtn.on('pointerdown', () => this._toggleSettings());
 
     // Controls hint
-    this.add.text(width / 2, height - 20, 'Arrow keys to move | Enter to play', {
-      fontFamily: PIXEL_FONT, fontSize: '5px', color: '#555577'
+    this.add.text(width / 2, height - 24, 'Arrow keys to move | Enter to play', {
+      fontFamily: PIXEL_FONT, fontSize: '8px', color: '#555577'
     }).setOrigin(0.5, 1);
   }
 
@@ -621,12 +640,12 @@ export class MenuScene extends Phaser.Scene {
     this.infoBg.fillRect(width / 2 - 200, panelY, 400, 2);
     this.infoBg.fillRect(width / 2 - 200, panelY + panelH - 2, 400, 2);
 
-    this.infoTitle = this.add.text(width / 2, panelY + 12, '', {
-      fontFamily: PIXEL_FONT, fontSize: '8px', color: '#ffffff'
+    this.infoTitle = this.add.text(width / 2, panelY + 14, '', {
+      fontFamily: PIXEL_FONT, fontSize: '12px', color: '#ffffff'
     }).setOrigin(0.5);
 
-    this.infoSub = this.add.text(width / 2, panelY + 30, '', {
-      fontFamily: PIXEL_FONT, fontSize: '5px', color: '#aaaacc'
+    this.infoSub = this.add.text(width / 2, panelY + 34, '', {
+      fontFamily: PIXEL_FONT, fontSize: '8px', color: '#aaaacc'
     }).setOrigin(0.5);
 
     this.infoStars = [];
@@ -713,7 +732,7 @@ export class MenuScene extends Phaser.Scene {
 
     // Title
     _add(this.add.text(cx, cy - 80, 'Settings', {
-      fontFamily: PIXEL_FONT, fontSize: '10px', color: '#ffffff'
+      fontFamily: PIXEL_FONT, fontSize: '14px', color: '#ffffff'
     }).setOrigin(0.5));
 
     // Separator
@@ -723,7 +742,7 @@ export class MenuScene extends Phaser.Scene {
 
     // Colorblind toggle
     const cbText = _add(this.add.text(cx - 130, cy - 35, `Colorblind Mode: ${settings.colorblindMode ? 'ON' : 'OFF'}`, {
-      fontFamily: PIXEL_FONT, fontSize: '7px', color: '#aaaacc'
+      fontFamily: PIXEL_FONT, fontSize: '10px', color: '#aaaacc'
     }).setInteractive({ useHandCursor: true }));
     cbText.on('pointerdown', () => {
       settings.colorblindMode = !settings.colorblindMode;
@@ -735,7 +754,7 @@ export class MenuScene extends Phaser.Scene {
 
     // Reset progress
     const resetBtn = _add(this.add.text(cx, cy + 30, '[ Reset All Progress ]', {
-      fontFamily: PIXEL_FONT, fontSize: '7px', color: '#ff4444'
+      fontFamily: PIXEL_FONT, fontSize: '10px', color: '#ff4444'
     }).setOrigin(0.5).setInteractive({ useHandCursor: true }));
     resetBtn.on('pointerdown', () => {
       this.progression.resetAll();
@@ -747,7 +766,7 @@ export class MenuScene extends Phaser.Scene {
 
     // Close button
     const closeBtn = _add(this.add.text(cx + 140, cy - 88, 'X', {
-      fontFamily: PIXEL_FONT, fontSize: '10px', color: '#ff6666'
+      fontFamily: PIXEL_FONT, fontSize: '14px', color: '#ff6666'
     }).setOrigin(0.5).setInteractive({ useHandCursor: true }));
     closeBtn.on('pointerdown', destroyPanel);
     closeBtn.on('pointerover', () => closeBtn.setColor('#ff9999'));
