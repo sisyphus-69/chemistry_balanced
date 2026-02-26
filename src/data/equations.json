@@ -1,0 +1,937 @@
+[
+  {
+    "id": "lvl_001", "level": 1, "difficulty": "easy", "type": "synthesis",
+    "display": "_H₂ + _O₂ → _H₂O",
+    "reactants": [
+      { "molecule": "H2", "formula": "H₂", "elements": { "H": 2 } },
+      { "molecule": "O2", "formula": "O₂", "elements": { "O": 2 } }
+    ],
+    "products": [
+      { "molecule": "H2O", "formula": "H₂O", "elements": { "H": 2, "O": 1 } }
+    ],
+    "solution": { "reactants": [2, 1], "products": [2] },
+    "par_time": 30,
+    "hints": [
+      "Count the hydrogen atoms on each side.",
+      "There are 2 oxygen atoms on the left. How many are on the right?",
+      "Try putting a 2 in front of H₂O."
+    ]
+  },
+  {
+    "id": "lvl_002", "level": 2, "difficulty": "easy", "type": "synthesis",
+    "display": "_N₂ + _H₂ → _NH₃",
+    "reactants": [
+      { "molecule": "N2", "formula": "N₂", "elements": { "N": 2 } },
+      { "molecule": "H2", "formula": "H₂", "elements": { "H": 2 } }
+    ],
+    "products": [
+      { "molecule": "NH3", "formula": "NH₃", "elements": { "N": 1, "H": 3 } }
+    ],
+    "solution": { "reactants": [1, 3], "products": [2] },
+    "par_time": 45,
+    "hints": [
+      "Count the nitrogen atoms on each side.",
+      "You need 2 nitrogen atoms on the right. What coefficient gives you that?",
+      "Put a 2 in front of NH₃, then balance hydrogen."
+    ]
+  },
+  {
+    "id": "lvl_003", "level": 3, "difficulty": "easy", "type": "synthesis",
+    "display": "_Na + _Cl₂ → _NaCl",
+    "reactants": [
+      { "molecule": "Na", "formula": "Na", "elements": { "Na": 1 } },
+      { "molecule": "Cl2", "formula": "Cl₂", "elements": { "Cl": 2 } }
+    ],
+    "products": [
+      { "molecule": "NaCl", "formula": "NaCl", "elements": { "Na": 1, "Cl": 1 } }
+    ],
+    "solution": { "reactants": [2, 1], "products": [2] },
+    "par_time": 30,
+    "hints": [
+      "How many chlorine atoms are on the left?",
+      "You have 2 Cl on the left but only 1 on the right.",
+      "Put a 2 in front of NaCl, then balance Na."
+    ]
+  },
+  {
+    "id": "lvl_004", "level": 4, "difficulty": "easy", "type": "synthesis",
+    "display": "_C + _O₂ → _CO₂",
+    "reactants": [
+      { "molecule": "C", "formula": "C", "elements": { "C": 1 } },
+      { "molecule": "O2", "formula": "O₂", "elements": { "O": 2 } }
+    ],
+    "products": [
+      { "molecule": "CO2", "formula": "CO₂", "elements": { "C": 1, "O": 2 } }
+    ],
+    "solution": { "reactants": [1, 1], "products": [1] },
+    "par_time": 15,
+    "hints": [
+      "Count each element on both sides.",
+      "This equation might already be balanced!",
+      "All coefficients are 1 — it's already balanced."
+    ]
+  },
+  {
+    "id": "lvl_005", "level": 5, "difficulty": "easy", "type": "synthesis",
+    "display": "_Mg + _O₂ → _MgO",
+    "reactants": [
+      { "molecule": "Mg", "formula": "Mg", "elements": { "Mg": 1 } },
+      { "molecule": "O2", "formula": "O₂", "elements": { "O": 2 } }
+    ],
+    "products": [
+      { "molecule": "MgO", "formula": "MgO", "elements": { "Mg": 1, "O": 1 } }
+    ],
+    "solution": { "reactants": [2, 1], "products": [2] },
+    "par_time": 30,
+    "hints": [
+      "Count the oxygen atoms on each side.",
+      "2 oxygen on the left, only 1 on the right.",
+      "Put a 2 in front of MgO, then balance Mg."
+    ]
+  },
+  {
+    "id": "lvl_006", "level": 6, "difficulty": "medium", "type": "synthesis",
+    "display": "_Fe + _O₂ → _Fe₂O₃",
+    "reactants": [
+      { "molecule": "Fe", "formula": "Fe", "elements": { "Fe": 1 } },
+      { "molecule": "O2", "formula": "O₂", "elements": { "O": 2 } }
+    ],
+    "products": [
+      { "molecule": "Fe2O3", "formula": "Fe₂O₃", "elements": { "Fe": 2, "O": 3 } }
+    ],
+    "solution": { "reactants": [4, 3], "products": [2] },
+    "par_time": 60,
+    "hints": [
+      "The product has both Fe and O — balance one element at a time.",
+      "Start with Fe₂O₃ having a coefficient of 2 to get even numbers.",
+      "4Fe + 3O₂ → 2Fe₂O₃. Try coefficient 4 for Fe."
+    ]
+  },
+  {
+    "id": "lvl_007", "level": 7, "difficulty": "medium", "type": "synthesis",
+    "display": "_Al + _O₂ → _Al₂O₃",
+    "reactants": [
+      { "molecule": "Al", "formula": "Al", "elements": { "Al": 1 } },
+      { "molecule": "O2", "formula": "O₂", "elements": { "O": 2 } }
+    ],
+    "products": [
+      { "molecule": "Al2O3", "formula": "Al₂O₃", "elements": { "Al": 2, "O": 3 } }
+    ],
+    "solution": { "reactants": [4, 3], "products": [2] },
+    "par_time": 60,
+    "hints": [
+      "This is similar to the iron oxide equation.",
+      "The product has 3 oxygens but O₂ comes in pairs of 2.",
+      "Put 2 in front of Al₂O₃, then balance Al and O."
+    ]
+  },
+  {
+    "id": "lvl_008", "level": 8, "difficulty": "easy", "type": "synthesis",
+    "display": "_Ca + _O₂ → _CaO",
+    "reactants": [
+      { "molecule": "Ca", "formula": "Ca", "elements": { "Ca": 1 } },
+      { "molecule": "O2", "formula": "O₂", "elements": { "O": 2 } }
+    ],
+    "products": [
+      { "molecule": "CaO", "formula": "CaO", "elements": { "Ca": 1, "O": 1 } }
+    ],
+    "solution": { "reactants": [2, 1], "products": [2] },
+    "par_time": 30,
+    "hints": [
+      "Count the oxygen atoms on each side.",
+      "O₂ has 2 oxygens, CaO has 1.",
+      "Put 2 in front of CaO, then balance Ca."
+    ]
+  },
+  {
+    "id": "lvl_009", "level": 9, "difficulty": "medium", "type": "synthesis",
+    "display": "_P + _O₂ → _P₂O₅",
+    "reactants": [
+      { "molecule": "P", "formula": "P", "elements": { "P": 1 } },
+      { "molecule": "O2", "formula": "O₂", "elements": { "O": 2 } }
+    ],
+    "products": [
+      { "molecule": "P2O5", "formula": "P₂O₅", "elements": { "P": 2, "O": 5 } }
+    ],
+    "solution": { "reactants": [4, 5], "products": [2] },
+    "par_time": 90,
+    "hints": [
+      "The product has 5 oxygens — an odd number. Try doubling the product.",
+      "With 2 P₂O₅ you need 10 oxygens, so 5 O₂.",
+      "4P + 5O₂ → 2P₂O₅."
+    ]
+  },
+  {
+    "id": "lvl_010", "level": 10, "difficulty": "medium", "type": "synthesis", "boss": true,
+    "display": "_Li + _N₂ → _Li₃N",
+    "reactants": [
+      { "molecule": "Li", "formula": "Li", "elements": { "Li": 1 } },
+      { "molecule": "N2", "formula": "N₂", "elements": { "N": 2 } }
+    ],
+    "products": [
+      { "molecule": "Li3N", "formula": "Li₃N", "elements": { "Li": 3, "N": 1 } }
+    ],
+    "solution": { "reactants": [6, 1], "products": [2] },
+    "par_time": 60,
+    "hints": [
+      "N₂ has 2 nitrogens. How many Li₃N do you need to have 2 N?",
+      "Put 2 in front of Li₃N → you need 6 Li on the left.",
+      "6Li + N₂ → 2Li₃N."
+    ]
+  },
+  {
+    "id": "lvl_011", "level": 11, "difficulty": "easy", "type": "decomposition",
+    "display": "_H₂O₂ → _H₂O + _O₂",
+    "reactants": [
+      { "molecule": "H2O2", "formula": "H₂O₂", "elements": { "H": 2, "O": 2 } }
+    ],
+    "products": [
+      { "molecule": "H2O", "formula": "H₂O", "elements": { "H": 2, "O": 1 } },
+      { "molecule": "O2", "formula": "O₂", "elements": { "O": 2 } }
+    ],
+    "solution": { "reactants": [2], "products": [2, 1] },
+    "par_time": 45,
+    "hints": [
+      "Count the oxygen atoms on each side.",
+      "Right side: H₂O has 1 O, O₂ has 2 O → total 3. Left side has 2.",
+      "Put 2 in front of H₂O₂ and 2 in front of H₂O."
+    ]
+  },
+  {
+    "id": "lvl_012", "level": 12, "difficulty": "medium", "type": "decomposition",
+    "display": "_KClO₃ → _KCl + _O₂",
+    "reactants": [
+      { "molecule": "KClO3", "formula": "KClO₃", "elements": { "K": 1, "Cl": 1, "O": 3 } }
+    ],
+    "products": [
+      { "molecule": "KCl", "formula": "KCl", "elements": { "K": 1, "Cl": 1 } },
+      { "molecule": "O2", "formula": "O₂", "elements": { "O": 2 } }
+    ],
+    "solution": { "reactants": [2], "products": [2, 3] },
+    "par_time": 60,
+    "hints": [
+      "Focus on oxygen — it has 3 in the reactant but comes in pairs on the right.",
+      "2 KClO₃ gives 6 oxygens. 3 O₂ also gives 6.",
+      "2KClO₃ → 2KCl + 3O₂."
+    ]
+  },
+  {
+    "id": "lvl_013", "level": 13, "difficulty": "medium", "type": "decomposition",
+    "display": "_NaN₃ → _Na + _N₂",
+    "reactants": [
+      { "molecule": "NaN3", "formula": "NaN₃", "elements": { "Na": 1, "N": 3 } }
+    ],
+    "products": [
+      { "molecule": "Na", "formula": "Na", "elements": { "Na": 1 } },
+      { "molecule": "N2", "formula": "N₂", "elements": { "N": 2 } }
+    ],
+    "solution": { "reactants": [2], "products": [2, 3] },
+    "par_time": 60,
+    "hints": [
+      "NaN₃ has 3 nitrogens, but N₂ comes in pairs.",
+      "With 2 NaN₃ you get 6 N. You need 3 N₂ to match.",
+      "2NaN₃ → 2Na + 3N₂."
+    ]
+  },
+  {
+    "id": "lvl_014", "level": 14, "difficulty": "easy", "type": "decomposition",
+    "display": "_H₂O → _H₂ + _O₂",
+    "reactants": [
+      { "molecule": "H2O", "formula": "H₂O", "elements": { "H": 2, "O": 1 } }
+    ],
+    "products": [
+      { "molecule": "H2", "formula": "H₂", "elements": { "H": 2 } },
+      { "molecule": "O2", "formula": "O₂", "elements": { "O": 2 } }
+    ],
+    "solution": { "reactants": [2], "products": [2, 1] },
+    "par_time": 30,
+    "hints": [
+      "Count the oxygen atoms on each side.",
+      "O₂ has 2 oxygens. H₂O only has 1.",
+      "Put 2 in front of H₂O and 2 in front of H₂."
+    ]
+  },
+  {
+    "id": "lvl_015", "level": 15, "difficulty": "medium", "type": "decomposition",
+    "display": "_NH₄NO₃ → _N₂O + _H₂O",
+    "reactants": [
+      { "molecule": "NH4NO3", "formula": "NH₄NO₃", "elements": { "N": 2, "H": 4, "O": 3 } }
+    ],
+    "products": [
+      { "molecule": "N2O", "formula": "N₂O", "elements": { "N": 2, "O": 1 } },
+      { "molecule": "H2O", "formula": "H₂O", "elements": { "H": 2, "O": 1 } }
+    ],
+    "solution": { "reactants": [1], "products": [1, 2] },
+    "par_time": 45,
+    "hints": [
+      "Count hydrogen: 4 on the left, 2 per H₂O on the right.",
+      "Put 2 in front of H₂O for 4 H. Check oxygen now.",
+      "NH₄NO₃ → N₂O + 2H₂O. Check: N=2|2, H=4|4, O=3|3."
+    ]
+  },
+  {
+    "id": "lvl_016", "level": 16, "difficulty": "medium", "type": "single_replacement",
+    "display": "_Zn + _HCl → _ZnCl₂ + _H₂",
+    "reactants": [
+      { "molecule": "Zn", "formula": "Zn", "elements": { "Zn": 1 } },
+      { "molecule": "HCl", "formula": "HCl", "elements": { "H": 1, "Cl": 1 } }
+    ],
+    "products": [
+      { "molecule": "ZnCl2", "formula": "ZnCl₂", "elements": { "Zn": 1, "Cl": 2 } },
+      { "molecule": "H2", "formula": "H₂", "elements": { "H": 2 } }
+    ],
+    "solution": { "reactants": [1, 2], "products": [1, 1] },
+    "par_time": 45,
+    "hints": [
+      "ZnCl₂ needs 2 chlorines. How many does HCl give you?",
+      "Put 2 in front of HCl to get 2 Cl and 2 H.",
+      "Zn + 2HCl → ZnCl₂ + H₂."
+    ]
+  },
+  {
+    "id": "lvl_017", "level": 17, "difficulty": "easy", "type": "single_replacement",
+    "display": "_Fe + _CuSO₄ → _FeSO₄ + _Cu",
+    "reactants": [
+      { "molecule": "Fe", "formula": "Fe", "elements": { "Fe": 1 } },
+      { "molecule": "CuSO4", "formula": "CuSO₄", "elements": { "Cu": 1, "S": 1, "O": 4 } }
+    ],
+    "products": [
+      { "molecule": "FeSO4", "formula": "FeSO₄", "elements": { "Fe": 1, "S": 1, "O": 4 } },
+      { "molecule": "Cu", "formula": "Cu", "elements": { "Cu": 1 } }
+    ],
+    "solution": { "reactants": [1, 1], "products": [1, 1] },
+    "par_time": 15,
+    "hints": [
+      "Count each element on both sides.",
+      "This equation is already balanced!",
+      "All coefficients are 1."
+    ]
+  },
+  {
+    "id": "lvl_018", "level": 18, "difficulty": "medium", "type": "single_replacement",
+    "display": "_Mg + _HCl → _MgCl₂ + _H₂",
+    "reactants": [
+      { "molecule": "Mg", "formula": "Mg", "elements": { "Mg": 1 } },
+      { "molecule": "HCl", "formula": "HCl", "elements": { "H": 1, "Cl": 1 } }
+    ],
+    "products": [
+      { "molecule": "MgCl2", "formula": "MgCl₂", "elements": { "Mg": 1, "Cl": 2 } },
+      { "molecule": "H2", "formula": "H₂", "elements": { "H": 2 } }
+    ],
+    "solution": { "reactants": [1, 2], "products": [1, 1] },
+    "par_time": 45,
+    "hints": [
+      "MgCl₂ needs 2 chlorines.",
+      "Put 2 in front of HCl.",
+      "Mg + 2HCl → MgCl₂ + H₂."
+    ]
+  },
+  {
+    "id": "lvl_019", "level": 19, "difficulty": "hard", "type": "single_replacement",
+    "display": "_Al + _HCl → _AlCl₃ + _H₂",
+    "reactants": [
+      { "molecule": "Al", "formula": "Al", "elements": { "Al": 1 } },
+      { "molecule": "HCl", "formula": "HCl", "elements": { "H": 1, "Cl": 1 } }
+    ],
+    "products": [
+      { "molecule": "AlCl3", "formula": "AlCl₃", "elements": { "Al": 1, "Cl": 3 } },
+      { "molecule": "H2", "formula": "H₂", "elements": { "H": 2 } }
+    ],
+    "solution": { "reactants": [2, 6], "products": [2, 3] },
+    "par_time": 90,
+    "hints": [
+      "AlCl₃ has 3 Cl but H₂ needs even H. Try balancing Cl first.",
+      "2 AlCl₃ needs 6 Cl → 6 HCl → 6 H → 3 H₂.",
+      "2Al + 6HCl → 2AlCl₃ + 3H₂."
+    ]
+  },
+  {
+    "id": "lvl_020", "level": 20, "difficulty": "medium", "type": "combustion", "boss": true,
+    "display": "_CH₄ + _O₂ → _CO₂ + _H₂O",
+    "reactants": [
+      { "molecule": "CH4", "formula": "CH₄", "elements": { "C": 1, "H": 4 } },
+      { "molecule": "O2", "formula": "O₂", "elements": { "O": 2 } }
+    ],
+    "products": [
+      { "molecule": "CO2", "formula": "CO₂", "elements": { "C": 1, "O": 2 } },
+      { "molecule": "H2O", "formula": "H₂O", "elements": { "H": 2, "O": 1 } }
+    ],
+    "solution": { "reactants": [1, 2], "products": [1, 2] },
+    "par_time": 60,
+    "hints": [
+      "Balance C first, then H, then O.",
+      "1 C on each side. 4 H left → 2 H₂O right.",
+      "CH₄ + 2O₂ → CO₂ + 2H₂O."
+    ]
+  },
+  {
+    "id": "lvl_021", "level": 21, "difficulty": "medium", "type": "double_replacement",
+    "display": "_NaOH + _HCl → _NaCl + _H₂O",
+    "reactants": [
+      { "molecule": "NaOH", "formula": "NaOH", "elements": { "Na": 1, "O": 1, "H": 1 } },
+      { "molecule": "HCl", "formula": "HCl", "elements": { "H": 1, "Cl": 1 } }
+    ],
+    "products": [
+      { "molecule": "NaCl", "formula": "NaCl", "elements": { "Na": 1, "Cl": 1 } },
+      { "molecule": "H2O", "formula": "H₂O", "elements": { "H": 2, "O": 1 } }
+    ],
+    "solution": { "reactants": [1, 1], "products": [1, 1] },
+    "par_time": 20,
+    "hints": [
+      "Count each element on both sides.",
+      "H: NaOH has 1 + HCl has 1 = 2 on left. H₂O has 2 on right.",
+      "It's already balanced! All coefficients are 1."
+    ]
+  },
+  {
+    "id": "lvl_022", "level": 22, "difficulty": "medium", "type": "double_replacement",
+    "display": "_AgNO₃ + _NaCl → _AgCl + _NaNO₃",
+    "reactants": [
+      { "molecule": "AgNO3", "formula": "AgNO₃", "elements": { "Ag": 1, "N": 1, "O": 3 } },
+      { "molecule": "NaCl", "formula": "NaCl", "elements": { "Na": 1, "Cl": 1 } }
+    ],
+    "products": [
+      { "molecule": "AgCl", "formula": "AgCl", "elements": { "Ag": 1, "Cl": 1 } },
+      { "molecule": "NaNO3", "formula": "NaNO₃", "elements": { "Na": 1, "N": 1, "O": 3 } }
+    ],
+    "solution": { "reactants": [1, 1], "products": [1, 1] },
+    "par_time": 20,
+    "hints": [
+      "Count all elements on each side.",
+      "Ag, N, O, Na, Cl — they all match 1:1.",
+      "Already balanced. All coefficients are 1."
+    ]
+  },
+  {
+    "id": "lvl_023", "level": 23, "difficulty": "medium", "type": "double_replacement",
+    "display": "_BaCl₂ + _Na₂SO₄ → _BaSO₄ + _NaCl",
+    "reactants": [
+      { "molecule": "BaCl2", "formula": "BaCl₂", "elements": { "Ba": 1, "Cl": 2 } },
+      { "molecule": "Na2SO4", "formula": "Na₂SO₄", "elements": { "Na": 2, "S": 1, "O": 4 } }
+    ],
+    "products": [
+      { "molecule": "BaSO4", "formula": "BaSO₄", "elements": { "Ba": 1, "S": 1, "O": 4 } },
+      { "molecule": "NaCl", "formula": "NaCl", "elements": { "Na": 1, "Cl": 1 } }
+    ],
+    "solution": { "reactants": [1, 1], "products": [1, 2] },
+    "par_time": 45,
+    "hints": [
+      "Count Na: 2 on left, 1 per NaCl on right.",
+      "Put 2 in front of NaCl for 2 Na and 2 Cl.",
+      "BaCl₂ + Na₂SO₄ → BaSO₄ + 2NaCl."
+    ]
+  },
+  {
+    "id": "lvl_024", "level": 24, "difficulty": "hard", "type": "double_replacement",
+    "display": "_Pb(NO₃)₂ + _KI → _PbI₂ + _KNO₃",
+    "reactants": [
+      { "molecule": "Pb(NO3)2", "formula": "Pb(NO₃)₂", "elements": { "Pb": 1, "N": 2, "O": 6 } },
+      { "molecule": "KI", "formula": "KI", "elements": { "K": 1, "I": 1 } }
+    ],
+    "products": [
+      { "molecule": "PbI2", "formula": "PbI₂", "elements": { "Pb": 1, "I": 2 } },
+      { "molecule": "KNO3", "formula": "KNO₃", "elements": { "K": 1, "N": 1, "O": 3 } }
+    ],
+    "solution": { "reactants": [1, 2], "products": [1, 2] },
+    "par_time": 60,
+    "hints": [
+      "PbI₂ needs 2 iodines. How many KI?",
+      "2 KI gives 2 I and 2 K. You need 2 KNO₃ for the K.",
+      "Pb(NO₃)₂ + 2KI → PbI₂ + 2KNO₃."
+    ]
+  },
+  {
+    "id": "lvl_025", "level": 25, "difficulty": "hard", "type": "double_replacement",
+    "display": "_H₂SO₄ + _NaOH → _Na₂SO₄ + _H₂O",
+    "reactants": [
+      { "molecule": "H2SO4", "formula": "H₂SO₄", "elements": { "H": 2, "S": 1, "O": 4 } },
+      { "molecule": "NaOH", "formula": "NaOH", "elements": { "Na": 1, "O": 1, "H": 1 } }
+    ],
+    "products": [
+      { "molecule": "Na2SO4", "formula": "Na₂SO₄", "elements": { "Na": 2, "S": 1, "O": 4 } },
+      { "molecule": "H2O", "formula": "H₂O", "elements": { "H": 2, "O": 1 } }
+    ],
+    "solution": { "reactants": [1, 2], "products": [1, 2] },
+    "par_time": 60,
+    "hints": [
+      "Na₂SO₄ needs 2 Na. NaOH only has 1.",
+      "Put 2 in front of NaOH. Now count H and O.",
+      "H₂SO₄ + 2NaOH → Na₂SO₄ + 2H₂O."
+    ]
+  },
+  {
+    "id": "lvl_026", "level": 26, "difficulty": "medium", "type": "single_replacement",
+    "display": "_Ca + _H₂O → _Ca(OH)₂ + _H₂",
+    "reactants": [
+      { "molecule": "Ca", "formula": "Ca", "elements": { "Ca": 1 } },
+      { "molecule": "H2O", "formula": "H₂O", "elements": { "H": 2, "O": 1 } }
+    ],
+    "products": [
+      { "molecule": "Ca(OH)2", "formula": "Ca(OH)₂", "elements": { "Ca": 1, "O": 2, "H": 2 } },
+      { "molecule": "H2", "formula": "H₂", "elements": { "H": 2 } }
+    ],
+    "solution": { "reactants": [1, 2], "products": [1, 1] },
+    "par_time": 45,
+    "hints": [
+      "Ca(OH)₂ needs 2 oxygens. Each H₂O has 1.",
+      "Put 2 in front of H₂O. Count H: 4 left, 2+2=4 right.",
+      "Ca + 2H₂O → Ca(OH)₂ + H₂."
+    ]
+  },
+  {
+    "id": "lvl_027", "level": 27, "difficulty": "hard", "type": "combustion",
+    "display": "_C₂H₆ + _O₂ → _CO₂ + _H₂O",
+    "reactants": [
+      { "molecule": "C2H6", "formula": "C₂H₆", "elements": { "C": 2, "H": 6 } },
+      { "molecule": "O2", "formula": "O₂", "elements": { "O": 2 } }
+    ],
+    "products": [
+      { "molecule": "CO2", "formula": "CO₂", "elements": { "C": 1, "O": 2 } },
+      { "molecule": "H2O", "formula": "H₂O", "elements": { "H": 2, "O": 1 } }
+    ],
+    "solution": { "reactants": [2, 7], "products": [4, 6] },
+    "par_time": 90,
+    "hints": [
+      "Balance C first: 2 C left → 2 CO₂ right.",
+      "Balance H: 6 H left → 3 H₂O right. Now count O on right: 4+3=7.",
+      "2C₂H₆ + 7O₂ → 4CO₂ + 6H₂O."
+    ]
+  },
+  {
+    "id": "lvl_028", "level": 28, "difficulty": "hard", "type": "combustion",
+    "display": "_C₃H₈ + _O₂ → _CO₂ + _H₂O",
+    "reactants": [
+      { "molecule": "C3H8", "formula": "C₃H₈", "elements": { "C": 3, "H": 8 } },
+      { "molecule": "O2", "formula": "O₂", "elements": { "O": 2 } }
+    ],
+    "products": [
+      { "molecule": "CO2", "formula": "CO₂", "elements": { "C": 1, "O": 2 } },
+      { "molecule": "H2O", "formula": "H₂O", "elements": { "H": 2, "O": 1 } }
+    ],
+    "solution": { "reactants": [1, 5], "products": [3, 4] },
+    "par_time": 90,
+    "hints": [
+      "Balance C first: 3 C → 3 CO₂.",
+      "Balance H: 8 H → 4 H₂O. Count O on right: 6+4=10.",
+      "C₃H₈ + 5O₂ → 3CO₂ + 4H₂O."
+    ]
+  },
+  {
+    "id": "lvl_029", "level": 29, "difficulty": "hard", "type": "combustion",
+    "display": "_C₂H₅OH + _O₂ → _CO₂ + _H₂O",
+    "reactants": [
+      { "molecule": "C2H5OH", "formula": "C₂H₅OH", "elements": { "C": 2, "H": 6, "O": 1 } },
+      { "molecule": "O2", "formula": "O₂", "elements": { "O": 2 } }
+    ],
+    "products": [
+      { "molecule": "CO2", "formula": "CO₂", "elements": { "C": 1, "O": 2 } },
+      { "molecule": "H2O", "formula": "H₂O", "elements": { "H": 2, "O": 1 } }
+    ],
+    "solution": { "reactants": [1, 3], "products": [2, 3] },
+    "par_time": 90,
+    "hints": [
+      "Balance C: 2 → 2 CO₂. Balance H: 6 → 3 H₂O.",
+      "O on right: 4+3=7. O on left: 1 + 2x = 7 → x=3.",
+      "C₂H₅OH + 3O₂ → 2CO₂ + 3H₂O."
+    ]
+  },
+  {
+    "id": "lvl_030", "level": 30, "difficulty": "hard", "type": "combustion", "boss": true,
+    "display": "_C₆H₁₂O₆ + _O₂ → _CO₂ + _H₂O",
+    "reactants": [
+      { "molecule": "C6H12O6", "formula": "C₆H₁₂O₆", "elements": { "C": 6, "H": 12, "O": 6 } },
+      { "molecule": "O2", "formula": "O₂", "elements": { "O": 2 } }
+    ],
+    "products": [
+      { "molecule": "CO2", "formula": "CO₂", "elements": { "C": 1, "O": 2 } },
+      { "molecule": "H2O", "formula": "H₂O", "elements": { "H": 2, "O": 1 } }
+    ],
+    "solution": { "reactants": [1, 6], "products": [6, 6] },
+    "par_time": 120,
+    "hints": [
+      "Balance C: 6 → 6 CO₂. Balance H: 12 → 6 H₂O.",
+      "O on right: 12+6=18. O on left: 6 + 2x = 18 → x=6.",
+      "C₆H₁₂O₆ + 6O₂ → 6CO₂ + 6H₂O."
+    ]
+  },
+  {
+    "id": "lvl_031", "level": 31, "difficulty": "hard", "type": "double_replacement",
+    "display": "_Fe₂O₃ + _HCl → _FeCl₃ + _H₂O",
+    "reactants": [
+      { "molecule": "Fe2O3", "formula": "Fe₂O₃", "elements": { "Fe": 2, "O": 3 } },
+      { "molecule": "HCl", "formula": "HCl", "elements": { "H": 1, "Cl": 1 } }
+    ],
+    "products": [
+      { "molecule": "FeCl3", "formula": "FeCl₃", "elements": { "Fe": 1, "Cl": 3 } },
+      { "molecule": "H2O", "formula": "H₂O", "elements": { "H": 2, "O": 1 } }
+    ],
+    "solution": { "reactants": [1, 6], "products": [2, 3] },
+    "par_time": 90,
+    "hints": [
+      "Fe₂O₃ has 2 Fe → need 2 FeCl₃.",
+      "2 FeCl₃ needs 6 Cl → 6 HCl. 6 H → 3 H₂O.",
+      "Fe₂O₃ + 6HCl → 2FeCl₃ + 3H₂O."
+    ]
+  },
+  {
+    "id": "lvl_032", "level": 32, "difficulty": "hard", "type": "single_replacement",
+    "display": "_Al + _Fe₂O₃ → _Al₂O₃ + _Fe",
+    "reactants": [
+      { "molecule": "Al", "formula": "Al", "elements": { "Al": 1 } },
+      { "molecule": "Fe2O3", "formula": "Fe₂O₃", "elements": { "Fe": 2, "O": 3 } }
+    ],
+    "products": [
+      { "molecule": "Al2O3", "formula": "Al₂O₃", "elements": { "Al": 2, "O": 3 } },
+      { "molecule": "Fe", "formula": "Fe", "elements": { "Fe": 1 } }
+    ],
+    "solution": { "reactants": [2, 1], "products": [1, 2] },
+    "par_time": 60,
+    "hints": [
+      "Al₂O₃ needs 2 Al on the left.",
+      "Fe₂O₃ has 2 Fe → need 2 Fe on the right.",
+      "2Al + Fe₂O₃ → Al₂O₃ + 2Fe."
+    ]
+  },
+  {
+    "id": "lvl_033", "level": 33, "difficulty": "hard", "type": "double_replacement",
+    "display": "_Na₂CO₃ + _HCl → _NaCl + _H₂O + _CO₂",
+    "reactants": [
+      { "molecule": "Na2CO3", "formula": "Na₂CO₃", "elements": { "Na": 2, "C": 1, "O": 3 } },
+      { "molecule": "HCl", "formula": "HCl", "elements": { "H": 1, "Cl": 1 } }
+    ],
+    "products": [
+      { "molecule": "NaCl", "formula": "NaCl", "elements": { "Na": 1, "Cl": 1 } },
+      { "molecule": "H2O", "formula": "H₂O", "elements": { "H": 2, "O": 1 } },
+      { "molecule": "CO2", "formula": "CO₂", "elements": { "C": 1, "O": 2 } }
+    ],
+    "solution": { "reactants": [1, 2], "products": [2, 1, 1] },
+    "par_time": 60,
+    "hints": [
+      "Na₂CO₃ has 2 Na → need 2 NaCl.",
+      "2 NaCl needs 2 Cl → 2 HCl.",
+      "Na₂CO₃ + 2HCl → 2NaCl + H₂O + CO₂."
+    ]
+  },
+  {
+    "id": "lvl_034", "level": 34, "difficulty": "hard", "type": "synthesis",
+    "display": "_N₂ + _O₂ → _N₂O₅",
+    "reactants": [
+      { "molecule": "N2", "formula": "N₂", "elements": { "N": 2 } },
+      { "molecule": "O2", "formula": "O₂", "elements": { "O": 2 } }
+    ],
+    "products": [
+      { "molecule": "N2O5", "formula": "N₂O₅", "elements": { "N": 2, "O": 5 } }
+    ],
+    "solution": { "reactants": [2, 5], "products": [2] },
+    "par_time": 60,
+    "hints": [
+      "N₂O₅ has 5 oxygens — odd number. Try doubling.",
+      "2 N₂O₅ = 10 O → 5 O₂. 4 N → 2 N₂.",
+      "2N₂ + 5O₂ → 2N₂O₅."
+    ]
+  },
+  {
+    "id": "lvl_035", "level": 35, "difficulty": "hard", "type": "single_replacement",
+    "display": "_K + _H₂O → _KOH + _H₂",
+    "reactants": [
+      { "molecule": "K", "formula": "K", "elements": { "K": 1 } },
+      { "molecule": "H2O", "formula": "H₂O", "elements": { "H": 2, "O": 1 } }
+    ],
+    "products": [
+      { "molecule": "KOH", "formula": "KOH", "elements": { "K": 1, "O": 1, "H": 1 } },
+      { "molecule": "H2", "formula": "H₂", "elements": { "H": 2 } }
+    ],
+    "solution": { "reactants": [2, 2], "products": [2, 1] },
+    "par_time": 60,
+    "hints": [
+      "Count H: H₂O has 2, KOH has 1, H₂ has 2.",
+      "Try 2K + 2H₂O → 2KOH + H₂.",
+      "H: 4 left, 2+2=4 right. O: 2|2. K: 2|2."
+    ]
+  },
+  {
+    "id": "lvl_036", "level": 36, "difficulty": "hard", "type": "combustion",
+    "display": "_C₄H₁₀ + _O₂ → _CO₂ + _H₂O",
+    "reactants": [
+      { "molecule": "C4H10", "formula": "C₄H₁₀", "elements": { "C": 4, "H": 10 } },
+      { "molecule": "O2", "formula": "O₂", "elements": { "O": 2 } }
+    ],
+    "products": [
+      { "molecule": "CO2", "formula": "CO₂", "elements": { "C": 1, "O": 2 } },
+      { "molecule": "H2O", "formula": "H₂O", "elements": { "H": 2, "O": 1 } }
+    ],
+    "solution": { "reactants": [2, 13], "products": [8, 10] },
+    "par_time": 120,
+    "hints": [
+      "Balance C: 4 → 4 CO₂. Balance H: 10 → 5 H₂O.",
+      "O on right: 8+5=13 — odd! Double everything.",
+      "2C₄H₁₀ + 13O₂ → 8CO₂ + 10H₂O."
+    ]
+  },
+  {
+    "id": "lvl_037", "level": 37, "difficulty": "hard", "type": "double_replacement",
+    "display": "_CaCO₃ + _HCl → _CaCl₂ + _H₂O + _CO₂",
+    "reactants": [
+      { "molecule": "CaCO3", "formula": "CaCO₃", "elements": { "Ca": 1, "C": 1, "O": 3 } },
+      { "molecule": "HCl", "formula": "HCl", "elements": { "H": 1, "Cl": 1 } }
+    ],
+    "products": [
+      { "molecule": "CaCl2", "formula": "CaCl₂", "elements": { "Ca": 1, "Cl": 2 } },
+      { "molecule": "H2O", "formula": "H₂O", "elements": { "H": 2, "O": 1 } },
+      { "molecule": "CO2", "formula": "CO₂", "elements": { "C": 1, "O": 2 } }
+    ],
+    "solution": { "reactants": [1, 2], "products": [1, 1, 1] },
+    "par_time": 60,
+    "hints": [
+      "CaCl₂ needs 2 Cl → 2 HCl.",
+      "2 H from 2 HCl → 1 H₂O. Check O: 3 left, 1+2=3 right.",
+      "CaCO₃ + 2HCl → CaCl₂ + H₂O + CO₂."
+    ]
+  },
+  {
+    "id": "lvl_038", "level": 38, "difficulty": "hard", "type": "single_replacement",
+    "display": "_Zn + _CuSO₄ → _ZnSO₄ + _Cu",
+    "reactants": [
+      { "molecule": "Zn", "formula": "Zn", "elements": { "Zn": 1 } },
+      { "molecule": "CuSO4", "formula": "CuSO₄", "elements": { "Cu": 1, "S": 1, "O": 4 } }
+    ],
+    "products": [
+      { "molecule": "ZnSO4", "formula": "ZnSO₄", "elements": { "Zn": 1, "S": 1, "O": 4 } },
+      { "molecule": "Cu", "formula": "Cu", "elements": { "Cu": 1 } }
+    ],
+    "solution": { "reactants": [1, 1], "products": [1, 1] },
+    "par_time": 15,
+    "hints": [
+      "Count each element on both sides.",
+      "Everything already matches 1:1.",
+      "Already balanced."
+    ]
+  },
+  {
+    "id": "lvl_039", "level": 39, "difficulty": "hard", "type": "double_replacement",
+    "display": "_Al₂(SO₄)₃ + _NaOH → _Al(OH)₃ + _Na₂SO₄",
+    "reactants": [
+      { "molecule": "Al2(SO4)3", "formula": "Al₂(SO₄)₃", "elements": { "Al": 2, "S": 3, "O": 12 } },
+      { "molecule": "NaOH", "formula": "NaOH", "elements": { "Na": 1, "O": 1, "H": 1 } }
+    ],
+    "products": [
+      { "molecule": "Al(OH)3", "formula": "Al(OH)₃", "elements": { "Al": 1, "O": 3, "H": 3 } },
+      { "molecule": "Na2SO4", "formula": "Na₂SO₄", "elements": { "Na": 2, "S": 1, "O": 4 } }
+    ],
+    "solution": { "reactants": [1, 6], "products": [2, 3] },
+    "par_time": 120,
+    "hints": [
+      "2 Al left → 2 Al(OH)₃. 3 S left → 3 Na₂SO₄.",
+      "3 Na₂SO₄ needs 6 Na → 6 NaOH.",
+      "Al₂(SO₄)₃ + 6NaOH → 2Al(OH)₃ + 3Na₂SO₄."
+    ]
+  },
+  {
+    "id": "lvl_040", "level": 40, "difficulty": "hard", "type": "double_replacement", "boss": true,
+    "display": "_Fe₂(SO₄)₃ + _KOH → _Fe(OH)₃ + _K₂SO₄",
+    "reactants": [
+      { "molecule": "Fe2(SO4)3", "formula": "Fe₂(SO₄)₃", "elements": { "Fe": 2, "S": 3, "O": 12 } },
+      { "molecule": "KOH", "formula": "KOH", "elements": { "K": 1, "O": 1, "H": 1 } }
+    ],
+    "products": [
+      { "molecule": "Fe(OH)3", "formula": "Fe(OH)₃", "elements": { "Fe": 1, "O": 3, "H": 3 } },
+      { "molecule": "K2SO4", "formula": "K₂SO₄", "elements": { "K": 2, "S": 1, "O": 4 } }
+    ],
+    "solution": { "reactants": [1, 6], "products": [2, 3] },
+    "par_time": 120,
+    "hints": [
+      "2 Fe → 2 Fe(OH)₃. 3 S → 3 K₂SO₄.",
+      "3 K₂SO₄ needs 6 K → 6 KOH.",
+      "Fe₂(SO₄)₃ + 6KOH → 2Fe(OH)₃ + 3K₂SO₄."
+    ]
+  },
+  {
+    "id": "lvl_041", "level": 41, "difficulty": "hard", "type": "combustion",
+    "display": "_C₂H₂ + _O₂ → _CO₂ + _H₂O",
+    "reactants": [
+      { "molecule": "C2H2", "formula": "C₂H₂", "elements": { "C": 2, "H": 2 } },
+      { "molecule": "O2", "formula": "O₂", "elements": { "O": 2 } }
+    ],
+    "products": [
+      { "molecule": "CO2", "formula": "CO₂", "elements": { "C": 1, "O": 2 } },
+      { "molecule": "H2O", "formula": "H₂O", "elements": { "H": 2, "O": 1 } }
+    ],
+    "solution": { "reactants": [2, 5], "products": [4, 2] },
+    "par_time": 90,
+    "hints": [
+      "Balance C: 2 → 2 CO₂. Balance H: 2 → 1 H₂O.",
+      "O on right: 4+1=5 — odd! Double everything.",
+      "2C₂H₂ + 5O₂ → 4CO₂ + 2H₂O."
+    ]
+  },
+  {
+    "id": "lvl_042", "level": 42, "difficulty": "hard", "type": "combustion",
+    "display": "_C₆H₆ + _O₂ → _CO₂ + _H₂O",
+    "reactants": [
+      { "molecule": "C6H6", "formula": "C₆H₆", "elements": { "C": 6, "H": 6 } },
+      { "molecule": "O2", "formula": "O₂", "elements": { "O": 2 } }
+    ],
+    "products": [
+      { "molecule": "CO2", "formula": "CO₂", "elements": { "C": 1, "O": 2 } },
+      { "molecule": "H2O", "formula": "H₂O", "elements": { "H": 2, "O": 1 } }
+    ],
+    "solution": { "reactants": [2, 15], "products": [12, 6] },
+    "par_time": 120,
+    "hints": [
+      "Balance C: 6 → 6 CO₂. Balance H: 6 → 3 H₂O.",
+      "O on right: 12+3=15 — odd! Double everything.",
+      "2C₆H₆ + 15O₂ → 12CO₂ + 6H₂O."
+    ]
+  },
+  {
+    "id": "lvl_043", "level": 43, "difficulty": "hard", "type": "decomposition",
+    "display": "_Ca(OH)₂ → _CaO + _H₂O",
+    "reactants": [
+      { "molecule": "Ca(OH)2", "formula": "Ca(OH)₂", "elements": { "Ca": 1, "O": 2, "H": 2 } }
+    ],
+    "products": [
+      { "molecule": "CaO", "formula": "CaO", "elements": { "Ca": 1, "O": 1 } },
+      { "molecule": "H2O", "formula": "H₂O", "elements": { "H": 2, "O": 1 } }
+    ],
+    "solution": { "reactants": [1], "products": [1, 1] },
+    "par_time": 20,
+    "hints": [
+      "Count each element on both sides.",
+      "Ca: 1|1, O: 2|2, H: 2|2.",
+      "Already balanced."
+    ]
+  },
+  {
+    "id": "lvl_044", "level": 44, "difficulty": "hard", "type": "single_replacement",
+    "display": "_Mg + _Fe₂O₃ → _MgO + _Fe",
+    "reactants": [
+      { "molecule": "Mg", "formula": "Mg", "elements": { "Mg": 1 } },
+      { "molecule": "Fe2O3", "formula": "Fe₂O₃", "elements": { "Fe": 2, "O": 3 } }
+    ],
+    "products": [
+      { "molecule": "MgO", "formula": "MgO", "elements": { "Mg": 1, "O": 1 } },
+      { "molecule": "Fe", "formula": "Fe", "elements": { "Fe": 1 } }
+    ],
+    "solution": { "reactants": [3, 1], "products": [3, 2] },
+    "par_time": 60,
+    "hints": [
+      "Fe₂O₃ has 3 O → need 3 MgO.",
+      "3 MgO needs 3 Mg. Fe₂O₃ has 2 Fe → 2 Fe.",
+      "3Mg + Fe₂O₃ → 3MgO + 2Fe."
+    ]
+  },
+  {
+    "id": "lvl_045", "level": 45, "difficulty": "hard", "type": "synthesis",
+    "display": "_Fe + _Cl₂ → _FeCl₃",
+    "reactants": [
+      { "molecule": "Fe", "formula": "Fe", "elements": { "Fe": 1 } },
+      { "molecule": "Cl2", "formula": "Cl₂", "elements": { "Cl": 2 } }
+    ],
+    "products": [
+      { "molecule": "FeCl3", "formula": "FeCl₃", "elements": { "Fe": 1, "Cl": 3 } }
+    ],
+    "solution": { "reactants": [2, 3], "products": [2] },
+    "par_time": 60,
+    "hints": [
+      "FeCl₃ has 3 Cl but Cl₂ comes in pairs.",
+      "2 FeCl₃ = 6 Cl → 3 Cl₂. And 2 Fe.",
+      "2Fe + 3Cl₂ → 2FeCl₃."
+    ]
+  },
+  {
+    "id": "lvl_046", "level": 46, "difficulty": "hard", "type": "double_replacement",
+    "display": "_NaHCO₃ + _HCl → _NaCl + _H₂O + _CO₂",
+    "reactants": [
+      { "molecule": "NaHCO3", "formula": "NaHCO₃", "elements": { "Na": 1, "H": 1, "C": 1, "O": 3 } },
+      { "molecule": "HCl", "formula": "HCl", "elements": { "H": 1, "Cl": 1 } }
+    ],
+    "products": [
+      { "molecule": "NaCl", "formula": "NaCl", "elements": { "Na": 1, "Cl": 1 } },
+      { "molecule": "H2O", "formula": "H₂O", "elements": { "H": 2, "O": 1 } },
+      { "molecule": "CO2", "formula": "CO₂", "elements": { "C": 1, "O": 2 } }
+    ],
+    "solution": { "reactants": [1, 1], "products": [1, 1, 1] },
+    "par_time": 30,
+    "hints": [
+      "Count each element carefully.",
+      "H: 1+1=2 left, 2 right. O: 3|1+2=3.",
+      "Already balanced."
+    ]
+  },
+  {
+    "id": "lvl_047", "level": 47, "difficulty": "hard", "type": "double_replacement",
+    "display": "_MgCl₂ + _NaOH → _Mg(OH)₂ + _NaCl",
+    "reactants": [
+      { "molecule": "MgCl2", "formula": "MgCl₂", "elements": { "Mg": 1, "Cl": 2 } },
+      { "molecule": "NaOH", "formula": "NaOH", "elements": { "Na": 1, "O": 1, "H": 1 } }
+    ],
+    "products": [
+      { "molecule": "Mg(OH)2", "formula": "Mg(OH)₂", "elements": { "Mg": 1, "O": 2, "H": 2 } },
+      { "molecule": "NaCl", "formula": "NaCl", "elements": { "Na": 1, "Cl": 1 } }
+    ],
+    "solution": { "reactants": [1, 2], "products": [1, 2] },
+    "par_time": 45,
+    "hints": [
+      "Mg(OH)₂ needs 2 OH → 2 NaOH.",
+      "2 NaOH gives 2 Na → 2 NaCl. 2 Cl = MgCl₂.",
+      "MgCl₂ + 2NaOH → Mg(OH)₂ + 2NaCl."
+    ]
+  },
+  {
+    "id": "lvl_048", "level": 48, "difficulty": "hard", "type": "combustion",
+    "display": "_C₅H₁₂ + _O₂ → _CO₂ + _H₂O",
+    "reactants": [
+      { "molecule": "C5H12", "formula": "C₅H₁₂", "elements": { "C": 5, "H": 12 } },
+      { "molecule": "O2", "formula": "O₂", "elements": { "O": 2 } }
+    ],
+    "products": [
+      { "molecule": "CO2", "formula": "CO₂", "elements": { "C": 1, "O": 2 } },
+      { "molecule": "H2O", "formula": "H₂O", "elements": { "H": 2, "O": 1 } }
+    ],
+    "solution": { "reactants": [1, 8], "products": [5, 6] },
+    "par_time": 90,
+    "hints": [
+      "Balance C: 5 → 5 CO₂. Balance H: 12 → 6 H₂O.",
+      "O on right: 10+6=16. 16/2 = 8 O₂.",
+      "C₅H₁₂ + 8O₂ → 5CO₂ + 6H₂O."
+    ]
+  },
+  {
+    "id": "lvl_049", "level": 49, "difficulty": "hard", "type": "double_replacement",
+    "display": "_Ca(OH)₂ + _H₃PO₄ → _Ca₃(PO₄)₂ + _H₂O",
+    "reactants": [
+      { "molecule": "Ca(OH)2", "formula": "Ca(OH)₂", "elements": { "Ca": 1, "O": 2, "H": 2 } },
+      { "molecule": "H3PO4", "formula": "H₃PO₄", "elements": { "H": 3, "P": 1, "O": 4 } }
+    ],
+    "products": [
+      { "molecule": "Ca3(PO4)2", "formula": "Ca₃(PO₄)₂", "elements": { "Ca": 3, "P": 2, "O": 8 } },
+      { "molecule": "H2O", "formula": "H₂O", "elements": { "H": 2, "O": 1 } }
+    ],
+    "solution": { "reactants": [3, 2], "products": [1, 6] },
+    "par_time": 120,
+    "hints": [
+      "Ca₃(PO₄)₂ needs 3 Ca → 3 Ca(OH)₂. And 2 P → 2 H₃PO₄.",
+      "H: 6+6=12. 12/2 = 6 H₂O. O: 6+8=14 | 8+6=14.",
+      "3Ca(OH)₂ + 2H₃PO₄ → Ca₃(PO₄)₂ + 6H₂O."
+    ]
+  },
+  {
+    "id": "lvl_050", "level": 50, "difficulty": "hard", "type": "combustion", "boss": true,
+    "display": "_C₈H₁₈ + _O₂ → _CO₂ + _H₂O",
+    "reactants": [
+      { "molecule": "C8H18", "formula": "C₈H₁₈", "elements": { "C": 8, "H": 18 } },
+      { "molecule": "O2", "formula": "O₂", "elements": { "O": 2 } }
+    ],
+    "products": [
+      { "molecule": "CO2", "formula": "CO₂", "elements": { "C": 1, "O": 2 } },
+      { "molecule": "H2O", "formula": "H₂O", "elements": { "H": 2, "O": 1 } }
+    ],
+    "solution": { "reactants": [2, 25], "products": [16, 18] },
+    "par_time": 120,
+    "hints": [
+      "Balance C: 8 → 8 CO₂. Balance H: 18 → 9 H₂O.",
+      "O on right: 16+9=25. Odd! Double everything.",
+      "2C₈H₁₈ + 25O₂ → 16CO₂ + 18H₂O."
+    ]
+  }
+]

@@ -1,0 +1,20 @@
+{
+  "name": "chemquest",
+  "version": "1.0.0",
+  "description": "ChemQuest: Equation Balancer — A 2D sprite-based puzzle game for learning chemical equation balancing",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "phaser": "^3.90.0"
+  },
+  "devDependencies": {
+    "vite": "^7.3.1"
+  }
+}
