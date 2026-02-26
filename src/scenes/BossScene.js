@@ -387,13 +387,13 @@ export class BossScene extends Phaser.Scene {
     this.equationContainer = this.add.container(0, 0);
 
     // Equation number indicator
-    const eqNum = this.add.text(width / 2, 88, `Equation ${this.currentEquationIdx + 1} / ${this.bossMaxHealth}`, {
+    const eqNum = this.add.text(width / 2, 100, `Equation ${this.currentEquationIdx + 1} / ${this.bossMaxHealth}`, {
       fontFamily: 'monospace', fontSize: '10px', color: '#cc6666'
     }).setOrigin(0.5);
     this.equationContainer.add(eqNum);
 
     // Equation display text
-    const eqText = this.add.text(width / 2, 108, eq.display, {
+    const eqText = this.add.text(width / 2, 122, eq.display, {
       fontFamily: 'monospace', fontSize: '20px', color: '#ffcccc'
     }).setOrigin(0.5);
     this.equationContainer.add(eqText);
@@ -409,7 +409,7 @@ export class BossScene extends Phaser.Scene {
       const isReactant = i < eq.reactants.length;
       const molIdx = isReactant ? i : i - eq.reactants.length;
       const x = startX + i * spacing;
-      const y = 160;
+      const y = 175;
 
       const slotBg = this.add.image(x, y, 'coeff_slot').setScale(0.9);
       const slotText = this.add.text(x, y, '1', {
@@ -455,7 +455,7 @@ export class BossScene extends Phaser.Scene {
     this._buildBossAtomTable(eq);
 
     // ── CHECK BUTTON ──
-    const checkY = 365;
+    const checkY = 430;
     const checkBg = this.add.graphics();
     checkBg.fillStyle(0x661111, 1);
     checkBg.fillRoundedRect(width / 2 - 65, checkY - 18, 130, 36, 8);
@@ -483,7 +483,7 @@ export class BossScene extends Phaser.Scene {
     this.equationContainer.add(checkZone);
 
     // ── NUMBER TRAY ──
-    const trayY = 410;
+    const trayY = 520;
     this.add.text(width / 2, trayY - 16, 'Click slot then type 1-9  |  Tap to cycle', {
       fontFamily: 'monospace', fontSize: '8px', color: '#664444'
     }).setOrigin(0.5);
@@ -575,7 +575,7 @@ export class BossScene extends Phaser.Scene {
     const headerH = 30;
     const panelW = Math.min(440, width - 50);
     const panelX = width / 2 - panelW / 2;
-    const tableY = 210;
+    const tableY = 240;
     const totalH = headerH + elements.length * rowH + 10;
 
     // Panel background — dark with red border

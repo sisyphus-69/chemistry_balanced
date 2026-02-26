@@ -30,10 +30,10 @@ export class GameScene extends Phaser.Scene {
     this.hintSystem = new HintSystem(this.equation.hints);
 
     // Layout constants
-    this.EQUATION_Y = 80;
-    this.SCALE_Y = 240;
-    this.HUD_Y = 370;
-    this.TOKEN_TRAY_Y = height - 70;
+    this.EQUATION_Y = 75;
+    this.SCALE_Y = 180;
+    this.HUD_Y = 275;
+    this.TOKEN_TRAY_Y = height - 48;
 
     // Background
     this.add.rectangle(width / 2, height / 2, width, height, 0x1a1a2e);
@@ -587,7 +587,7 @@ export class GameScene extends Phaser.Scene {
   // ─────────────────────────────────────────────
   _buildCheckButton() {
     const { width } = this.cameras.main;
-    const y = this.TOKEN_TRAY_Y - 38;
+    const y = this.TOKEN_TRAY_Y - 50;
 
     const checkBtn = this.add.image(width / 2, y, 'btn_check');
     this.add.text(width / 2, y, 'CHECK', {
