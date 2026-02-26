@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
 import { ScoringSystem } from '../systems/ScoringSystem.js';
+import { soundManager } from '../systems/SoundManager.js';
 import equationsData from '../data/equations.json';
 
 export class ResultScene extends Phaser.Scene {
@@ -55,7 +56,10 @@ export class ResultScene extends Phaser.Scene {
         scaleX: 2, scaleY: 2,
         duration: 300,
         delay: 500 + i * 200,
-        ease: 'Back.easeOut'
+        ease: 'Back.easeOut',
+        onStart: () => {
+          if (i < this.stars) soundManager.starReveal();
+        }
       });
     }
 
@@ -90,7 +94,8 @@ export class ResultScene extends Phaser.Scene {
       scaleX: 1, scaleY: 1,
       duration: 400,
       delay: 1200,
-      ease: 'Back.easeOut'
+      ease: 'Back.easeOut',
+      onStart: () => soundManager.xpGain()
     });
 
     // Streak display
@@ -161,7 +166,7 @@ export class ResultScene extends Phaser.Scene {
 
     const nextZone = this.add.zone(width / 2 + 80, btnY, 140, 36)
       .setInteractive({ useHandCursor: true });
-    nextZone.on('pointerdown', () => this._nextLevel());
+    nextZone.on('pointerdown', () => { soundManager.buttonPress(); this._nextLevel(); });
 
     // Menu button
     const menuBtn = this.add.graphics();
@@ -174,6 +179,7 @@ export class ResultScene extends Phaser.Scene {
     const menuZone = this.add.zone(width / 2 - 80, btnY, 140, 36)
       .setInteractive({ useHandCursor: true });
     menuZone.on('pointerdown', () => {
+      soundManager.buttonPress();
       this.scene.start('MenuScene', { progression: this.progression });
     });
 

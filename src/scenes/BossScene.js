@@ -3,6 +3,7 @@ import { EquationEngine } from '../systems/EquationEngine.js';
 import { CoefficientManager } from '../systems/CoefficientManager.js';
 import { ScoringSystem } from '../systems/ScoringSystem.js';
 import { HintSystem } from '../systems/HintSystem.js';
+import { soundManager } from '../systems/SoundManager.js';
 import elementsData from '../data/elements.json';
 import equationsData from '../data/equations.json';
 
@@ -214,6 +215,7 @@ export class BossScene extends Phaser.Scene {
         } else {
           this.coeffManager.setProductCoeff(molIdx, next);
         }
+        soundManager.coeffChange();
         // Update text
         this._updateBossSlots();
       });
@@ -399,6 +401,7 @@ export class BossScene extends Phaser.Scene {
   _onBossCorrect() {
     this.bossHealth--;
     this.timeRemaining += 10; // Bonus time
+    soundManager.success();
     this._drawHealthBar();
     if (this.healthText) {
       this.healthText.setText(`${this.bossHealth} / ${this.bossMaxHealth}`);
@@ -422,6 +425,7 @@ export class BossScene extends Phaser.Scene {
   _onBossFail() {
     this.failedAttempts++;
     this.timeRemaining -= 3; // Penalty
+    soundManager.fail();
     this.cameras.main.shake(150, 0.008);
   }
 
@@ -442,6 +446,7 @@ export class BossScene extends Phaser.Scene {
     this.progression.addXP(xp);
     this.progression.completeLevel(this.equation.id, stars, timeSeconds, score);
     this.progression.unlockAchievement('boss_slayer');
+    soundManager.bossDefeat();
 
     // Victory overlay
     const overlay = this.add.graphics();
@@ -487,6 +492,7 @@ export class BossScene extends Phaser.Scene {
   _onBossTimeOut() {
     this.levelComplete = true;
     if (this.timerEvent) this.timerEvent.remove();
+    soundManager.bossTimeout();
 
     const { width, height } = this.cameras.main;
 
