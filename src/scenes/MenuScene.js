@@ -525,7 +525,7 @@ export class MenuScene extends Phaser.Scene {
 
     this.infoStars = [];
     for (let s = 0; s < 3; s++) {
-      const star = this.add.image(width / 2 + 190 + s * 16, panelY + 16, 'star_empty')
+      const star = this.add.image(width / 2 + 170 + s * 16, panelY + 16, 'star_empty')
         .setScale(0.6).setScrollFactor(0).setDepth(100);
       this.infoStars.push(star);
     }
@@ -539,18 +539,19 @@ export class MenuScene extends Phaser.Scene {
     const completed = this.progression.getLevelData(eq.id);
 
     const typeLabel = eq.type.replace(/_/g, ' ');
-    const bossTag = eq.boss ? '  [BOSS]' : '';
+    const bossTag = eq.boss ? ' [BOSS]' : '';
+    const diffLabel = eq.difficulty ? eq.difficulty.charAt(0).toUpperCase() + eq.difficulty.slice(1) : '';
 
     this.infoTitle.setText(
       unlocked
-        ? `Level ${eq.level}: ${eq.display.replace(/_/g, '')}${bossTag}`
+        ? `Level ${eq.level}${bossTag}`
         : `Level ${eq.level}: LOCKED`
     );
     this.infoTitle.setColor(unlocked ? (eq.boss ? '#ff6644' : '#ffffff') : '#444466');
 
     this.infoSub.setText(
       unlocked
-        ? `${typeLabel}  |  par: ${eq.par_time}s  |  ${completed ? 'COMPLETED' : 'not yet cleared'}`
+        ? `${typeLabel}  |  ${diffLabel}  |  par: ${eq.par_time}s  |  ${completed ? 'COMPLETED' : 'not yet cleared'}`
         : 'Earn more XP to unlock this region'
     );
 
@@ -565,55 +566,89 @@ export class MenuScene extends Phaser.Scene {
 
   _toggleSettings() {
     if (this.settingsPanel) {
-      this.settingsPanel.destroy();
+      this.settingsPanel.forEach(el => el.destroy());
       this.settingsPanel = null;
       return;
     }
 
     const { width, height } = this.cameras.main;
+    const cx = width / 2;
+    const cy = height / 2;
     const settings = this.progression.getSettings();
+    const D = 200; // depth for all settings elements
 
-    this.settingsPanel = this.add.container(width / 2, height / 2)
-      .setScrollFactor(0).setDepth(200);
+    // Track all elements so we can destroy them together
+    this.settingsPanel = [];
 
-    const bg = this.add.graphics();
-    bg.fillStyle(0x1a1a2e, 0.95);
-    bg.fillRoundedRect(-150, -100, 300, 200, 10);
-    bg.lineStyle(2, 0x5555aa, 1);
-    bg.strokeRoundedRect(-150, -100, 300, 200, 10);
-    this.settingsPanel.add(bg);
+    const _add = (obj) => {
+      obj.setScrollFactor(0).setDepth(D);
+      this.settingsPanel.push(obj);
+      return obj;
+    };
 
-    const title = this.add.text(0, -80, 'Settings', {
-      fontFamily: 'monospace', fontSize: '18px', color: '#ffffff'
-    }).setOrigin(0.5);
-    this.settingsPanel.add(title);
+    const destroyPanel = () => {
+      if (this.settingsPanel) {
+        this.settingsPanel.forEach(el => el.destroy());
+        this.settingsPanel = null;
+      }
+    };
 
-    const cbText = this.add.text(-100, -30, `Colorblind Mode: ${settings.colorblindMode ? 'ON' : 'OFF'}`, {
-      fontFamily: 'monospace', fontSize: '12px', color: '#aaaacc'
-    }).setInteractive({ useHandCursor: true });
+    // Full-screen blocker so clicks don't pass through
+    const blocker = _add(
+      this.add.zone(cx, cy, width, height)
+        .setInteractive()
+    );
+    blocker.on('pointerdown', () => {}); // swallow clicks
+
+    // Panel background
+    const bg = _add(this.add.graphics());
+    bg.fillStyle(0x000000, 0.6);
+    bg.fillRect(0, 0, width, height);
+    bg.fillStyle(0x1a1a2e, 0.98);
+    bg.fillRoundedRect(cx - 160, cy - 110, 320, 220, 12);
+    bg.lineStyle(2, 0x5555aa, 0.8);
+    bg.strokeRoundedRect(cx - 160, cy - 110, 320, 220, 12);
+
+    // Title
+    _add(this.add.text(cx, cy - 88, 'Settings', {
+      fontFamily: 'monospace', fontSize: '18px', color: '#ffffff', fontStyle: 'bold'
+    }).setOrigin(0.5));
+
+    // Separator
+    const sep = _add(this.add.graphics());
+    sep.lineStyle(1, 0x3344aa, 0.3);
+    sep.lineBetween(cx - 140, cy - 65, cx + 140, cy - 65);
+
+    // Colorblind toggle
+    const cbText = _add(this.add.text(cx - 130, cy - 40, `Colorblind Mode: ${settings.colorblindMode ? 'ON' : 'OFF'}`, {
+      fontFamily: 'monospace', fontSize: '13px', color: '#aaaacc'
+    }).setInteractive({ useHandCursor: true }));
     cbText.on('pointerdown', () => {
       settings.colorblindMode = !settings.colorblindMode;
       this.progression.updateSettings(settings);
       cbText.setText(`Colorblind Mode: ${settings.colorblindMode ? 'ON' : 'OFF'}`);
     });
-    this.settingsPanel.add(cbText);
+    cbText.on('pointerover', () => cbText.setColor('#ffffff'));
+    cbText.on('pointerout', () => cbText.setColor('#aaaacc'));
 
-    const resetBtn = this.add.text(0, 60, '[Reset Progress]', {
+    // Reset progress
+    const resetBtn = _add(this.add.text(cx, cy + 40, '[ Reset All Progress ]', {
       fontFamily: 'monospace', fontSize: '12px', color: '#ff4444'
-    }).setOrigin(0.5).setInteractive({ useHandCursor: true });
+    }).setOrigin(0.5).setInteractive({ useHandCursor: true }));
     resetBtn.on('pointerdown', () => {
       this.progression.resetAll();
+      this.settingsPanel = null; // prevent double-destroy
       this.scene.restart({ progression: this.progression });
     });
-    this.settingsPanel.add(resetBtn);
+    resetBtn.on('pointerover', () => resetBtn.setColor('#ff6666'));
+    resetBtn.on('pointerout', () => resetBtn.setColor('#ff4444'));
 
-    const closeBtn = this.add.text(130, -90, 'X', {
-      fontFamily: 'monospace', fontSize: '16px', color: '#ff6666'
-    }).setOrigin(0.5).setInteractive({ useHandCursor: true });
-    closeBtn.on('pointerdown', () => {
-      this.settingsPanel.destroy();
-      this.settingsPanel = null;
-    });
-    this.settingsPanel.add(closeBtn);
+    // Close button
+    const closeBtn = _add(this.add.text(cx + 140, cy - 98, '\u2715', {
+      fontFamily: 'monospace', fontSize: '18px', color: '#ff6666'
+    }).setOrigin(0.5).setInteractive({ useHandCursor: true }));
+    closeBtn.on('pointerdown', destroyPanel);
+    closeBtn.on('pointerover', () => closeBtn.setColor('#ff9999'));
+    closeBtn.on('pointerout', () => closeBtn.setColor('#ff6666'));
   }
 }
