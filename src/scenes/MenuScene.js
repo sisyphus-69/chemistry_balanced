@@ -2,6 +2,11 @@ import Phaser from 'phaser';
 import { ProgressionSystem } from '../systems/ProgressionSystem.js';
 import equationsData from '../data/equations.json';
 
+/**
+ * MenuScene — Super Mario World-style overworld map.
+ * The player controls a flask character that walks along a winding path
+ * between level nodes. Press Enter or click a node to start that level.
+ */
 export class MenuScene extends Phaser.Scene {
   constructor() {
     super({ key: 'MenuScene' });
@@ -9,214 +14,538 @@ export class MenuScene extends Phaser.Scene {
 
   init(data) {
     this.progression = data.progression || new ProgressionSystem();
+    this.playerMoving = false;
+    this.currentNodeIdx = data.startNode ?? this._findStartNode();
+  }
+
+  /**
+   * Find the best starting node — highest unlocked incomplete, or last completed.
+   */
+  _findStartNode() {
+    const maxUnlocked = this.progression.getMaxUnlockedLevel();
+    let best = 0;
+    for (let i = 0; i < equationsData.length; i++) {
+      const eq = equationsData[i];
+      if (eq.level > maxUnlocked) break;
+      const done = this.progression.getLevelData(eq.id);
+      if (!done) return i; // first uncompleted unlocked
+      best = i;
+    }
+    return best;
   }
 
   create() {
     const { width, height } = this.cameras.main;
+    const maxUnlocked = this.progression.getMaxUnlockedLevel();
 
-    // Title
-    this.add.text(width / 2, 40, 'ChemQuest', {
-      fontFamily: 'monospace',
-      fontSize: '36px',
-      color: '#00ff88',
-      fontStyle: 'bold'
-    }).setOrigin(0.5);
+    // ---- Build winding path positions ----
+    this.nodes = this._buildMapPath(width, height);
 
-    this.add.text(width / 2, 72, 'Equation Balancer', {
-      fontFamily: 'monospace',
-      fontSize: '14px',
-      color: '#8888aa'
-    }).setOrigin(0.5);
+    // World container that we'll scroll with the camera
+    this.mapContainer = this.add.container(0, 0);
 
-    // Rank & XP
+    // Background
+    this.add.rectangle(width / 2, height / 2, width, height, 0x0f0f1e).setScrollFactor(0);
+
+    // Draw decorative background elements (subtle grid lines)
+    const bgGfx = this.add.graphics().setScrollFactor(0);
+    bgGfx.lineStyle(1, 0x1a1a30, 0.3);
+    for (let gx = 0; gx < width; gx += 60) {
+      bgGfx.lineBetween(gx, 0, gx, height);
+    }
+    for (let gy = 0; gy < height; gy += 60) {
+      bgGfx.lineBetween(0, gy, width, gy);
+    }
+
+    // ---- Draw path lines between nodes ----
+    const pathGfx = this.add.graphics();
+    for (let i = 0; i < this.nodes.length - 1; i++) {
+      const a = this.nodes[i];
+      const b = this.nodes[i + 1];
+      // Draw dotted path
+      const dist = Phaser.Math.Distance.Between(a.x, a.y, b.x, b.y);
+      const dots = Math.floor(dist / 10);
+      for (let d = 0; d < dots; d++) {
+        const t = d / dots;
+        const dx = Phaser.Math.Linear(a.x, b.x, t);
+        const dy = Phaser.Math.Linear(a.y, b.y, t);
+        const unlocked = equationsData[i + 1].level <= maxUnlocked;
+        pathGfx.fillStyle(unlocked ? 0x555577 : 0x2a2a3a, unlocked ? 0.8 : 0.3);
+        pathGfx.fillCircle(dx, dy, 2);
+      }
+    }
+
+    // ---- Draw region banners ----
+    const regions = [
+      { level: 1,  label: 'Synthesis',          color: '#00ff88' },
+      { level: 11, label: 'Decomposition',      color: '#ff8844' },
+      { level: 16, label: 'Single Replacement',  color: '#44aaff' },
+      { level: 21, label: 'Double Replacement',  color: '#ff44aa' },
+      { level: 27, label: 'Combustion & Mixed',  color: '#ffdd44' }
+    ];
+
+    regions.forEach(region => {
+      const nodeIdx = equationsData.findIndex(eq => eq.level === region.level);
+      if (nodeIdx < 0) return;
+      const node = this.nodes[nodeIdx];
+      this.add.image(node.x, node.y - 36, 'region_banner').setOrigin(0.5);
+      this.add.text(node.x, node.y - 36, region.label, {
+        fontFamily: 'monospace', fontSize: '10px', color: region.color
+      }).setOrigin(0.5);
+    });
+
+    // ---- Draw level nodes ----
+    this.nodeSprites = [];
+    this.nodeLabels = [];
+
+    equationsData.forEach((eq, i) => {
+      const node = this.nodes[i];
+      const unlocked = eq.level <= maxUnlocked;
+      const completed = this.progression.getLevelData(eq.id);
+      const isCurrent = i === this.currentNodeIdx;
+
+      // Choose node texture
+      let texKey = 'node_locked';
+      if (!unlocked) {
+        texKey = 'node_locked';
+      } else if (isCurrent) {
+        texKey = 'node_current';
+      } else if (completed) {
+        texKey = 'node_complete';
+      } else if (eq.boss) {
+        texKey = 'node_boss';
+      } else {
+        texKey = 'node_normal';
+      }
+
+      const sprite = this.add.image(node.x, node.y, texKey).setOrigin(0.5);
+      if (eq.boss && unlocked) sprite.setScale(1.15);
+
+      // Level number on node
+      const label = this.add.text(node.x, node.y, `${eq.level}`, {
+        fontFamily: 'monospace',
+        fontSize: eq.boss ? '13px' : '12px',
+        color: unlocked ? '#ffffff' : '#333355',
+        fontStyle: eq.boss ? 'bold' : 'normal'
+      }).setOrigin(0.5);
+
+      // Stars below node
+      if (completed) {
+        for (let s = 0; s < 3; s++) {
+          this.add.image(
+            node.x - 10 + s * 10,
+            node.y + 20,
+            s < completed.stars ? 'star_filled' : 'star_empty'
+          ).setScale(0.45);
+        }
+      }
+
+      // Boss label
+      if (eq.boss && unlocked) {
+        this.add.text(node.x, node.y - 22, 'BOSS', {
+          fontFamily: 'monospace', fontSize: '7px', color: '#ff4444', fontStyle: 'bold'
+        }).setOrigin(0.5);
+      }
+
+      // Click to move player to this node
+      if (unlocked) {
+        sprite.setInteractive({ useHandCursor: true });
+        sprite.on('pointerdown', () => {
+          this._movePlayerToNode(i);
+        });
+      }
+
+      this.nodeSprites.push(sprite);
+      this.nodeLabels.push(label);
+    });
+
+    // ---- Player sprite ----
+    const startNode = this.nodes[this.currentNodeIdx];
+    this.player = this.add.image(startNode.x, startNode.y - 24, 'player_flask')
+      .setOrigin(0.5, 1);
+
+    // Gentle bob animation
+    this.tweens.add({
+      targets: this.player,
+      y: startNode.y - 28,
+      duration: 800,
+      yoyo: true,
+      repeat: -1,
+      ease: 'Sine.easeInOut'
+    });
+
+    // ---- HUD (fixed to camera) ----
+    this._buildHUD(width, height);
+
+    // ---- Level info panel at bottom ----
+    this._buildInfoPanel(width, height);
+    this._updateInfoPanel();
+
+    // ---- Keyboard controls ----
+    this.cursors = this.input.keyboard.createCursorKeys();
+    this.enterKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ENTER);
+    this.spaceKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
+
+    // Camera follows player
+    this.cameras.main.startFollow(this.player, true, 0.08, 0.08);
+    this.cameras.main.setDeadzone(100, 50);
+
+    // Set camera bounds to cover the full map
+    const bounds = this._getMapBounds();
+    this.cameras.main.setBounds(
+      bounds.minX - 80, bounds.minY - 80,
+      bounds.maxX - bounds.minX + 160,
+      bounds.maxY - bounds.minY + 160
+    );
+
+    // Track input for left/right navigation
+    this.lastMoveTime = 0;
+
+    // Highlight current node
+    this._highlightCurrentNode();
+  }
+
+  update(time) {
+    if (this.playerMoving) return;
+    if (this.settingsPanel) return;
+
+    const debounce = 180; // ms between moves
+
+    // Arrow keys: move to adjacent node
+    if (time - this.lastMoveTime > debounce) {
+      if (this.cursors.right.isDown || this.cursors.down.isDown) {
+        this._movePlayerToNode(this.currentNodeIdx + 1);
+        this.lastMoveTime = time;
+      } else if (this.cursors.left.isDown || this.cursors.up.isDown) {
+        this._movePlayerToNode(this.currentNodeIdx - 1);
+        this.lastMoveTime = time;
+      }
+    }
+
+    // Enter / Space: start the level at current node
+    if (Phaser.Input.Keyboard.JustDown(this.enterKey) || Phaser.Input.Keyboard.JustDown(this.spaceKey)) {
+      this._enterCurrentLevel();
+    }
+  }
+
+  /**
+   * Build a winding snaking path for the map nodes.
+   * Snakes left-to-right, then right-to-left, in rows.
+   */
+  _buildMapPath(viewW, viewH) {
+    const nodes = [];
+    const nodesPerRow = 5;
+    const hSpacing = 120;
+    const vSpacing = 90;
+    const startX = 100;
+    const startY = 80;
+
+    const totalRows = Math.ceil(equationsData.length / nodesPerRow);
+
+    equationsData.forEach((eq, i) => {
+      const row = Math.floor(i / nodesPerRow);
+      const col = i % nodesPerRow;
+      const goingRight = row % 2 === 0;
+
+      const actualCol = goingRight ? col : (nodesPerRow - 1 - col);
+      const x = startX + actualCol * hSpacing;
+      const y = startY + row * vSpacing;
+
+      nodes.push({ x, y, eq, index: i });
+    });
+
+    return nodes;
+  }
+
+  _getMapBounds() {
+    let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+    this.nodes.forEach(n => {
+      if (n.x < minX) minX = n.x;
+      if (n.y < minY) minY = n.y;
+      if (n.x > maxX) maxX = n.x;
+      if (n.y > maxY) maxY = n.y;
+    });
+    return { minX, minY, maxX, maxY };
+  }
+
+  _movePlayerToNode(targetIdx) {
+    if (this.playerMoving) return;
+    if (targetIdx < 0 || targetIdx >= this.nodes.length) return;
+
+    // Can only move to unlocked nodes
+    const targetEq = equationsData[targetIdx];
+    if (targetEq.level > this.progression.getMaxUnlockedLevel()) return;
+
+    // Can only move to adjacent nodes (one step at a time)
+    const diff = Math.abs(targetIdx - this.currentNodeIdx);
+    if (diff === 0) return;
+
+    // If clicking a non-adjacent node, walk through each node in sequence
+    if (diff > 1) {
+      this._walkPath(targetIdx);
+      return;
+    }
+
+    this.playerMoving = true;
+    const prev = this.currentNodeIdx;
+    this.currentNodeIdx = targetIdx;
+    const target = this.nodes[targetIdx];
+
+    // Stop bob tween, move, restart bob
+    this.tweens.killTweensOf(this.player);
+
+    this.tweens.add({
+      targets: this.player,
+      x: target.x,
+      y: target.y - 24,
+      duration: 200,
+      ease: 'Sine.easeInOut',
+      onComplete: () => {
+        this.playerMoving = false;
+        // Restart bob
+        this.tweens.add({
+          targets: this.player,
+          y: target.y - 28,
+          duration: 800,
+          yoyo: true,
+          repeat: -1,
+          ease: 'Sine.easeInOut'
+        });
+        this._highlightCurrentNode();
+        this._updateInfoPanel();
+      }
+    });
+  }
+
+  /**
+   * Walk through multiple nodes in sequence to reach a distant target.
+   */
+  _walkPath(targetIdx) {
+    if (this.playerMoving) return;
+
+    const maxUnlocked = this.progression.getMaxUnlockedLevel();
+    // Clamp target to furthest unlocked
+    let clampedTarget = targetIdx;
+    if (equationsData[clampedTarget].level > maxUnlocked) {
+      // Find the last unlocked index before target
+      for (let i = targetIdx; i >= 0; i--) {
+        if (equationsData[i].level <= maxUnlocked) {
+          clampedTarget = i;
+          break;
+        }
+      }
+    }
+    if (clampedTarget === this.currentNodeIdx) return;
+
+    this.playerMoving = true;
+    const direction = clampedTarget > this.currentNodeIdx ? 1 : -1;
+    const steps = [];
+    let idx = this.currentNodeIdx;
+    while (idx !== clampedTarget) {
+      idx += direction;
+      steps.push(idx);
+    }
+
+    this.tweens.killTweensOf(this.player);
+
+    const walkStep = (stepIdx) => {
+      if (stepIdx >= steps.length) {
+        this.playerMoving = false;
+        const finalNode = this.nodes[this.currentNodeIdx];
+        this.tweens.add({
+          targets: this.player,
+          y: finalNode.y - 28,
+          duration: 800,
+          yoyo: true,
+          repeat: -1,
+          ease: 'Sine.easeInOut'
+        });
+        this._highlightCurrentNode();
+        this._updateInfoPanel();
+        return;
+      }
+
+      const nextIdx = steps[stepIdx];
+      this.currentNodeIdx = nextIdx;
+      const node = this.nodes[nextIdx];
+
+      this.tweens.add({
+        targets: this.player,
+        x: node.x,
+        y: node.y - 24,
+        duration: 120,
+        ease: 'Linear',
+        onComplete: () => walkStep(stepIdx + 1)
+      });
+    };
+
+    walkStep(0);
+  }
+
+  _highlightCurrentNode() {
+    const maxUnlocked = this.progression.getMaxUnlockedLevel();
+
+    this.nodeSprites.forEach((sprite, i) => {
+      const eq = equationsData[i];
+      const unlocked = eq.level <= maxUnlocked;
+      const completed = this.progression.getLevelData(eq.id);
+
+      if (i === this.currentNodeIdx) {
+        sprite.setTexture('node_current');
+        if (eq.boss) sprite.setScale(1.15);
+        else sprite.setScale(1);
+      } else if (!unlocked) {
+        sprite.setTexture('node_locked');
+        sprite.setScale(1);
+      } else if (completed) {
+        sprite.setTexture('node_complete');
+        sprite.setScale(1);
+      } else if (eq.boss) {
+        sprite.setTexture('node_boss');
+        sprite.setScale(1.15);
+      } else {
+        sprite.setTexture('node_normal');
+        sprite.setScale(1);
+      }
+    });
+  }
+
+  _enterCurrentLevel() {
+    const eq = equationsData[this.currentNodeIdx];
+    if (!eq) return;
+    if (eq.level > this.progression.getMaxUnlockedLevel()) return;
+
+    // Flash the node
+    const sprite = this.nodeSprites[this.currentNodeIdx];
+    this.tweens.add({
+      targets: sprite,
+      scaleX: 1.4, scaleY: 1.4,
+      duration: 150,
+      yoyo: true,
+      onComplete: () => {
+        const sceneKey = eq.boss ? 'BossScene' : 'GameScene';
+        this.scene.start(sceneKey, {
+          equation: eq,
+          progression: this.progression
+        });
+      }
+    });
+  }
+
+  _buildHUD(width, height) {
+    // Fixed HUD container
     const rank = this.progression.getRank();
     const nextRank = this.progression.getNextRank();
     const xp = this.progression.getXP();
 
-    this.add.text(width / 2, 100, rank.title, {
-      fontFamily: 'monospace',
-      fontSize: '14px',
-      color: '#ffdd44'
-    }).setOrigin(0.5);
+    // Title (top-left)
+    this.add.text(12, 8, 'ChemQuest', {
+      fontFamily: 'monospace', fontSize: '18px', color: '#00ff88', fontStyle: 'bold'
+    }).setScrollFactor(0).setDepth(100);
 
+    // Rank (below title)
+    this.add.text(12, 28, rank.title, {
+      fontFamily: 'monospace', fontSize: '10px', color: '#ffdd44'
+    }).setScrollFactor(0).setDepth(100);
+
+    // XP bar (top right)
     if (nextRank) {
-      const xpProgress = xp - rank.xp;
-      const xpNeeded = nextRank.xp - rank.xp;
-      const pct = Math.min(1, xpProgress / xpNeeded);
+      const barW = 120, barH = 6;
+      const barX = width - barW - 12;
+      const barY = 12;
+      const pct = Math.min(1, (xp - rank.xp) / (nextRank.xp - rank.xp));
 
-      // XP bar
-      const barW = 200, barH = 8;
-      const barX = width / 2 - barW / 2;
-      const barY = 115;
-      this.add.graphics()
-        .fillStyle(0x333355, 1)
-        .fillRect(barX, barY, barW, barH);
-      this.add.graphics()
-        .fillStyle(0x00ff88, 1)
-        .fillRect(barX, barY, barW * pct, barH);
+      const xpBg = this.add.graphics().setScrollFactor(0).setDepth(100);
+      xpBg.fillStyle(0x333355, 1);
+      xpBg.fillRoundedRect(barX, barY, barW, barH, 3);
 
-      this.add.text(width / 2, barY + 14, `${xp} / ${nextRank.xp} XP`, {
-        fontFamily: 'monospace',
-        fontSize: '10px',
-        color: '#aaaacc'
-      }).setOrigin(0.5);
+      const xpFill = this.add.graphics().setScrollFactor(0).setDepth(100);
+      xpFill.fillStyle(0x00ff88, 1);
+      xpFill.fillRoundedRect(barX, barY, barW * pct, barH, 3);
+
+      this.add.text(barX + barW, barY + 12, `${xp} XP`, {
+        fontFamily: 'monospace', fontSize: '9px', color: '#aaaacc'
+      }).setOrigin(1, 0).setScrollFactor(0).setDepth(100);
     }
 
-    // Level grid
-    const startY = 150;
-    const cols = 10;
-    const cellSize = 52;
-    const gridW = cols * cellSize;
-    const offsetX = (width - gridW) / 2 + cellSize / 2;
-    const maxUnlocked = this.progression.getMaxUnlockedLevel();
-
-    // Band labels keyed by level number
-    const bandLabels = [
-      { level: 1, label: 'Synthesis' },
-      { level: 11, label: 'Decomposition' },
-      { level: 16, label: 'Single Replacement' },
-      { level: 21, label: 'Double Replacement' },
-      { level: 27, label: 'Combustion & Mixed' }
-    ];
-
-    let currentBandIdx = 0;
-    let yOffset = startY;
-    let col = 0; // track column independently
-
-    equationsData.forEach((eq, i) => {
-      // Check if we need a band label
-      if (currentBandIdx < bandLabels.length && eq.level === bandLabels[currentBandIdx].level) {
-        // If we are mid-row, finish the row first
-        if (col > 0) {
-          yOffset += cellSize;
-          col = 0;
-        }
-        if (i > 0) yOffset += 6;
-        this.add.text(offsetX - cellSize / 2 + 5, yOffset, bandLabels[currentBandIdx].label, {
-          fontFamily: 'monospace',
-          fontSize: '11px',
-          color: '#6666aa'
-        });
-        yOffset += 20;
-        currentBandIdx++;
-      }
-
-      const x = offsetX + col * cellSize;
-      const y = yOffset;
-
-      // Advance to next column; wrap row when full
-      col++;
-      if (col >= cols) {
-        col = 0;
-        yOffset += cellSize;
-      }
-
-      const levelNum = eq.level;
-      const unlocked = levelNum <= maxUnlocked;
-      const completed = this.progression.getLevelData(eq.id);
-
-      // Level cell background
-      const bg = this.add.graphics();
-      if (!unlocked) {
-        bg.fillStyle(0x222233, 0.5);
-      } else if (eq.boss) {
-        bg.fillStyle(0x442222, 0.8);
-      } else {
-        bg.fillStyle(0x2a2a4a, 0.8);
-      }
-      bg.fillRoundedRect(x - 20, y - 16, 44, 44, 6);
-
-      if (unlocked) {
-        bg.lineStyle(1, eq.boss ? 0xff4444 : 0x5555aa, 0.6);
-        bg.strokeRoundedRect(x - 20, y - 16, 44, 44, 6);
-      }
-
-      // Level number
-      const numText = this.add.text(x + 2, y, `${levelNum}`, {
-        fontFamily: 'monospace',
-        fontSize: unlocked ? '16px' : '12px',
-        color: unlocked ? '#ffffff' : '#444466'
-      }).setOrigin(0.5);
-
-      // Stars
-      if (completed) {
-        for (let s = 0; s < 3; s++) {
-          const starX = x - 10 + s * 10;
-          const starY = y + 14;
-          this.add.image(starX, starY, s < completed.stars ? 'star_filled' : 'star_empty')
-            .setScale(0.5);
-        }
-      }
-
-      // Boss indicator
-      if (eq.boss && unlocked) {
-        this.add.text(x + 2, y - 10, 'BOSS', {
-          fontFamily: 'monospace',
-          fontSize: '7px',
-          color: '#ff4444'
-        }).setOrigin(0.5);
-      }
-
-      // Lock icon for locked levels
-      if (!unlocked) {
-        this.add.text(x + 2, y + 2, '🔒', {
-          fontSize: '10px'
-        }).setOrigin(0.5);
-      }
-
-      // Click handler
-      if (unlocked) {
-        const hitZone = this.add.zone(x + 2, y + 4, 44, 44)
-          .setInteractive({ useHandCursor: true });
-
-        hitZone.on('pointerover', () => {
-          bg.clear();
-          bg.fillStyle(eq.boss ? 0x663333 : 0x3a3a6a, 0.9);
-          bg.fillRoundedRect(x - 20, y - 16, 44, 44, 6);
-          bg.lineStyle(2, eq.boss ? 0xff6666 : 0x7777cc, 0.8);
-          bg.strokeRoundedRect(x - 20, y - 16, 44, 44, 6);
-        });
-
-        hitZone.on('pointerout', () => {
-          bg.clear();
-          bg.fillStyle(eq.boss ? 0x442222 : 0x2a2a4a, 0.8);
-          bg.fillRoundedRect(x - 20, y - 16, 44, 44, 6);
-          bg.lineStyle(1, eq.boss ? 0xff4444 : 0x5555aa, 0.6);
-          bg.strokeRoundedRect(x - 20, y - 16, 44, 44, 6);
-        });
-
-        hitZone.on('pointerdown', () => {
-          const sceneKey = eq.boss ? 'BossScene' : 'GameScene';
-          this.scene.start(sceneKey, {
-            equation: eq,
-            progression: this.progression
-          });
-        });
-      }
-    });
-
-    // Streak display
+    // Streak
     const streak = this.progression.getStreak();
     if (streak > 0) {
-      this.add.text(width - 10, 10, `Streak: ${streak}`, {
-        fontFamily: 'monospace',
-        fontSize: '12px',
+      this.add.text(width - 12, 32, `Streak: ${streak}`, {
+        fontFamily: 'monospace', fontSize: '10px',
         color: streak >= 5 ? '#ff6644' : '#ffdd44'
-      }).setOrigin(1, 0);
+      }).setOrigin(1, 0).setScrollFactor(0).setDepth(100);
     }
 
     // Settings button
-    const settingsBtn = this.add.text(10, 10, '[Settings]', {
-      fontFamily: 'monospace',
-      fontSize: '12px',
-      color: '#8888aa'
-    }).setInteractive({ useHandCursor: true });
+    const settingsBtn = this.add.text(12, height - 18, '[Settings]', {
+      fontFamily: 'monospace', fontSize: '10px', color: '#6666aa'
+    }).setScrollFactor(0).setDepth(100).setInteractive({ useHandCursor: true });
+    settingsBtn.on('pointerdown', () => this._toggleSettings());
 
-    settingsBtn.on('pointerdown', () => {
-      this._toggleSettings();
+    // Controls hint
+    this.add.text(width / 2, height - 10, 'Arrow keys to move  |  Enter to play', {
+      fontFamily: 'monospace', fontSize: '9px', color: '#444466'
+    }).setOrigin(0.5, 1).setScrollFactor(0).setDepth(100);
+  }
+
+  _buildInfoPanel(width, height) {
+    // Info panel at the bottom showing current level details
+    const panelH = 52;
+    const panelY = height - panelH - 22;
+
+    this.infoBg = this.add.graphics().setScrollFactor(0).setDepth(99);
+    this.infoBg.fillStyle(0x1a1a2e, 0.9);
+    this.infoBg.fillRoundedRect(width / 2 - 190, panelY, 380, panelH, 8);
+    this.infoBg.lineStyle(1, 0x3333555, 0.5);
+    this.infoBg.strokeRoundedRect(width / 2 - 190, panelY, 380, panelH, 8);
+
+    this.infoTitle = this.add.text(width / 2, panelY + 12, '', {
+      fontFamily: 'monospace', fontSize: '13px', color: '#ffffff', fontStyle: 'bold'
+    }).setOrigin(0.5).setScrollFactor(0).setDepth(100);
+
+    this.infoSub = this.add.text(width / 2, panelY + 30, '', {
+      fontFamily: 'monospace', fontSize: '10px', color: '#aaaacc'
+    }).setOrigin(0.5).setScrollFactor(0).setDepth(100);
+
+    this.infoStars = [];
+    for (let s = 0; s < 3; s++) {
+      const star = this.add.image(width / 2 + 160 + s * 14, panelY + 14, 'star_empty')
+        .setScale(0.55).setScrollFactor(0).setDepth(100);
+      this.infoStars.push(star);
+    }
+  }
+
+  _updateInfoPanel() {
+    const eq = equationsData[this.currentNodeIdx];
+    if (!eq) return;
+
+    const unlocked = eq.level <= this.progression.getMaxUnlockedLevel();
+    const completed = this.progression.getLevelData(eq.id);
+
+    const typeLabel = eq.type.replace(/_/g, ' ');
+    const bossTag = eq.boss ? '  [BOSS]' : '';
+
+    this.infoTitle.setText(
+      unlocked
+        ? `Level ${eq.level}: ${eq.display.replace(/_/g, '')}${bossTag}`
+        : `Level ${eq.level}: LOCKED`
+    );
+    this.infoTitle.setColor(unlocked ? (eq.boss ? '#ff6644' : '#ffffff') : '#444466');
+
+    this.infoSub.setText(
+      unlocked
+        ? `${typeLabel}  |  par: ${eq.par_time}s  |  ${completed ? 'COMPLETED' : 'not yet cleared'}`
+        : 'Earn more XP to unlock this region'
+    );
+
+    this.infoStars.forEach((star, s) => {
+      if (completed && s < completed.stars) {
+        star.setTexture('star_filled');
+      } else {
+        star.setTexture('star_empty');
+      }
     });
-
-    this.settingsPanel = null;
   }
 
   _toggleSettings() {
@@ -229,7 +558,8 @@ export class MenuScene extends Phaser.Scene {
     const { width, height } = this.cameras.main;
     const settings = this.progression.getSettings();
 
-    this.settingsPanel = this.add.container(width / 2, height / 2);
+    this.settingsPanel = this.add.container(width / 2, height / 2)
+      .setScrollFactor(0).setDepth(200);
 
     const bg = this.add.graphics();
     bg.fillStyle(0x1a1a2e, 0.95);
@@ -243,7 +573,6 @@ export class MenuScene extends Phaser.Scene {
     }).setOrigin(0.5);
     this.settingsPanel.add(title);
 
-    // Colorblind mode toggle
     const cbText = this.add.text(-100, -30, `Colorblind Mode: ${settings.colorblindMode ? 'ON' : 'OFF'}`, {
       fontFamily: 'monospace', fontSize: '12px', color: '#aaaacc'
     }).setInteractive({ useHandCursor: true });
@@ -254,7 +583,6 @@ export class MenuScene extends Phaser.Scene {
     });
     this.settingsPanel.add(cbText);
 
-    // Reset progress
     const resetBtn = this.add.text(0, 60, '[Reset Progress]', {
       fontFamily: 'monospace', fontSize: '12px', color: '#ff4444'
     }).setOrigin(0.5).setInteractive({ useHandCursor: true });
@@ -264,7 +592,6 @@ export class MenuScene extends Phaser.Scene {
     });
     this.settingsPanel.add(resetBtn);
 
-    // Close button
     const closeBtn = this.add.text(130, -90, 'X', {
       fontFamily: 'monospace', fontSize: '16px', color: '#ff6666'
     }).setOrigin(0.5).setInteractive({ useHandCursor: true });

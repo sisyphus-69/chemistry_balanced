@@ -198,6 +198,108 @@ export class BootScene extends Phaser.Scene {
     // Star textures
     this._generateStarTexture('star_filled', 0xffdd00, 1);
     this._generateStarTexture('star_empty', 0x444466, 0.5);
+
+    // --- Overworld map textures ---
+
+    // Player sprite (little flask-shaped character)
+    {
+      const g = this.make.graphics({ add: false });
+      const s = 28;
+      // Body (flask shape)
+      g.fillStyle(0x00ff88, 1);
+      g.fillRoundedRect(6, 8, 16, 16, 4);
+      // Neck
+      g.fillStyle(0x00ff88, 1);
+      g.fillRect(10, 2, 8, 8);
+      // Cork / head
+      g.fillStyle(0xffdd44, 1);
+      g.fillRoundedRect(9, 0, 10, 5, 2);
+      // Eyes
+      g.fillStyle(0x000000, 1);
+      g.fillCircle(11, 14, 2);
+      g.fillCircle(17, 14, 2);
+      // Feet
+      g.fillStyle(0x008844, 1);
+      g.fillRoundedRect(6, 22, 6, 4, 2);
+      g.fillRoundedRect(16, 22, 6, 4, 2);
+      g.generateTexture('player_flask', s, s);
+      g.destroy();
+    }
+
+    // Level node: normal (circle)
+    {
+      const g = this.make.graphics({ add: false });
+      g.fillStyle(0x2a2a4a, 1);
+      g.fillCircle(16, 16, 14);
+      g.lineStyle(2, 0x5555aa, 1);
+      g.strokeCircle(16, 16, 14);
+      g.generateTexture('node_normal', 32, 32);
+      g.destroy();
+    }
+
+    // Level node: boss (larger, red ring)
+    {
+      const g = this.make.graphics({ add: false });
+      g.fillStyle(0x442222, 1);
+      g.fillCircle(18, 18, 16);
+      g.lineStyle(3, 0xff4444, 1);
+      g.strokeCircle(18, 18, 16);
+      g.generateTexture('node_boss', 36, 36);
+      g.destroy();
+    }
+
+    // Level node: locked (dimmed)
+    {
+      const g = this.make.graphics({ add: false });
+      g.fillStyle(0x1a1a2a, 0.6);
+      g.fillCircle(16, 16, 14);
+      g.lineStyle(1, 0x333355, 0.5);
+      g.strokeCircle(16, 16, 14);
+      g.generateTexture('node_locked', 32, 32);
+      g.destroy();
+    }
+
+    // Level node: completed
+    {
+      const g = this.make.graphics({ add: false });
+      g.fillStyle(0x1a3a2a, 1);
+      g.fillCircle(16, 16, 14);
+      g.lineStyle(2, 0x00ff88, 0.8);
+      g.strokeCircle(16, 16, 14);
+      g.generateTexture('node_complete', 32, 32);
+      g.destroy();
+    }
+
+    // Level node: current (highlighted)
+    {
+      const g = this.make.graphics({ add: false });
+      g.fillStyle(0x3a3a6a, 1);
+      g.fillCircle(16, 16, 14);
+      g.lineStyle(3, 0x00ccff, 1);
+      g.strokeCircle(16, 16, 14);
+      g.generateTexture('node_current', 32, 32);
+      g.destroy();
+    }
+
+    // Path dot (for dotted trail between nodes)
+    {
+      const g = this.make.graphics({ add: false });
+      g.fillStyle(0x555577, 1);
+      g.fillCircle(3, 3, 3);
+      g.generateTexture('path_dot', 6, 6);
+      g.destroy();
+    }
+
+    // Region banner background
+    {
+      const g = this.make.graphics({ add: false });
+      g.fillStyle(0x1a1a2e, 0.85);
+      g.fillRoundedRect(0, 0, 200, 22, 4);
+      g.lineStyle(1, 0x5555aa, 0.6);
+      g.strokeRoundedRect(0, 0, 200, 22, 4);
+      g.generateTexture('region_banner', 200, 22);
+      g.destroy();
+    }
   }
 
   _generateStarTexture(key, color, alpha) {
