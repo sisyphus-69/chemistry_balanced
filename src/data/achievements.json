@@ -1,12 +1,16 @@
 [
   { "id": "first_balance",  "name": "First Reaction!",  "desc": "Balance your first equation",              "icon": "flask" },
   { "id": "speed_demon",    "name": "Speed Demon",       "desc": "Balance an equation in under 5 seconds",  "icon": "lightning" },
-  { "id": "perfectionist",  "name": "Perfectionist",     "desc": "3-star an entire level band",              "icon": "star" },
+  { "id": "perfectionist",  "name": "Perfectionist",     "desc": "3-star an entire region",                  "icon": "star" },
   { "id": "no_hints_10",    "name": "Solo Scientist",    "desc": "Complete 10 levels without hints",         "icon": "brain" },
-  { "id": "all_stars",      "name": "Nobel Prize",       "desc": "3-star every level in the game",           "icon": "trophy" },
-  { "id": "streak_10",      "name": "Unstoppable",       "desc": "Get 10 correct in a row",                  "icon": "fire" },
-  { "id": "boss_slayer",    "name": "Boss Slayer",       "desc": "Defeat all boss levels",                   "icon": "sword" },
+  { "id": "no_hints_25",    "name": "Genius",             "desc": "Complete 25 levels without hints",         "icon": "brain" },
+  { "id": "all_stars",      "name": "Nobel Prize",       "desc": "3-star all 100 levels",                    "icon": "trophy" },
   { "id": "streak_5",       "name": "On Fire!",          "desc": "Get 5 correct in a row",                   "icon": "flame" },
+  { "id": "streak_10",      "name": "Unstoppable",       "desc": "Get 10 correct in a row",                  "icon": "fire" },
+  { "id": "streak_20",      "name": "Legendary",          "desc": "Get 20 correct in a row",                  "icon": "fire" },
+  { "id": "boss_slayer",    "name": "Boss Slayer",       "desc": "Defeat all 10 boss levels",                "icon": "sword" },
   { "id": "no_hints_5",     "name": "Independent",       "desc": "Complete 5 levels without hints",          "icon": "magnifier" },
-  { "id": "level_20",       "name": "Halfway There",     "desc": "Complete 20 levels",                       "icon": "medal" }
+  { "id": "level_20",       "name": "Getting Started",   "desc": "Complete 20 levels",                       "icon": "medal" },
+  { "id": "level_50",       "name": "Halfway There",     "desc": "Complete 50 levels",                       "icon": "medal" },
+  { "id": "level_100",      "name": "Chemistry Master",  "desc": "Complete all 100 levels",                  "icon": "crown" }
 ]

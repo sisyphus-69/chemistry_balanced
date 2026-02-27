@@ -8,12 +8,29 @@ import { PIXEL_FONT } from '../ui/PixelText.js';
 import { HPBar } from '../ui/HPBar.js';
 import { ProfessorAurum } from '../ui/ProfessorAurum.js';
 import { BattleUI } from '../ui/BattleUI.js';
+import { LayoutGrid } from '../ui/LayoutGrid.js';
+import { PanelRenderer } from '../ui/PanelRenderer.js';
+import { getRegionForLevel } from '../data/regions.js';
 import elementsData from '../data/elements.json';
 import equationsData from '../data/equations.json';
 
+const BOSS_CONFIG = {
+  10:  { equations: 2, time: 90,  failPenalty: 3,  timeBonus: 15, name: 'Dr. Entropy',             desc: 'Balance equations before time runs out!',    color: '#ff4444' },
+  20:  { equations: 3, time: 80,  failPenalty: 3,  timeBonus: 12, name: 'The Combustion Engine',    desc: 'Speed round! Solve quickly!',                  color: '#ff8844' },
+  30:  { equations: 3, time: 75,  failPenalty: 5,  timeBonus: 12, name: 'Professor Redox',          desc: 'Triple challenge! 3 equations in sequence.',   color: '#cc44ff' },
+  40:  { equations: 3, time: 70,  failPenalty: 5,  timeBonus: 10, name: 'The Acid King',            desc: 'Prove your mastery with tough equations!',     color: '#44ff44' },
+  50:  { equations: 4, time: 65,  failPenalty: 5,  timeBonus: 10, name: 'Chaos Reactor',            desc: 'The gauntlet intensifies!',                     color: '#ff44ff' },
+  60:  { equations: 4, time: 60,  failPenalty: 7,  timeBonus: 8,  name: 'Crystal Warden',           desc: 'Guard of the crystal lab. 4 equations!',       color: '#00ffcc' },
+  70:  { equations: 4, time: 55,  failPenalty: 7,  timeBonus: 8,  name: 'Solar Inferno',            desc: 'The forge burns bright. Stay sharp!',          color: '#ffaa00' },
+  80:  { equations: 5, time: 50,  failPenalty: 7,  timeBonus: 7,  name: 'Leviathan',                desc: 'From the deep! 5 equations await.',            color: '#0066ff' },
+  90:  { equations: 5, time: 45,  failPenalty: 10, timeBonus: 6,  name: 'Plasma Overlord',          desc: 'Extreme heat! Penalties are severe.',           color: '#ff00aa' },
+  100: { equations: 6, time: 40,  failPenalty: 10, timeBonus: 5,  name: 'The Quantum Singularity',  desc: 'The ultimate test. 6 equations. No mercy.',    color: '#ffffff' }
+};
+
 /**
- * BossScene — Intense timed boss fight with red RPG theme, heartbeat,
- * HP bars, 3×3 grid, and dramatic visual effects.
+ * BossScene — Intense timed boss fight with region-themed RPG visuals,
+ * heartbeat, HP bars, 3x3 grid, and dramatic visual effects.
+ * Scaled for 1200x900 resolution.
  */
 export class BossScene extends Phaser.Scene {
   constructor() {
@@ -24,6 +41,7 @@ export class BossScene extends Phaser.Scene {
     this.equation = data.equation;
     this.progression = data.progression;
     this.bossLevel = data.equation.level;
+    this.region = getRegionForLevel(data.equation.level);
     this.failedAttempts = 0;
     this.startTime = 0;
     this.levelComplete = false;
@@ -42,13 +60,16 @@ export class BossScene extends Phaser.Scene {
     const { width, height } = this.cameras.main;
     this.startTime = Date.now();
 
-    // Layout constants
-    this.EQUATION_Y = height * 0.45;
-    this.HP_BAR_Y = 470;
-    this.GRID_CENTER_Y = 520;
-    this.CHECK_CENTER_Y = 520;
+    // Grid layout system
+    this.grid = new LayoutGrid(width, height);
 
-    // Build the fixed boss environment (red-themed control panel)
+    // Layout constants (scaled for 1200x900)
+    this.EQUATION_Y = this.grid.rowY(0.42);
+    this.HP_BAR_Y = this.grid.rowY(0.78);
+    this.GRID_CENTER_Y = this.grid.rowY(0.80);
+    this.CHECK_CENTER_Y = this.grid.rowY(0.80);
+
+    // Build the fixed boss environment (region-themed control panel)
     this._buildBossEnvironment(width, height);
 
     this._setupBossEquations();
@@ -75,16 +96,29 @@ export class BossScene extends Phaser.Scene {
   }
 
   // ─────────────────────────────────────────────
-  // BACKGROUND — Dark red with vignette + embers
+  // BACKGROUND — Region-themed with vignette + embers
   // ─────────────────────────────────────────────
   _buildBossEnvironment(width, height) {
-    // Red-tinted background
-    this.add.rectangle(width / 2, height / 2, width, height, 0x1a0a0a);
+    // Region-tinted background
+    this.add.rectangle(width / 2, height / 2, width, height, this.region?.palette?.bg || 0x1a0a0a);
 
-    // Control panel at the bottom (tinted red)
-    const panelY = height - 160;
+    // Edge glow (fixes bug: was referenced but never created)
+    this._edgeGlow = this.add.graphics();
+    this._edgeGlow.fillStyle(this.region?.palette?.accent || 0xff0000, 0.15);
+    this._edgeGlow.fillRect(0, 0, width, 8);
+    this._edgeGlow.fillRect(0, height - 8, width, 8);
+    this._edgeGlow.fillRect(0, 0, 8, height);
+    this._edgeGlow.fillRect(width - 8, 0, 8, height);
+    this._edgeGlow.setAlpha(0.1);
+
+    // Control panel at the bottom (tinted with region border color), scaled Y
+    const panelY = height - 240;
     const panel = this.add.image(0, panelY, 'control_panel').setOrigin(0, 0);
-    panel.setTint(0xffcccc);
+    panel.setTint(this.region?.palette?.border || 0xffcccc);
+
+    // CRT scanline overlay
+    const crt = this.add.graphics();
+    PanelRenderer.drawCRTOverlay(crt, width, height);
 
     this._buildBossHUD();
   }
@@ -93,14 +127,15 @@ export class BossScene extends Phaser.Scene {
   // BOSS EQUATIONS SETUP
   // ─────────────────────────────────────────────
   _setupBossEquations() {
+    const config = BOSS_CONFIG[this.bossLevel] || BOSS_CONFIG[10];
     const nearby = equationsData.filter(eq =>
       eq.level >= this.bossLevel - 5 &&
       eq.level <= this.bossLevel &&
       !eq.boss
     );
     const shuffled = Phaser.Utils.Array.Shuffle([...nearby]);
-    this.equationsToSolve = shuffled.slice(0, 3);
-    while (this.equationsToSolve.length < 3) {
+    this.equationsToSolve = shuffled.slice(0, config.equations);
+    while (this.equationsToSolve.length < config.equations) {
       this.equationsToSolve.push(this.equation);
     }
     this.bossMaxHealth = this.equationsToSolve.length;
@@ -108,19 +143,12 @@ export class BossScene extends Phaser.Scene {
   }
 
   // ─────────────────────────────────────────────
-  // BOSS INTRO — Dramatic red splash
+  // BOSS INTRO — Dramatic region-themed splash
   // ─────────────────────────────────────────────
   _showBossIntro(onComplete) {
     const { width, height } = this.cameras.main;
 
-    const bossNames = {
-      10: { name: 'Dr. Entropy', desc: 'Balance 3 equations before time runs out!', color: '#ff4444' },
-      20: { name: 'The Combustion Engine', desc: 'Speed round! Each equation must be solved quickly.', color: '#ff8844' },
-      30: { name: 'Professor Redox', desc: 'Triple challenge! Solve 3 equations in sequence.', color: '#cc44ff' },
-      40: { name: 'The Acid King', desc: 'Prove your mastery with tough equations!', color: '#44ff44' },
-      50: { name: 'Chaos Reactor', desc: 'The ultimate challenge! Balance them all.', color: '#ff44ff' }
-    };
-    const boss = bossNames[this.bossLevel] || { name: 'Boss', desc: 'Defeat the boss!', color: '#ff4444' };
+    const boss = BOSS_CONFIG[this.bossLevel] || BOSS_CONFIG[10];
 
     const container = this.add.container(width / 2, height / 2);
 
@@ -130,24 +158,25 @@ export class BossScene extends Phaser.Scene {
     bg.fillRect(-width / 2, -height / 2, width, height);
     container.add(bg);
 
-    // Red danger stripes
+    // Danger stripes with region accent
     const stripes = this.add.graphics();
+    const stripeColor = this.region?.palette?.accent || 0xff0000;
     for (let i = 0; i < 8; i++) {
-      stripes.fillStyle(0xff0000, 0.15 - i * 0.015);
+      stripes.fillStyle(stripeColor, 0.15 - i * 0.015);
       stripes.fillRect(-width / 2, -height / 2 + i * 4, width, 4);
       stripes.fillRect(-width / 2, height / 2 - (i + 1) * 4, width, 4);
     }
     container.add(stripes);
 
-    // "BOSS FIGHT"
+    // "BOSS FIGHT" — scaled 1.5x: 16px -> 24px
     const fightText = this.add.text(0, -60, 'BOSS FIGHT', {
-      fontFamily: PIXEL_FONT, fontSize: '16px', color: '#ff4444'
+      fontFamily: PIXEL_FONT, fontSize: '24px', color: '#ff4444'
     }).setOrigin(0.5);
     container.add(fightText);
 
-    // Boss name
+    // Boss name — scaled 1.5x: 24px -> 36px
     const nameText = this.add.text(0, -15, boss.name, {
-      fontFamily: PIXEL_FONT, fontSize: '24px', color: boss.color
+      fontFamily: PIXEL_FONT, fontSize: '36px', color: boss.color
     }).setOrigin(0.5).setScale(0).setAlpha(0);
     container.add(nameText);
 
@@ -157,24 +186,24 @@ export class BossScene extends Phaser.Scene {
       duration: 500, delay: 300, ease: 'Back.easeOut'
     });
 
-    // Description
+    // Description — scaled 1.5x: 10px -> 15px
     const descText = this.add.text(0, 30, boss.desc, {
-      fontFamily: PIXEL_FONT, fontSize: '10px', color: '#cc8888',
+      fontFamily: PIXEL_FONT, fontSize: '15px', color: '#cc8888',
       wordWrap: { width: 400 }, align: 'center'
     }).setOrigin(0.5).setAlpha(0);
     container.add(descText);
     this.tweens.add({ targets: descText, alpha: 1, duration: 400, delay: 600 });
 
-    // Health segments preview
+    // Health segments preview — scaled 1.5x: 10px -> 15px
     const segText = this.add.text(0, 70, `\u2764 \u2764 \u2764  x${this.bossMaxHealth} equations`, {
-      fontFamily: PIXEL_FONT, fontSize: '10px', color: '#ff6666'
+      fontFamily: PIXEL_FONT, fontSize: '15px', color: '#ff6666'
     }).setOrigin(0.5).setAlpha(0);
     container.add(segText);
     this.tweens.add({ targets: segText, alpha: 1, duration: 300, delay: 800 });
 
-    // Start prompt
+    // Start prompt — scaled 1.5x: 12px -> 18px
     const startText = this.add.text(0, 105, '[ CLICK TO FIGHT ]', {
-      fontFamily: PIXEL_FONT, fontSize: '12px', color: '#ffffff'
+      fontFamily: PIXEL_FONT, fontSize: '18px', color: '#ffffff'
     }).setOrigin(0.5).setAlpha(0);
     container.add(startText);
     this.tweens.add({ targets: startText, alpha: 1, duration: 300, delay: 1000 });
@@ -220,13 +249,15 @@ export class BossScene extends Phaser.Scene {
   // START BOSS FIGHT
   // ─────────────────────────────────────────────
   _startBossFight() {
+    const config = BOSS_CONFIG[this.bossLevel] || BOSS_CONFIG[10];
+
     this.currentEquationIdx = 0;
     this._loadCurrentEquation();
     this._buildBossHUD();
     this._startHeartbeat();
     this._setupKeyboard();
 
-    this.timeRemaining = 60 + this.bossLevel;
+    this.timeRemaining = config.time;
     this.timerEvent = this.time.addEvent({
       delay: 1000,
       callback: () => {
@@ -316,15 +347,15 @@ export class BossScene extends Phaser.Scene {
 
     this.equationContainer = this.add.container(0, 0);
 
-    // Equation number indicator
+    // Equation number indicator — scaled 1.5x: 10px -> 15px
     const eqNum = this.add.text(width / 2, this.EQUATION_Y - 24, `Equation ${this.currentEquationIdx + 1} / ${this.bossMaxHealth}`, {
-      fontFamily: PIXEL_FONT, fontSize: '10px', color: '#cc6666'
+      fontFamily: PIXEL_FONT, fontSize: '15px', color: '#cc6666'
     }).setOrigin(0.5);
     this.equationContainer.add(eqNum);
 
-    // Equation display
+    // Equation display — scaled 1.5x: 16px -> 24px
     const eqText = this.add.text(width / 2, this.EQUATION_Y, eq.display, {
-      fontFamily: PIXEL_FONT, fontSize: '16px', color: '#ffcccc'
+      fontFamily: PIXEL_FONT, fontSize: '24px', color: '#ffcccc'
     }).setOrigin(0.5);
     this.equationContainer.add(eqText);
 
@@ -341,11 +372,14 @@ export class BossScene extends Phaser.Scene {
       const x = startX + i * spacing;
       const y = this.EQUATION_Y + 40;
 
-      const slotBg = this.add.image(x, y, 'coeff_slot').setScale(0.9);
+      // Slot scale: 0.9 -> 1.35
+      const slotBg = this.add.image(x, y, 'coeff_slot').setScale(1.35);
+      // Coefficient text: 16px -> 24px
       const slotText = this.add.text(x, y, '1', {
-        fontFamily: PIXEL_FONT, fontSize: '16px', color: '#cc7777'
+        fontFamily: PIXEL_FONT, fontSize: '24px', color: '#cc7777'
       }).setOrigin(0.5);
-      const cursor = this.add.rectangle(x, y + 14, 16, 2, 0xff4444).setAlpha(0);
+      // Cursor: 16x2 -> 24x3
+      const cursor = this.add.rectangle(x, y + 14, 24, 3, 0xff4444).setAlpha(0);
 
       const slotIndex = this.bossSlots.length;
       slotBg.setInteractive({ useHandCursor: true });
@@ -364,8 +398,9 @@ export class BossScene extends Phaser.Scene {
         }
       });
 
+      // Formula text: 14px -> 21px
       const formulaText = this.add.text(x, y + 28, mol.formula, {
-        fontFamily: PIXEL_FONT, fontSize: '14px', color: '#ddaaaa'
+        fontFamily: PIXEL_FONT, fontSize: '21px', color: '#ddaaaa'
       }).setOrigin(0.5);
 
       this.equationContainer.add(slotBg);
@@ -387,31 +422,35 @@ export class BossScene extends Phaser.Scene {
     // ── HP BARS ──
     this._buildBossHPBars(eq);
 
-    // ── CHECK BUTTON ──
-    const checkX = width / 2; // Center of panel
+    // ── CHECK BUTTON — scaled 1.5x ──
+    const checkX = width / 2;
     const checkY = this.CHECK_CENTER_Y;
 
     const checkBg = this.add.graphics();
+    // Outer: 130x36 -> 195x54
     checkBg.fillStyle(0x661111, 1);
-    checkBg.fillRect(checkX - 65, checkY - 18, 130, 36);
+    checkBg.fillRect(checkX - 97, checkY - 27, 195, 54);
+    // Inner: 126x32 -> 189x48
     checkBg.fillStyle(0x882222, 1);
-    checkBg.fillRect(checkX - 63, checkY - 16, 126, 32);
+    checkBg.fillRect(checkX - 94, checkY - 24, 189, 48);
+    // Highlight: 116x10 -> 174x15
     checkBg.fillStyle(0xffffff, 0.06);
-    checkBg.fillRect(checkX - 58, checkY - 15, 116, 10);
-    // Border
+    checkBg.fillRect(checkX - 87, checkY - 22, 174, 15);
+    // Border — scaled 1.5x
     checkBg.fillStyle(0xff4444, 0.5);
-    checkBg.fillRect(checkX - 65, checkY - 18, 130, 2);
-    checkBg.fillRect(checkX - 65, checkY + 16, 130, 2);
-    checkBg.fillRect(checkX - 65, checkY - 18, 2, 36);
-    checkBg.fillRect(checkX + 63, checkY - 18, 2, 36);
+    checkBg.fillRect(checkX - 97, checkY - 27, 195, 3);
+    checkBg.fillRect(checkX - 97, checkY + 24, 195, 3);
+    checkBg.fillRect(checkX - 97, checkY - 27, 3, 54);
+    checkBg.fillRect(checkX + 94, checkY - 27, 3, 54);
     this.equationContainer.add(checkBg);
 
+    // CHECK text: 14px -> 21px
     const checkText = this.add.text(checkX, checkY, 'CHECK', {
-      fontFamily: PIXEL_FONT, fontSize: '14px', color: '#ffffff'
+      fontFamily: PIXEL_FONT, fontSize: '21px', color: '#ffffff'
     }).setOrigin(0.5);
     this.equationContainer.add(checkText);
 
-    const checkZone = this.add.zone(checkX, checkY, 130, 36)
+    const checkZone = this.add.zone(checkX, checkY, 195, 54)
       .setInteractive({ useHandCursor: true });
     checkZone.on('pointerdown', () => {
       soundManager.buttonPress();
@@ -419,12 +458,13 @@ export class BossScene extends Phaser.Scene {
     });
     this.equationContainer.add(checkZone);
 
-    // ── 3×3 GRID ──
-    const gridX = width - 150; // Right side of panel
+    // ── 3x3 GRID — scaled position: width - 150 -> width - 225 ──
+    const gridX = width - 225;
     const gridY = this.GRID_CENTER_Y;
 
+    // Grid instruction: 10px -> 15px
     const inst = this.add.text(gridX, gridY - 55, 'COEFFICIENT', {
-      fontFamily: PIXEL_FONT, fontSize: '10px', color: '#ddaaaa'
+      fontFamily: PIXEL_FONT, fontSize: '15px', color: '#ddaaaa'
     }).setOrigin(0.5);
     this.equationContainer.add(inst);
 
@@ -490,7 +530,7 @@ export class BossScene extends Phaser.Scene {
     }
     this.focusedSlotIdx = idx;
     const slot = this.bossSlots[idx];
-    slot.bg.setTint(0xff4444);
+    slot.bg.setTint(this.region?.palette?.accent || 0xff4444);
     if (slot.cursor) slot.cursor.setAlpha(1);
     soundManager.slotSelect();
   }
@@ -505,19 +545,22 @@ export class BossScene extends Phaser.Scene {
   }
 
   // ─────────────────────────────────────────────
-  // HP BARS (red-themed, replaces atom table)
+  // HP BARS (region-themed, replaces atom table)
   // ─────────────────────────────────────────────
   _buildBossHPBars(eq) {
     const { width } = this.cameras.main;
     const elements = EquationEngine.getElements(eq);
-    const barWidth = 140; // Fixed width for panel
-    const rowH = 24;
+    // Scaled 1.5x: 140 -> 210
+    const barWidth = 210;
+    // Scaled 1.5x: 24 -> 36
+    const rowH = 36;
     const startY = this.HP_BAR_Y;
-    const barX = 40; // Left side of panel
+    // Scaled 1.5x: 40 -> 60
+    const barX = 60;
 
-    // Title
+    // Title — scaled 1.5x: 10px -> 15px
     const title = this.add.text(barX + barWidth / 2 + 20, startY - 10, 'ATOM COUNT', {
-      fontFamily: PIXEL_FONT, fontSize: '10px', color: '#cc4444'
+      fontFamily: PIXEL_FONT, fontSize: '15px', color: '#cc4444'
     }).setOrigin(0.5);
     this.equationContainer.add(title);
 
@@ -533,14 +576,15 @@ export class BossScene extends Phaser.Scene {
 
   _updateBossSlots() {
     if (!this.bossSlots) return;
+    const accentHex = this.region?.palette?.accentHex || '#ff4444';
     this.bossSlots.forEach((slot, i) => {
       const coeff = slot.side === 'reactant'
         ? this.coeffManager.getReactantCoeff(slot.index)
         : this.coeffManager.getProductCoeff(slot.index);
       slot.text.setText(coeff.toString());
-      slot.text.setColor(coeff > 1 ? '#ff4444' : '#cc7777');
+      slot.text.setColor(coeff > 1 ? accentHex : '#cc7777');
       slot.bg.setTexture(coeff > 1 ? 'coeff_slot_active' : 'coeff_slot');
-      if (i === this.focusedSlotIdx) slot.bg.setTint(0xff4444);
+      if (i === this.focusedSlotIdx) slot.bg.setTint(this.region?.palette?.accent || 0xff4444);
     });
   }
 
@@ -575,21 +619,22 @@ export class BossScene extends Phaser.Scene {
   _buildBossHUD() {
     const { width } = this.cameras.main;
 
-    // Timer
+    // Timer — scaled 1.5x: 24px -> 36px
     this.bossTimerText = this.add.text(width / 2, 24, `${this.timeRemaining}`, {
-      fontFamily: PIXEL_FONT, fontSize: '24px', color: '#ff4444'
+      fontFamily: PIXEL_FONT, fontSize: '36px', color: '#ff4444'
     }).setOrigin(0.5);
 
+    // Timer label — scaled 1.5x: 8px -> 12px
     this.bossTimerLabel = this.add.text(width / 2, 48, 'SECONDS REMAINING', {
-      fontFamily: PIXEL_FONT, fontSize: '8px', color: '#993333'
+      fontFamily: PIXEL_FONT, fontSize: '12px', color: '#993333'
     }).setOrigin(0.5);
 
     this.bossTimerGlow = this.add.text(width / 2, 24, `${this.timeRemaining}`, {
-      fontFamily: PIXEL_FONT, fontSize: '24px', color: '#ff0000'
+      fontFamily: PIXEL_FONT, fontSize: '36px', color: '#ff0000'
     }).setOrigin(0.5).setAlpha(0).setScale(1.1);
 
-    // Health bar
-    const barW = 240, barH = 14;
+    // Health bar — scaled 1.5x: 240x14 -> 360x21
+    const barW = 360, barH = 21;
     const barX = width / 2 - barW / 2;
     const barY = 50;
 
@@ -611,13 +656,14 @@ export class BossScene extends Phaser.Scene {
       segDiv.fillRect(sx - 1, barY, 2, barH);
     }
 
+    // Health text — scaled 1.5x: 8px -> 12px
     this.healthText = this.add.text(width / 2, barY + barH + 12, `${this.bossHealth} / ${this.bossMaxHealth} remaining`, {
-      fontFamily: PIXEL_FONT, fontSize: '8px', color: '#cc6666'
+      fontFamily: PIXEL_FONT, fontSize: '12px', color: '#cc6666'
     }).setOrigin(0.5);
 
-    // Back button
+    // Back button — scaled 1.5x: 10px -> 15px
     const backBtn = this.add.text(10, 10, '< Retreat', {
-      fontFamily: PIXEL_FONT, fontSize: '10px', color: '#886666'
+      fontFamily: PIXEL_FONT, fontSize: '15px', color: '#886666'
     }).setInteractive({ useHandCursor: true });
     backBtn.on('pointerdown', () => {
       soundManager.buttonPress();
@@ -629,7 +675,8 @@ export class BossScene extends Phaser.Scene {
 
   _drawHealthBar() {
     const { width } = this.cameras.main;
-    const barW = 240, barH = 14;
+    // Scaled 1.5x: 240x14 -> 360x21
+    const barW = 360, barH = 21;
     const barX = width / 2 - barW / 2;
     const barY = 50;
     const pct = this.bossHealth / this.bossMaxHealth;
@@ -651,14 +698,15 @@ export class BossScene extends Phaser.Scene {
     if (this.bossTimerText) {
       this.bossTimerText.setText(`${this.timeRemaining}`);
 
+      // Scaled 1.5x: 20px/18px/16px -> 30px/27px/24px
       if (this.timeRemaining <= 10) {
-        this.bossTimerText.setColor('#ff0000').setFontSize('20px');
+        this.bossTimerText.setColor('#ff0000').setFontSize('30px');
         soundManager.bossWarning();
         this.cameras.main.flash(100, 60, 0, 0);
       } else if (this.timeRemaining <= 20) {
-        this.bossTimerText.setColor('#ff2222').setFontSize('18px');
+        this.bossTimerText.setColor('#ff2222').setFontSize('27px');
       } else {
-        this.bossTimerText.setColor('#ff4444').setFontSize('16px');
+        this.bossTimerText.setColor('#ff4444').setFontSize('24px');
       }
 
       if (this.bossTimerGlow) {
@@ -688,8 +736,10 @@ export class BossScene extends Phaser.Scene {
   }
 
   _onBossCorrect() {
+    const config = BOSS_CONFIG[this.bossLevel] || BOSS_CONFIG[10];
+
     this.bossHealth--;
-    this.timeRemaining += 10;
+    this.timeRemaining += config.timeBonus;
 
     soundManager.bossImpact();
     this.time.delayedCall(200, () => soundManager.success());
@@ -725,8 +775,10 @@ export class BossScene extends Phaser.Scene {
   }
 
   _onBossFail() {
+    const config = BOSS_CONFIG[this.bossLevel] || BOSS_CONFIG[10];
+
     this.failedAttempts++;
-    this.timeRemaining -= 3;
+    this.timeRemaining -= config.failPenalty;
     soundManager.fail();
 
     this.cameras.main.shake(200, 0.01);
@@ -807,9 +859,9 @@ export class BossScene extends Phaser.Scene {
       }
     });
 
-    // "BOSS DEFEATED!" title
-    const defeatText = this.add.text(width / 2, height / 2 - 60, 'BOSS DEFEATED!', {
-      fontFamily: PIXEL_FONT, fontSize: '24px', color: '#00ff88'
+    // "BOSS DEFEATED!" title — scaled 1.5x: 24px -> 36px
+    const defeatText = this.add.text(width / 2, height / 2 - 90, 'BOSS DEFEATED!', {
+      fontFamily: PIXEL_FONT, fontSize: '36px', color: '#00ff88'
     }).setOrigin(0.5).setScale(0);
 
     this.tweens.add({
@@ -818,16 +870,16 @@ export class BossScene extends Phaser.Scene {
       duration: 500, delay: 500, ease: 'Back.easeOut'
     });
 
-    // XP display
+    // XP display — scaled 1.5x: 20px -> 30px
     const xpText = this.add.text(width / 2, height / 2, `+${xp} XP`, {
-      fontFamily: PIXEL_FONT, fontSize: '20px', color: '#ffdd44'
+      fontFamily: PIXEL_FONT, fontSize: '30px', color: '#ffdd44'
     }).setOrigin(0.5).setAlpha(0);
     this.tweens.add({ targets: xpText, alpha: 1, duration: 400, delay: 800 });
 
-    // Stars
+    // Stars — scaled 1.5x: spacing 40 -> 60
     for (let i = 0; i < 3; i++) {
-      const sx = width / 2 - 40 + i * 40;
-      const star = this.add.image(sx, height / 2 + 45,
+      const sx = width / 2 - 60 + i * 60;
+      const star = this.add.image(sx, height / 2 + 67,
         i < stars ? 'star_filled' : 'star_empty'
       ).setScale(0).setOrigin(0.5).setAngle(-180);
       this.tweens.add({
@@ -898,8 +950,9 @@ export class BossScene extends Phaser.Scene {
 
     this.cameras.main.shake(400, 0.008);
 
-    const timeUpText = this.add.text(width / 2, height / 2 - 40, "TIME'S UP!", {
-      fontFamily: PIXEL_FONT, fontSize: '24px', color: '#ff2222'
+    // "TIME'S UP!" — scaled 1.5x: 24px -> 36px
+    const timeUpText = this.add.text(width / 2, height / 2 - 60, "TIME'S UP!", {
+      fontFamily: PIXEL_FONT, fontSize: '36px', color: '#ff2222'
     }).setOrigin(0.5).setScale(2).setAlpha(0);
     this.tweens.add({
       targets: timeUpText,
@@ -907,8 +960,9 @@ export class BossScene extends Phaser.Scene {
       duration: 400, ease: 'Cubic.easeOut'
     });
 
-    const subText = this.add.text(width / 2, height / 2 + 10, 'The boss got away...', {
-      fontFamily: PIXEL_FONT, fontSize: '12px', color: '#aa6666'
+    // Sub text — scaled 1.5x: 12px -> 18px
+    const subText = this.add.text(width / 2, height / 2 + 15, 'The boss got away...', {
+      fontFamily: PIXEL_FONT, fontSize: '18px', color: '#aa6666'
     }).setOrigin(0.5).setAlpha(0);
     this.tweens.add({ targets: subText, alpha: 1, duration: 300, delay: 500 });
 
@@ -925,17 +979,18 @@ export class BossScene extends Phaser.Scene {
       emitter.explode(30);
     }
 
-    // Retry button
+    // Retry button — scaled 1.5x: 140x36 -> 210x54
     const retryBg = this.add.graphics();
     retryBg.fillStyle(0x881111, 1);
-    retryBg.fillRect(width / 2 - 70, height / 2 + 40, 140, 36);
+    retryBg.fillRect(width / 2 - 105, height / 2 + 60, 210, 54);
     retryBg.fillStyle(0xff4444, 0.4);
-    retryBg.fillRect(width / 2 - 70, height / 2 + 40, 140, 2);
+    retryBg.fillRect(width / 2 - 105, height / 2 + 60, 210, 3);
     retryBg.setAlpha(0);
     this.tweens.add({ targets: retryBg, alpha: 1, duration: 300, delay: 800 });
 
-    const retryText = this.add.text(width / 2, height / 2 + 58, 'RETRY', {
-      fontFamily: PIXEL_FONT, fontSize: '14px', color: '#ffffff'
+    // Retry text — scaled 1.5x: 14px -> 21px
+    const retryText = this.add.text(width / 2, height / 2 + 87, 'RETRY', {
+      fontFamily: PIXEL_FONT, fontSize: '21px', color: '#ffffff'
     }).setOrigin(0.5).setAlpha(0).setInteractive({ useHandCursor: true });
     this.tweens.add({ targets: retryText, alpha: 1, duration: 300, delay: 800 });
 
@@ -944,9 +999,9 @@ export class BossScene extends Phaser.Scene {
       this.scene.restart({ equation: this.equation, progression: this.progression });
     });
 
-    // Menu button
-    const menuText = this.add.text(width / 2, height / 2 + 95, '< Level Select', {
-      fontFamily: PIXEL_FONT, fontSize: '10px', color: '#886666'
+    // Menu button — scaled 1.5x: 10px -> 15px
+    const menuText = this.add.text(width / 2, height / 2 + 142, '< Level Select', {
+      fontFamily: PIXEL_FONT, fontSize: '15px', color: '#886666'
     }).setOrigin(0.5).setAlpha(0).setInteractive({ useHandCursor: true });
     this.tweens.add({ targets: menuText, alpha: 1, duration: 300, delay: 1000 });
 

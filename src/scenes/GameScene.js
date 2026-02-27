@@ -8,6 +8,9 @@ import { PIXEL_FONT } from '../ui/PixelText.js';
 import { HPBar } from '../ui/HPBar.js';
 import { ProfessorAurum } from '../ui/ProfessorAurum.js';
 import { BattleUI } from '../ui/BattleUI.js';
+import { LayoutGrid } from '../ui/LayoutGrid.js';
+import { PanelRenderer } from '../ui/PanelRenderer.js';
+import { getRegionForLevel } from '../data/regions.js';
 import elementsData from '../data/elements.json';
 
 export class GameScene extends Phaser.Scene {
@@ -23,25 +26,27 @@ export class GameScene extends Phaser.Scene {
     this.levelComplete = false;
     this.focusedSlotIdx = -1;
     this._prevBalancedSet = new Set();
+    this.region = getRegionForLevel(this.equation.level);
   }
 
   create() {
     const { width, height } = this.cameras.main;
     this.startTime = Date.now();
+    this.grid = new LayoutGrid(width, height);
 
     // Systems
     this.coeffManager = new CoefficientManager(this, this.equation);
     this.hintSystem = new HintSystem(this.equation.hints);
     this.professor = new ProfessorAurum(this);
 
-    // Layout constants (relative to viewport)
-    this.EQUATION_Y = height * 0.45;
-    this.SCALE_Y = height * 0.18;
-    
-    // Bottom control panel area (y: 440 to 600)
-    this.HP_BAR_Y = 470;
-    this.GRID_CENTER_Y = 520;
-    this.CHECK_CENTER_Y = 520;
+    // Layout constants (relative to viewport via grid)
+    this.EQUATION_Y = this.grid.rowY(0.42);
+    this.SCALE_Y = this.grid.rowY(0.14);
+
+    // Bottom control panel area
+    this.HP_BAR_Y = this.grid.rowY(0.78);
+    this.GRID_CENTER_Y = this.grid.rowY(0.80);
+    this.CHECK_CENTER_Y = this.grid.rowY(0.80);
 
     // Background
     this._buildLabEnvironment(width, height);
@@ -59,8 +64,8 @@ export class GameScene extends Phaser.Scene {
     this._buildHintButton(width);
 
     // Timer display
-    this.timerText = this.add.text(width - 15, 10, '0:00', {
-      fontFamily: PIXEL_FONT, fontSize: '14px', color: '#aaaacc'
+    this.timerText = this.add.text(width - 22, 15, '0:00', {
+      fontFamily: PIXEL_FONT, fontSize: '21px', color: '#aaaacc'
     }).setOrigin(1, 0);
 
     this.hintOverlay = null;
@@ -117,40 +122,50 @@ export class GameScene extends Phaser.Scene {
   // BOTTOM CONTROL PANEL
   // ─────────────────────────────────────────────
   _buildControlPanel(width, height) {
-    const panelY = height - 160;
-    this.add.image(0, panelY, 'control_panel').setOrigin(0, 0);
+    const panelY = height - 240;
+    const img = this.add.image(0, panelY, 'control_panel').setOrigin(0, 0);
+    if (this.region?.palette?.border) {
+      img.setTint(this.region.palette.border);
+    }
   }
 
   // ─────────────────────────────────────────────
   // LAB ENVIRONMENT
   // ─────────────────────────────────────────────
   _buildLabEnvironment(width, height) {
+    // Fallback palette if region is null
+    const palette = this.region?.palette || {
+      bg: 0x080c12,
+      bgLight: 0x0f1520,
+      accent: 0x00ff88
+    };
+
     // Deep dark base
-    this.add.rectangle(width / 2, height / 2, width, height, 0x080c12);
+    this.add.rectangle(width / 2, height / 2, width, height, palette.bg);
 
     const graphics = this.add.graphics();
     const horizonY = height * 0.35;
 
     // --- Wall / Cyber details ---
-    graphics.fillStyle(0x0f1520, 1);
+    graphics.fillStyle(palette.bgLight, 1);
     graphics.fillRect(0, 0, width, horizonY);
-    
+
     // Some glowing wall panels
     graphics.fillStyle(0x112233, 0.8);
-    graphics.fillRect(width * 0.1, horizonY - 80, width * 0.2, 40);
-    graphics.fillRect(width * 0.7, horizonY - 80, width * 0.2, 40);
-    
-    graphics.fillStyle(0x00ff88, 0.2);
-    graphics.fillRect(width * 0.1, horizonY - 40, width * 0.2, 2);
-    graphics.fillRect(width * 0.7, horizonY - 40, width * 0.2, 2);
+    graphics.fillRect(width * 0.1, horizonY - 120, width * 0.2, 60);
+    graphics.fillRect(width * 0.7, horizonY - 120, width * 0.2, 60);
+
+    graphics.fillStyle(palette.accent, 0.2);
+    graphics.fillRect(width * 0.1, horizonY - 60, width * 0.2, 3);
+    graphics.fillRect(width * 0.7, horizonY - 60, width * 0.2, 3);
 
     // --- Floor Perspective Grid ---
-    graphics.lineStyle(1, 0x00ff88, 0.15);
-    
+    graphics.lineStyle(1, palette.accent, 0.15);
+
     // Horizontal lines (getting thicker/spaced out towards bottom)
     let y = horizonY;
     let step = 5;
-    while (y < height - 160) {
+    while (y < height - 240) {
       graphics.lineBetween(0, y, width, y);
       y += step;
       step *= 1.25;
@@ -158,40 +173,49 @@ export class GameScene extends Phaser.Scene {
 
     // Perspective lines radiating from center
     const vpX = width / 2;
-    const vpY = horizonY - 50; // slightly above horizon
-    for (let x = -width; x < width * 2; x += 100) {
+    const vpY = horizonY - 75; // slightly above horizon
+    for (let x = -width; x < width * 2; x += 150) {
       graphics.lineBetween(vpX, vpY, x, height);
     }
+
+    // CRT scanline overlay
+    const crtGraphics = this.add.graphics();
+    PanelRenderer.drawCRTOverlay(crtGraphics, width, height);
   }
 
   // ─────────────────────────────────────────────
   // HEADER BAR
   // ─────────────────────────────────────────────
   _buildHeader(width, height) {
+    const palette = this.region?.palette || { accent: 0x00ff88 };
+    const headerH = this.grid.HEADER_H;
+
     // Header background
     const hdr = this.add.graphics();
     hdr.fillStyle(0x0d0d1e, 0.9);
-    hdr.fillRect(0, 0, width, 32);
-    hdr.fillStyle(0x333366, 0.4);
-    hdr.fillRect(0, 31, width, 1);
+    hdr.fillRect(0, 0, width, headerH);
+    hdr.fillStyle(palette.accent, 0.4);
+    hdr.fillRect(0, headerH - 1, width, 1);
 
-    // Back button
-    const backBtn = this.add.text(10, 10, '< Back', {
+    // Back button (cols 0-2)
+    const backX = this.grid.colCenterX(0, 3);
+    const backBtn = this.add.text(backX, this.grid.headerCenterY(), '< Back', {
       fontFamily: PIXEL_FONT, fontSize: '10px', color: '#8888aa'
-    }).setInteractive({ useHandCursor: true });
+    }).setOrigin(0.5).setInteractive({ useHandCursor: true });
     backBtn.on('pointerdown', () => {
       soundManager.buttonPress();
       this.scene.start('MenuScene', { progression: this.progression });
     });
 
-    // Level title
-    this.add.text(width / 2, 8, `Level ${this.equation.level}`, {
-      fontFamily: PIXEL_FONT, fontSize: '12px', color: '#ffffff'
+    // Level title (cols 3-8)
+    const titleX = this.grid.colCenterX(3, 6);
+    this.add.text(titleX, this.grid.headerCenterY() - 7, `Level ${this.equation.level}`, {
+      fontFamily: PIXEL_FONT, fontSize: '15px', color: '#ffffff'
     }).setOrigin(0.5, 0);
 
     // Type subtitle
-    this.add.text(width / 2, 22, this.equation.type.replace('_', ' ').toUpperCase(), {
-      fontFamily: PIXEL_FONT, fontSize: '8px', color: '#6666aa'
+    this.add.text(titleX, this.grid.headerCenterY() + 8, this.equation.type.replace('_', ' ').toUpperCase(), {
+      fontFamily: PIXEL_FONT, fontSize: '12px', color: '#6666aa'
     }).setOrigin(0.5, 0);
   }
 
@@ -212,7 +236,7 @@ export class GameScene extends Phaser.Scene {
     const arrowSlots = 1;
     const plusCount = this.equation.reactants.length - 1 + this.equation.products.length - 1;
     const totalSlots = allMolecules.length + arrowSlots + plusCount;
-    const spacing = Math.min(90, (width - 80) / totalSlots);
+    const spacing = Math.min(135, (width - 120) / totalSlots);
     const startX = width / 2 - (totalSlots * spacing) / 2 + spacing / 2;
 
     let slotIdx = 0;
@@ -222,13 +246,13 @@ export class GameScene extends Phaser.Scene {
       const y = this.EQUATION_Y;
 
       // Coefficient slot
-      const slotBg = this.add.image(x - 26, y, 'coeff_slot').setScale(1.0);
-      const slotText = this.add.text(x - 26, y, '1', {
-        fontFamily: PIXEL_FONT, fontSize: '16px', color: '#7777cc'
+      const slotBg = this.add.image(x - 39, y, 'coeff_slot').setScale(1.5);
+      const slotText = this.add.text(x - 39, y, '1', {
+        fontFamily: PIXEL_FONT, fontSize: '24px', color: '#7777cc'
       }).setOrigin(0.5);
 
       // Focus cursor (hidden by default)
-      const cursor = this.add.rectangle(x - 22, y + 12, 16, 2, 0x00ccff).setAlpha(0);
+      const cursor = this.add.rectangle(x - 33, y + 18, 24, 3, 0x00ccff).setAlpha(0);
 
       // Click to focus this slot for text input
       slotBg.setInteractive({ useHandCursor: true });
@@ -263,18 +287,18 @@ export class GameScene extends Phaser.Scene {
       });
 
       // Formula text
-      const formulaText = this.add.text(x + 12, y, mol.formula, {
-        fontFamily: PIXEL_FONT, fontSize: '14px', color: '#ffffff'
+      const formulaText = this.add.text(x + 18, y, mol.formula, {
+        fontFamily: PIXEL_FONT, fontSize: '21px', color: '#ffffff'
       }).setOrigin(0.5);
       this.equationTexts.push(formulaText);
 
       // Mini molecule orbs
-      const orbContainer = this.add.container(x + 10, y + 28);
+      const orbContainer = this.add.container(x + 15, y + 42);
       let orbIdx = 0;
       for (const [element, count] of Object.entries(mol.elements)) {
         for (let c = 0; c < Math.min(count, 4); c++) {
           const totalOrbs = Object.values(mol.elements).reduce((a, b) => a + Math.min(b, 4), 0);
-          const orbX = (orbIdx - totalOrbs / 2) * 14;
+          const orbX = (orbIdx - totalOrbs / 2) * 21;
           const texKey = `orb_${element}`;
           if (this.textures.exists(texKey)) {
             orbContainer.add(this.add.image(orbX, 0, texKey).setScale(0.45));
@@ -292,12 +316,12 @@ export class GameScene extends Phaser.Scene {
 
       if (isLastReactant) {
         this.add.text(startX + slotIdx * spacing, y, '\u2192', {
-          fontFamily: PIXEL_FONT, fontSize: '18px', color: '#aaaacc'
+          fontFamily: PIXEL_FONT, fontSize: '27px', color: '#aaaacc'
         }).setOrigin(0.5);
         slotIdx++;
       } else if (!isLastProduct) {
         this.add.text(startX + slotIdx * spacing, y, '+', {
-          fontFamily: PIXEL_FONT, fontSize: '16px', color: '#aaaacc'
+          fontFamily: PIXEL_FONT, fontSize: '24px', color: '#aaaacc'
         }).setOrigin(0.5);
         slotIdx++;
       }
@@ -326,7 +350,8 @@ export class GameScene extends Phaser.Scene {
     }
     this.focusedSlotIdx = idx;
     const slot = this.equationSlots[idx];
-    slot.bg.setTint(0x00ccff);
+    const focusTint = this.region?.palette?.accent || 0x00ccff;
+    slot.bg.setTint(focusTint);
     slot.cursor.setAlpha(1);
     soundManager.slotSelect();
   }
@@ -351,6 +376,7 @@ export class GameScene extends Phaser.Scene {
   }
 
   _updateEquationDisplay() {
+    const accentHex = this.region?.palette?.accentHex || '#00ff88';
     this.equationSlots.forEach((slot, i) => {
       const coeff = slot.side === 'reactant'
         ? this.coeffManager.getReactantCoeff(slot.index)
@@ -359,7 +385,7 @@ export class GameScene extends Phaser.Scene {
       slot.text.setText(coeff.toString());
 
       if (coeff > 1) {
-        slot.text.setColor('#00ff88');
+        slot.text.setColor(accentHex);
         slot.bg.setTexture('coeff_slot_active');
       } else {
         slot.text.setColor('#7777cc');
@@ -367,7 +393,8 @@ export class GameScene extends Phaser.Scene {
       }
 
       if (i === this.focusedSlotIdx) {
-        slot.bg.setTint(0x00ccff);
+        const focusTint = this.region?.palette?.accent || 0x00ccff;
+        slot.bg.setTint(focusTint);
       }
     });
   }
@@ -380,18 +407,15 @@ export class GameScene extends Phaser.Scene {
     const cx = width / 2;
     const cy = this.SCALE_Y;
 
-    // We no longer draw the medieval scale base/beam in the new design
-    // Instead we place two separate pseudo-3D cylindrical platforms
-    
     // Left platform (Reactants)
-    this.leftPan = this.add.image(cx - 150, cy + 40, 'scale_pan').setScale(1.2);
-    
+    this.leftPan = this.add.image(cx - 225, cy + 60, 'scale_pan').setScale(1.8);
+
     // Right platform (Products)
-    this.rightPan = this.add.image(cx + 150, cy + 40, 'scale_pan').setScale(1.2);
+    this.rightPan = this.add.image(cx + 225, cy + 60, 'scale_pan').setScale(1.8);
 
     // Balance text indicator (now floating between platforms)
-    this.balanceText = this.add.text(cx, cy + 10, '', {
-      fontFamily: PIXEL_FONT, fontSize: '12px', color: '#ffdd44'
+    this.balanceText = this.add.text(cx, cy + 15, '', {
+      fontFamily: PIXEL_FONT, fontSize: '18px', color: '#ffdd44'
     }).setOrigin(0.5);
 
     this.targetAngle = 0;
@@ -415,9 +439,11 @@ export class GameScene extends Phaser.Scene {
     const maxTilt = 15;
     this.targetAngle = Math.max(-maxTilt, Math.min(maxTilt, diff * 2));
 
+    const accentHex = this.region?.palette?.accentHex || '#00ff88';
+
     if (result.balanced) {
       this.targetAngle = 0;
-      this.balanceText.setText('BALANCED!').setColor('#00ff88');
+      this.balanceText.setText('BALANCED!').setColor(accentHex);
     } else if (leftTotal > rightTotal) {
       this.balanceText.setText('Reactants heavier').setColor('#ffdd44');
     } else {
@@ -426,26 +452,22 @@ export class GameScene extends Phaser.Scene {
   }
 
   _animateScale(delta) {
-    // Medieval scale animation removed.
-    // Instead we can just do a gentle float on the platforms.
     const time = Date.now();
     const floatOffsetL = Math.sin(time * 0.002) * 3;
     const floatOffsetR = Math.sin(time * 0.002 + Math.PI) * 3;
-    
-    if (this.leftPan) this.leftPan.y = this.SCALE_Y + 40 + floatOffsetL;
-    if (this.rightPan) this.rightPan.y = this.SCALE_Y + 40 + floatOffsetR;
+
+    if (this.leftPan) this.leftPan.y = this.SCALE_Y + 60 + floatOffsetL;
+    if (this.rightPan) this.rightPan.y = this.SCALE_Y + 60 + floatOffsetR;
   }
 
   _animateMolecules(time) {
     this.moleculeContainers.forEach((mc, i) => {
-      // Molecules float above the platform instead of below text
       const offset = Math.sin(time * 0.002 + i * 0.5) * 4;
       const isReactant = mc.mol.side === 'reactant';
-      // Anchor them to their respective platforms
       const platformY = isReactant ? this.leftPan.y : this.rightPan.y;
-      
-      // Override the container's Y to sit on platform (roughly -30px above center)
-      mc.container.y = platformY - 30 + offset;
+
+      // Override the container's Y to sit on platform (roughly -45px above center)
+      mc.container.y = platformY - 45 + offset;
     });
   }
 
@@ -462,14 +484,14 @@ export class GameScene extends Phaser.Scene {
   _buildHPBars() {
     const { width } = this.cameras.main;
     const allElements = EquationEngine.getElements(this.equation);
-    const barWidth = 140; // Fixed width for panel
-    const rowH = 24;
+    const barWidth = 210;
+    const rowH = 36;
     const startY = this.HP_BAR_Y;
-    const barX = 40; // Left side of panel
+    const barX = 60;
 
     // Title
-    this.add.text(barX + barWidth / 2 + 20, startY - 10, 'ATOM COUNT', {
-      fontFamily: PIXEL_FONT, fontSize: '10px', color: '#6677bb'
+    this.add.text(barX + barWidth / 2 + 30, startY - 15, 'ATOM COUNT', {
+      fontFamily: PIXEL_FONT, fontSize: '15px', color: '#6677bb'
     }).setOrigin(0.5);
 
     this.hpBars = [];
@@ -508,17 +530,17 @@ export class GameScene extends Phaser.Scene {
   // 3×3 COEFFICIENT GRID
   // ─────────────────────────────────────────────
   _buildGrid(width, height) {
-    const gridX = width - 150; // Right side of panel
-    const gridY = this.GRID_CENTER_Y;
+    const gridX = width - 225;
+    const gridY = this.grid.rowY(0.80);
 
     // Instruction text
-    this.add.text(gridX, gridY - 55, 'COEFFICIENT', {
-      fontFamily: PIXEL_FONT, fontSize: '10px', color: '#ffffff'
+    this.add.text(gridX, gridY - 82, 'COEFFICIENT', {
+      fontFamily: PIXEL_FONT, fontSize: '15px', color: '#ffffff'
     }).setOrigin(0.5);
 
     BattleUI.buildGrid(this, {
       gridCenterX: gridX,
-      gridCenterY: gridY + 10,
+      gridCenterY: gridY + 15,
       numColor: '#aaccff',
       onTap: (n) => {
         // Apply to focused slot
@@ -557,12 +579,12 @@ export class GameScene extends Phaser.Scene {
   // CHECK / HINT BUTTONS
   // ─────────────────────────────────────────────
   _buildCheckButton(width, height) {
-    const checkX = width / 2; // Center of panel
-    const checkY = this.CHECK_CENTER_Y;
+    const checkX = this.grid.centerX();
+    const checkY = this.grid.rowY(0.80);
 
-    const checkBtn = this.add.image(checkX, checkY, 'btn_check').setScale(1.2);
+    const checkBtn = this.add.image(checkX, checkY, 'btn_check').setScale(1.8);
     this.add.text(checkX, checkY, 'CHECK', {
-      fontFamily: PIXEL_FONT, fontSize: '14px', color: '#ffffff'
+      fontFamily: PIXEL_FONT, fontSize: '21px', color: '#ffffff'
     }).setOrigin(0.5);
 
     checkBtn.setInteractive({ useHandCursor: true });
@@ -575,9 +597,9 @@ export class GameScene extends Phaser.Scene {
   }
 
   _buildHintButton(width) {
-    const hintBtn = this.add.image(width - 30, 50, 'btn_hint').setScale(1.0);
-    this.add.text(width - 30, 50, '?', {
-      fontFamily: PIXEL_FONT, fontSize: '16px', color: '#ffffff'
+    const hintBtn = this.add.image(width - 45, 75, 'btn_hint').setScale(1.0);
+    this.add.text(width - 45, 75, '?', {
+      fontFamily: PIXEL_FONT, fontSize: '24px', color: '#ffffff'
     }).setOrigin(0.5);
 
     hintBtn.setInteractive({ useHandCursor: true });
@@ -594,7 +616,7 @@ export class GameScene extends Phaser.Scene {
   // ─────────────────────────────────────────────
   _showHint(text) {
     const tier = this.hintSystem.getTier();
-    this.professor.show(text, tier, this.SCALE_Y + 80);
+    this.professor.show(text, tier, this.SCALE_Y + 120);
   }
 
   // ─────────────────────────────────────────────
@@ -638,7 +660,9 @@ export class GameScene extends Phaser.Scene {
     this.progression.completeLevel(this.equation.id, stars, timeSeconds, score);
     this._checkAchievements(timeSeconds, hintsUsed, streak);
     this._playVictoryAnimation();
-    this.balanceText.setText('PERFECTLY BALANCED!').setColor('#00ff88');
+
+    const accentHex = this.region?.palette?.accentHex || '#00ff88';
+    this.balanceText.setText('PERFECTLY BALANCED!').setColor(accentHex);
 
     this.time.delayedCall(2000, () => {
       this.scene.start('ResultScene', {

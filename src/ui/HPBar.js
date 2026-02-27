@@ -23,39 +23,39 @@ export class HPBar {
     // Element orb (small)
     const texKey = `orb_${element}`;
     if (scene.textures.exists(texKey)) {
-      this.orb = scene.add.image(x, y, texKey).setScale(0.55).setOrigin(0.5);
+      this.orb = scene.add.image(x, y, texKey).setScale(0.82).setOrigin(0.5);
     }
 
     // Element symbol
-    this.symText = scene.add.text(x + 18, y, element, {
-      fontFamily: PIXEL_FONT, fontSize: '10px', color: orbColor || '#ffffff'
+    this.symText = scene.add.text(x + 27, y, element, {
+      fontFamily: PIXEL_FONT, fontSize: '15px', color: orbColor || '#ffffff'
     }).setOrigin(0, 0.5);
 
     // Bar background
-    const barX = x + 40;
+    const barX = x + 60;
     this.barBg = scene.add.graphics();
     this.barBg.fillStyle(0x111122, 1);
-    this.barBg.fillRect(barX, y - 6, barWidth, 12);
+    this.barBg.fillRect(barX, y - 9, barWidth, 18);
     this.barBg.lineStyle(1, 0x333355, 0.5);
-    this.barBg.strokeRect(barX, y - 6, barWidth, 12);
+    this.barBg.strokeRect(barX, y - 9, barWidth, 18);
     this.barStartX = barX;
 
     // Bar fill
     this.barFill = scene.add.graphics();
 
     // Count text: "L : R"
-    this.countText = scene.add.text(barX + barWidth + 8, y, '0 : 0', {
-      fontFamily: PIXEL_FONT, fontSize: '10px', color: '#ffffff'
+    this.countText = scene.add.text(barX + barWidth + 12, y, '0 : 0', {
+      fontFamily: PIXEL_FONT, fontSize: '15px', color: '#ffffff'
     }).setOrigin(0, 0.5);
 
     // Status icon
-    this.statusText = scene.add.text(barX + barWidth + 65, y, '', {
-      fontFamily: PIXEL_FONT, fontSize: '12px', color: '#ffffff'
+    this.statusText = scene.add.text(barX + barWidth + 98, y, '', {
+      fontFamily: PIXEL_FONT, fontSize: '18px', color: '#ffffff'
     }).setOrigin(0.5);
 
     // Flash bar for balance-achieved effect
     this.flashBar = scene.add.rectangle(
-      barX + barWidth / 2, y, barWidth, 12, 0x00ff88, 0
+      barX + barWidth / 2, y, barWidth, 18, 0x00ff88, 0
     );
   }
 
@@ -76,9 +76,9 @@ export class HPBar {
     if (balanced) {
       // Green fill
       this.barFill.fillStyle(0x00cc66, 1);
-      this.barFill.fillRect(this.barStartX + 1, this.y - 5, (this.barWidth - 2) * fillPct, 10);
+      this.barFill.fillRect(this.barStartX + 1, this.y - 8, (this.barWidth - 2) * fillPct, 16);
       this.barFill.fillStyle(0x00ff88, 0.3);
-      this.barFill.fillRect(this.barStartX + 1, this.y - 5, (this.barWidth - 2) * fillPct, 3);
+      this.barFill.fillRect(this.barStartX + 1, this.y - 8, (this.barWidth - 2) * fillPct, 5);
 
       this.countText.setText(`${left} : ${right}`).setColor('#00ff88');
       this.statusText.setText('\u2713').setColor('#00ff88');
@@ -87,9 +87,9 @@ export class HPBar {
       // Red/orange fill
       const color = leftPct > rightPct ? 0xff6644 : 0xff8844;
       this.barFill.fillStyle(color, 1);
-      this.barFill.fillRect(this.barStartX + 1, this.y - 5, (this.barWidth - 2) * fillPct, 10);
+      this.barFill.fillRect(this.barStartX + 1, this.y - 8, (this.barWidth - 2) * fillPct, 16);
       this.barFill.fillStyle(0xffffff, 0.15);
-      this.barFill.fillRect(this.barStartX + 1, this.y - 5, (this.barWidth - 2) * fillPct, 3);
+      this.barFill.fillRect(this.barStartX + 1, this.y - 8, (this.barWidth - 2) * fillPct, 5);
 
       this.countText.setText(`${left} : ${right}`).setColor('#ff6644');
       this.statusText.setText('\u2717').setColor('#ff6644');

@@ -16,5 +16,13 @@
   "Ca": { "name": "Calcium",   "number": 20, "color": "#3DFF00", "size": 24 },
   "Fe": { "name": "Iron",      "number": 26, "color": "#E06633", "size": 24 },
   "Cu": { "name": "Copper",    "number": 29, "color": "#C88033", "size": 22 },
-  "Zn": { "name": "Zinc",      "number": 30, "color": "#7D80B0", "size": 22 }
+  "Zn": { "name": "Zinc",      "number": 30, "color": "#7D80B0", "size": 22 },
+  "Si": { "name": "Silicon",   "number": 14, "color": "#F0C8A0", "size": 20 },
+  "Cr": { "name": "Chromium",  "number": 24, "color": "#8A99C7", "size": 24 },
+  "Mn": { "name": "Manganese", "number": 25, "color": "#9C7AC7", "size": 24 },
+  "Sn": { "name": "Tin",       "number": 50, "color": "#668080", "size": 24 },
+  "Ba": { "name": "Barium",    "number": 56, "color": "#00C900", "size": 26 },
+  "Ag": { "name": "Silver",    "number": 47, "color": "#C0C0C0", "size": 24 },
+  "Pb": { "name": "Lead",      "number": 82, "color": "#575961", "size": 26 },
+  "I":  { "name": "Iodine",    "number": 53, "color": "#940094", "size": 22 }
 }

@@ -26,8 +26,8 @@ export class BattleUI {
       onTap
     } = opts;
 
-    const cellSize = 46;
-    const gap = 4;
+    const cellSize = 69;
+    const gap = 6;
     const totalSize = cellSize * 3 + gap * 2;
     const startX = gridCenterX - totalSize / 2 + cellSize / 2;
     const startY = gridCenterY - totalSize / 2 + cellSize / 2;
@@ -40,9 +40,9 @@ export class BattleUI {
       const x = startX + col * (cellSize + gap);
       const y = startY + row * (cellSize + gap);
 
-      const btn = scene.add.image(x, y, `token_${n}`).setScale(0.9);
+      const btn = scene.add.image(x, y, `token_${n}`).setScale(1.35);
       const numText = scene.add.text(x, y, n.toString(), {
-        fontFamily: PIXEL_FONT, fontSize: '16px', color: numColor
+        fontFamily: PIXEL_FONT, fontSize: '24px', color: numColor
       }).setOrigin(0.5);
 
       btn.setInteractive({ useHandCursor: true, draggable: true });
@@ -55,22 +55,22 @@ export class BattleUI {
       let dragSprite = null;
 
       btn.on('dragstart', () => {
-        btn.setScale(1.0);
+        btn.setScale(1.5);
         btn.setAlpha(0.7);
       });
 
       btn.on('drag', (pointer) => {
         if (!dragSprite) {
           dragSprite = scene.add.text(pointer.x, pointer.y, n.toString(), {
-            fontFamily: PIXEL_FONT, fontSize: '20px', color: '#00ff88',
-            backgroundColor: '#2a2a4a', padding: { x: 6, y: 3 }
+            fontFamily: PIXEL_FONT, fontSize: '30px', color: '#00ff88',
+            backgroundColor: '#2a2a4a', padding: { x: 9, y: 5 }
           }).setOrigin(0.5);
         }
         dragSprite.setPosition(pointer.x, pointer.y);
       });
 
       btn.on('dragend', (pointer) => {
-        btn.setScale(0.9);
+        btn.setScale(1.35);
         btn.setAlpha(1);
         if (dragSprite) {
           dragSprite.destroy();

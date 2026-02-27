@@ -25,8 +25,8 @@ export class ProfessorAurum {
     this.hide();
 
     const { width } = this.scene.cameras.main;
-    const boxW = Math.min(720, width - 40);
-    const boxH = 70;
+    const boxW = Math.min(1080, width - 60);
+    const boxH = 105;
     const boxX = width / 2;
     const boxY = y || (this.scene.cameras.main.height * 0.48);
 
@@ -52,37 +52,37 @@ export class ProfessorAurum {
 
     // Portrait
     if (this.scene.textures.exists('prof_aurum')) {
-      const portrait = this.scene.add.image(-boxW / 2 + 40, 0, 'prof_aurum')
-        .setScale(0.85).setOrigin(0.5);
+      const portrait = this.scene.add.image(-boxW / 2 + 60, 0, 'prof_aurum')
+        .setScale(1.28).setOrigin(0.5);
       this.container.add(portrait);
 
       // Portrait frame
       const frame = this.scene.add.graphics();
       frame.lineStyle(2, borderColor, 0.6);
-      frame.strokeRect(-boxW / 2 + 12, -26, 56, 52);
+      frame.strokeRect(-boxW / 2 + 18, -39, 84, 78);
       this.container.add(frame);
     }
 
     // Text area
-    const textX = -boxW / 2 + 78;
-    const textW = boxW - 100;
+    const textX = -boxW / 2 + 117;
+    const textW = boxW - 150;
 
-    this.dialogueText = this.scene.add.text(textX, -boxH / 2 + 12, '', {
+    this.dialogueText = this.scene.add.text(textX, -boxH / 2 + 18, '', {
       fontFamily: PIXEL_FONT,
-      fontSize: '10px',
+      fontSize: '15px',
       color: textColor,
       wordWrap: { width: textW },
-      lineSpacing: 4
+      lineSpacing: 6
     });
     this.container.add(this.dialogueText);
 
     // Name plate
-    const namePlate = this.scene.add.text(-boxW / 2 + 78, -boxH / 2 - 8, 'Prof. Aurum', {
+    const namePlate = this.scene.add.text(-boxW / 2 + 117, -boxH / 2 - 12, 'Prof. Aurum', {
       fontFamily: PIXEL_FONT,
-      fontSize: '8px',
+      fontSize: '12px',
       color: '#ddaa44',
       backgroundColor: '#1a1a2e',
-      padding: { x: 4, y: 2 }
+      padding: { x: 6, y: 3 }
     }).setOrigin(0, 1);
     this.container.add(namePlate);
 

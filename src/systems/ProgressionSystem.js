@@ -3,11 +3,16 @@
  */
 
 const RANKS = [
-  { title: 'Apprentice Chemist', xp: 0, levelsUnlocked: 10 },
-  { title: 'Lab Technician', xp: 500, levelsUnlocked: 20 },
-  { title: 'Molecule Engineer', xp: 1500, levelsUnlocked: 30 },
-  { title: 'Reaction Specialist', xp: 3000, levelsUnlocked: 40 },
-  { title: 'Master Chemist', xp: 5000, levelsUnlocked: 50 }
+  { title: 'Apprentice Chemist',  xp: 0,     levelsUnlocked: 10,  badge: 'badge_1',  color: 0x888888 },
+  { title: 'Lab Technician',      xp: 500,   levelsUnlocked: 20,  badge: 'badge_2',  color: 0x44aa44 },
+  { title: 'Molecule Engineer',   xp: 1500,  levelsUnlocked: 30,  badge: 'badge_3',  color: 0x4488ff },
+  { title: 'Reaction Specialist', xp: 3000,  levelsUnlocked: 40,  badge: 'badge_4',  color: 0xcc44ff },
+  { title: 'Master Chemist',      xp: 5000,  levelsUnlocked: 50,  badge: 'badge_5',  color: 0xff4444 },
+  { title: 'Crystal Chemist',     xp: 7500,  levelsUnlocked: 60,  badge: 'badge_6',  color: 0x00ffcc },
+  { title: 'Solar Alchemist',     xp: 10500, levelsUnlocked: 70,  badge: 'badge_7',  color: 0xffaa00 },
+  { title: 'Abyssal Researcher',  xp: 14000, levelsUnlocked: 80,  badge: 'badge_8',  color: 0x0066ff },
+  { title: 'Plasma Theorist',     xp: 18000, levelsUnlocked: 90,  badge: 'badge_9',  color: 0xff00aa },
+  { title: 'Quantum Master',      xp: 23000, levelsUnlocked: 100, badge: 'badge_10', color: 0xffffff }
 ];
 
 const SAVE_KEY = 'chemquest_save';

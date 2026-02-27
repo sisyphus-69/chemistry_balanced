@@ -8,8 +8,8 @@ import { ResultScene } from './scenes/ResultScene.js';
 const config = {
   type: Phaser.AUTO,
   parent: 'game-container',
-  width: 800,
-  height: 600,
+  width: 1200,
+  height: 900,
   backgroundColor: '#0d0d1a',
   scale: {
     mode: Phaser.Scale.FIT,
@@ -25,7 +25,8 @@ const config = {
   },
   render: {
     pixelArt: true,
-    antialias: false
+    antialias: false,
+    roundPixels: true
   }
 };
 

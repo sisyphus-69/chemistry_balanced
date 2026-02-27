@@ -32,5 +32,5 @@ export function pixelText(scene, x, y, text, size, color, opts = {}) {
  * @returns {number}
  */
 export function scaledSize(base, w, h) {
-  return Math.round(base * Math.min(w / 800, h / 600));
+  return Math.round(base * Math.min(w / 1200, h / 900));
 }

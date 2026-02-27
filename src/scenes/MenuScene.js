@@ -2,6 +2,8 @@ import Phaser from 'phaser';
 import { ProgressionSystem } from '../systems/ProgressionSystem.js';
 import { soundManager } from '../systems/SoundManager.js';
 import { PIXEL_FONT } from '../ui/PixelText.js';
+import { LayoutGrid } from '../ui/LayoutGrid.js';
+import { PanelRenderer } from '../ui/PanelRenderer.js';
 import { REGIONS, getRegionForLevel, getRegionIndex } from '../data/regions.js';
 import equationsData from '../data/equations.json';
 
@@ -37,6 +39,7 @@ export class MenuScene extends Phaser.Scene {
 
   create() {
     const { width, height } = this.cameras.main;
+    this.grid = new LayoutGrid(width, height);
     this._buildRegionMap(width, height);
     this._buildHUD(width, height);
     this._buildInfoPanel(width, height);
@@ -96,7 +99,7 @@ export class MenuScene extends Phaser.Scene {
       const bx = b.x * width, by = b.y * height;
 
       const dist = Phaser.Math.Distance.Between(ax, ay, bx, by);
-      const dots = Math.floor(dist / 12);
+      const dots = Math.floor(dist / 18);
       const nextEq = regionEqs[i + 1];
       const unlocked = nextEq && nextEq.level <= maxUnlocked;
 
@@ -105,7 +108,7 @@ export class MenuScene extends Phaser.Scene {
         const dx = Phaser.Math.Linear(ax, bx, t);
         const dy = Phaser.Math.Linear(ay, by, t);
         pathGfx.fillStyle(unlocked ? region.palette.pathDot : region.palette.path, unlocked ? 0.7 : 0.25);
-        pathGfx.fillRect(Math.round(dx) - 1, Math.round(dy) - 1, 3, 3);
+        pathGfx.fillRect(Math.round(dx) - 2, Math.round(dy) - 2, 5, 5);
       }
     }
 
@@ -144,7 +147,7 @@ export class MenuScene extends Phaser.Scene {
       // Level number
       const label = this.add.text(x, y, `${eq.level}`, {
         fontFamily: PIXEL_FONT,
-        fontSize: eq.boss ? '12px' : '10px',
+        fontSize: eq.boss ? '18px' : '15px',
         color: unlocked ? '#ffffff' : '#333355'
       }).setOrigin(0.5);
 
@@ -152,16 +155,16 @@ export class MenuScene extends Phaser.Scene {
       if (completed) {
         for (let s = 0; s < 3; s++) {
           this.add.image(
-            x - 10 + s * 10, y + 22,
+            x - 15 + s * 15, y + 22,
             s < completed.stars ? 'star_filled' : 'star_empty'
-          ).setScale(0.4);
+          ).setScale(0.6);
         }
       }
 
       // Boss label
       if (eq.boss && unlocked) {
         this.add.text(x, y - 22, 'BOSS', {
-          fontFamily: PIXEL_FONT, fontSize: '8px', color: '#ff4444'
+          fontFamily: PIXEL_FONT, fontSize: '12px', color: '#ff4444'
         }).setOrigin(0.5);
       }
 
@@ -184,11 +187,11 @@ export class MenuScene extends Phaser.Scene {
     const px = startNodePos.x * width;
     const py = startNodePos.y * height;
 
-    this.player = this.add.image(px, py - 18, 'player_flask').setOrigin(0.5, 1);
+    this.player = this.add.image(px, py - 27, 'player_flask').setOrigin(0.5, 1);
 
     this.tweens.add({
       targets: this.player,
-      y: py - 22,
+      y: py - 33,
       duration: 800,
       yoyo: true,
       repeat: -1,
@@ -196,12 +199,12 @@ export class MenuScene extends Phaser.Scene {
     });
 
     // Region name banner
-    this.add.text(width / 2, 50, region.name, {
-      fontFamily: PIXEL_FONT, fontSize: '16px', color: region.palette.accentHex
+    this.add.text(width / 2, 75, region.name, {
+      fontFamily: PIXEL_FONT, fontSize: '24px', color: region.palette.accentHex
     }).setOrigin(0.5);
 
-    this.add.text(width / 2, 70, region.subtitle, {
-      fontFamily: PIXEL_FONT, fontSize: '10px', color: region.palette.text
+    this.add.text(width / 2, 105, region.subtitle, {
+      fontFamily: PIXEL_FONT, fontSize: '15px', color: region.palette.text
     }).setOrigin(0.5);
   }
 
@@ -215,7 +218,7 @@ export class MenuScene extends Phaser.Scene {
       // Left side - Lab
       gfx.fillStyle(0x0f1a15, 1);
       gfx.fillRect(0, 0, midX, height);
-      
+
       // Right side - Corrupted
       gfx.fillStyle(0x150a1a, 1);
       gfx.fillRect(midX, 0, width - midX, height);
@@ -299,6 +302,80 @@ export class MenuScene extends Phaser.Scene {
         gfx.fillRect(sx + 1, sy, 2, 2);
         gfx.fillRect(sx - 1, sy + 3, 3, 1);
       }
+    } else if (region.decorations === 'crystal') {
+      // Crystal prism patterns
+      gfx.fillStyle(region.palette.accent, 0.06);
+      for (let i = 0; i < 8; i++) {
+        const cx = Phaser.Math.Between(40, width - 40);
+        const cy = Phaser.Math.Between(80, height - 80);
+        gfx.fillTriangle(cx, cy - 16, cx - 8, cy, cx + 8, cy);
+        gfx.fillTriangle(cx, cy + 16, cx - 8, cy, cx + 8, cy);
+      }
+      gfx.lineStyle(1, region.palette.accent, 0.08);
+      for (let i = 0; i < 6; i++) {
+        const sx = Phaser.Math.Between(20, width - 20);
+        const sy = Phaser.Math.Between(60, height - 60);
+        gfx.lineBetween(sx, sy, sx + Phaser.Math.Between(-40, 40), sy + Phaser.Math.Between(-20, 20));
+      }
+    } else if (region.decorations === 'solar') {
+      // Sun rays and heat shimmer
+      gfx.fillStyle(region.palette.accent, 0.04);
+      for (let i = 0; i < 6; i++) {
+        gfx.fillCircle(Phaser.Math.Between(50, width - 50), Phaser.Math.Between(80, height - 80), Phaser.Math.Between(8, 20));
+      }
+      gfx.lineStyle(1, region.palette.accent, 0.06);
+      const sunCx = width / 2, sunCy = height / 2;
+      for (let i = 0; i < 10; i++) {
+        const angle = (i / 10) * Math.PI * 2;
+        gfx.lineBetween(sunCx, sunCy, sunCx + Math.cos(angle) * 300, sunCy + Math.sin(angle) * 300);
+      }
+    } else if (region.decorations === 'ocean') {
+      // Bubbles and wave lines
+      gfx.fillStyle(region.palette.accent, 0.04);
+      for (let i = 0; i < 15; i++) {
+        gfx.fillCircle(Phaser.Math.Between(20, width - 20), Phaser.Math.Between(60, height - 60), Phaser.Math.Between(2, 8));
+      }
+      gfx.lineStyle(1, region.palette.accent, 0.06);
+      for (let y = 100; y < height - 80; y += 80) {
+        gfx.beginPath();
+        gfx.moveTo(20, y);
+        for (let x = 20; x < width - 20; x += 10) {
+          gfx.lineTo(x, y + Math.sin(x * 0.03) * 10);
+        }
+        gfx.strokePath();
+      }
+    } else if (region.decorations === 'plasma') {
+      // Plasma arcs and energy orbs
+      gfx.fillStyle(region.palette.accent, 0.05);
+      for (let i = 0; i < 8; i++) {
+        const cx = Phaser.Math.Between(40, width - 40);
+        const cy = Phaser.Math.Between(80, height - 80);
+        gfx.fillCircle(cx, cy, 5);
+        gfx.lineStyle(1, region.palette.accent, 0.1);
+        gfx.lineBetween(cx, cy, cx + Phaser.Math.Between(-30, 30), cy + Phaser.Math.Between(-20, 20));
+      }
+      // Concentric rings
+      gfx.lineStyle(1, region.palette.accent, 0.04);
+      gfx.strokeCircle(width / 2, height / 2, 120);
+      gfx.strokeCircle(width / 2, height / 2, 180);
+    } else if (region.decorations === 'frontier') {
+      // Star field
+      gfx.fillStyle(0xffffff, 0.08);
+      for (let i = 0; i < 40; i++) {
+        const sz = Phaser.Math.Between(1, 3);
+        gfx.fillRect(Phaser.Math.Between(10, width - 10), Phaser.Math.Between(50, height - 50), sz, sz);
+      }
+      // Constellation lines
+      gfx.lineStyle(1, 0xffffff, 0.03);
+      for (let i = 0; i < 5; i++) {
+        const sx = Phaser.Math.Between(50, width - 50);
+        const sy = Phaser.Math.Between(80, height - 80);
+        gfx.lineBetween(sx, sy, sx + Phaser.Math.Between(-80, 80), sy + Phaser.Math.Between(-50, 50));
+      }
+      // Orbital ellipses
+      gfx.lineStyle(1, region.palette.accent, 0.05);
+      gfx.strokeEllipse(width / 2, height / 2, 250, 100);
+      gfx.strokeEllipse(width / 2, height / 2, 200, 150);
     }
   }
 
@@ -361,14 +438,14 @@ export class MenuScene extends Phaser.Scene {
     this.tweens.add({
       targets: this.player,
       x: target.x * width,
-      y: target.y * height - 18,
+      y: target.y * height - 27,
       duration: 200,
       ease: 'Sine.easeInOut',
       onComplete: () => {
         this.playerMoving = false;
         this.tweens.add({
           targets: this.player,
-          y: target.y * height - 22,
+          y: target.y * height - 33,
           duration: 800,
           yoyo: true,
           repeat: -1,
@@ -426,7 +503,7 @@ export class MenuScene extends Phaser.Scene {
           const fn = region.nodes[finalLocalIdx];
           this.tweens.add({
             targets: this.player,
-            y: fn.y * height - 22,
+            y: fn.y * height - 33,
             duration: 800,
             yoyo: true,
             repeat: -1,
@@ -452,7 +529,7 @@ export class MenuScene extends Phaser.Scene {
       this.tweens.add({
         targets: this.player,
         x: node.x * width,
-        y: node.y * height - 18,
+        y: node.y * height - 27,
         duration: 120,
         ease: 'Linear',
         onComplete: () => walkStep(stepIdx + 1)
@@ -509,7 +586,8 @@ export class MenuScene extends Phaser.Scene {
           const sceneKey = eq.boss ? 'BossScene' : 'GameScene';
           this.scene.start(sceneKey, {
             equation: eq,
-            progression: this.progression
+            progression: this.progression,
+            region: REGIONS[this.currentRegionIdx]
           });
         }
       });
@@ -517,7 +595,8 @@ export class MenuScene extends Phaser.Scene {
       const sceneKey = eq.boss ? 'BossScene' : 'GameScene';
       this.scene.start(sceneKey, {
         equation: eq,
-        progression: this.progression
+        progression: this.progression,
+        region: REGIONS[this.currentRegionIdx]
       });
     }
   }
@@ -526,6 +605,7 @@ export class MenuScene extends Phaser.Scene {
   // HUD
   // ─────────────────────────────────────────────
   _buildHUD(width, height) {
+    const grid = this.grid;
     const rank = this.progression.getRank();
     const nextRank = this.progression.getNextRank();
     const xp = this.progression.getXP();
@@ -533,24 +613,29 @@ export class MenuScene extends Phaser.Scene {
     // Title bar
     const titleBar = this.add.graphics();
     titleBar.fillStyle(0x0d0d1e, 0.9);
-    titleBar.fillRect(0, 0, width, 40);
+    titleBar.fillRect(0, 0, width, grid.HEADER_H);
     titleBar.fillStyle(0x333366, 0.3);
-    titleBar.fillRect(0, 39, width, 1);
+    titleBar.fillRect(0, grid.HEADER_H - 1, width, 1);
 
-    // Title
-    this.add.text(16, 10, 'ChemQuest', {
-      fontFamily: PIXEL_FONT, fontSize: '14px', color: '#00ff88'
+    // Title — cols 0-2
+    this.add.text(grid.colX(0), 15, 'ChemQuest', {
+      fontFamily: PIXEL_FONT, fontSize: '21px', color: '#00ff88'
     });
 
-    // Rank
-    this.add.text(16, 28, rank.title, {
-      fontFamily: PIXEL_FONT, fontSize: '10px', color: '#ffdd44'
+    // Rank title — cols 0-2, below title
+    this.add.text(grid.colX(0), 38, rank.title, {
+      fontFamily: PIXEL_FONT, fontSize: '15px', color: '#ffdd44'
     });
 
-    // XP bar
+    // Rank badge
+    if (rank.badge && this.textures.exists(rank.badge)) {
+      this.add.image(grid.colX(3), 20, rank.badge).setScale(0.7).setOrigin(0, 0.5);
+    }
+
+    // XP bar — cols 9-11
     if (nextRank) {
-      const barW = 120, barH = 6;
-      const barX = width - barW - 16;
+      const barW = 180, barH = 9;
+      const barX = grid.colX(9);
       const barY = 10;
       const pct = Math.min(1, (xp - rank.xp) / (nextRank.xp - rank.xp));
 
@@ -562,16 +647,16 @@ export class MenuScene extends Phaser.Scene {
       xpFill.fillStyle(0x00ff88, 1);
       xpFill.fillRect(barX, barY, barW * pct, barH);
 
-      this.add.text(width - 16, barY + 12, `${xp} XP`, {
-        fontFamily: PIXEL_FONT, fontSize: '8px', color: '#aaaacc'
+      this.add.text(grid.colRight(9, 3), barY + 14, `${xp} XP`, {
+        fontFamily: PIXEL_FONT, fontSize: '12px', color: '#aaaacc'
       }).setOrigin(1, 0);
     }
 
     // Streak
     const streak = this.progression.getStreak();
     if (streak > 0) {
-      this.add.text(width - 16, 28, `Streak: ${streak}`, {
-        fontFamily: PIXEL_FONT, fontSize: '8px',
+      this.add.text(grid.colRight(9, 3), 38, `Streak: ${streak}`, {
+        fontFamily: PIXEL_FONT, fontSize: '12px',
         color: streak >= 5 ? '#ff6644' : '#ffdd44'
       }).setOrigin(1, 0);
     }
@@ -582,8 +667,8 @@ export class MenuScene extends Phaser.Scene {
 
     // Left arrow (previous region)
     if (this.currentRegionIdx > 0) {
-      const prevBtn = this.add.text(20, height - 20, '< Prev Region', {
-        fontFamily: PIXEL_FONT, fontSize: '10px', color: '#8888aa'
+      const prevBtn = this.add.text(20, height - 30, '< Prev Region', {
+        fontFamily: PIXEL_FONT, fontSize: '15px', color: '#8888aa'
       }).setOrigin(0, 1).setInteractive({ useHandCursor: true });
       prevBtn.on('pointerdown', () => {
         const prevRegion = REGIONS[this.currentRegionIdx - 1];
@@ -602,8 +687,8 @@ export class MenuScene extends Phaser.Scene {
       const nextRegion = REGIONS[this.currentRegionIdx + 1];
       const nextUnlocked = nextRegion.levels[0] <= maxUnlocked;
       if (nextUnlocked) {
-        const nextBtn = this.add.text(width - 20, height - 20, 'Next Region >', {
-          fontFamily: PIXEL_FONT, fontSize: '10px', color: '#8888aa'
+        const nextBtn = this.add.text(width - 20, height - 30, 'Next Region >', {
+          fontFamily: PIXEL_FONT, fontSize: '15px', color: '#8888aa'
         }).setOrigin(1, 1).setInteractive({ useHandCursor: true });
         nextBtn.on('pointerdown', () => {
           const firstEq = equationsData.find(eq => eq.level === nextRegion.levels[0]);
@@ -618,40 +703,45 @@ export class MenuScene extends Phaser.Scene {
     }
 
     // Settings button
-    const settingsBtn = this.add.text(width / 2, height - 8, '[Settings]', {
-      fontFamily: PIXEL_FONT, fontSize: '10px', color: '#6666aa'
+    const settingsBtn = this.add.text(width / 2, height - 12, '[Settings]', {
+      fontFamily: PIXEL_FONT, fontSize: '15px', color: '#6666aa'
     }).setOrigin(0.5, 1).setInteractive({ useHandCursor: true });
     settingsBtn.on('pointerdown', () => this._toggleSettings());
 
     // Controls hint
-    this.add.text(width / 2, height - 24, 'Arrow keys to move | Enter to play', {
-      fontFamily: PIXEL_FONT, fontSize: '8px', color: '#555577'
+    this.add.text(width / 2, height - 36, 'Arrow keys to move | Enter to play', {
+      fontFamily: PIXEL_FONT, fontSize: '12px', color: '#555577'
     }).setOrigin(0.5, 1);
   }
 
   _buildInfoPanel(width, height) {
-    const panelH = 50;
+    const panelH = 75;
+    const panelW = 600;
     const panelY = height - panelH - 30;
+    const panelX = width / 2 - panelW / 2;
 
     this.infoBg = this.add.graphics();
-    this.infoBg.fillStyle(0x0d0d1e, 0.92);
-    this.infoBg.fillRect(width / 2 - 200, panelY, 400, panelH);
-    this.infoBg.fillStyle(0x333366, 0.4);
-    this.infoBg.fillRect(width / 2 - 200, panelY, 400, 2);
-    this.infoBg.fillRect(width / 2 - 200, panelY + panelH - 2, 400, 2);
+    PanelRenderer.drawPanel(this.infoBg, panelX, panelY, panelW, panelH, {
+      fillColor: 0x0d0d1e,
+      fillAlpha: 0.92,
+      borderColor: 0x333366,
+      borderAlpha: 0.4,
+      cornerBrackets: true,
+      bracketSize: 10
+    });
 
-    this.infoTitle = this.add.text(width / 2, panelY + 14, '', {
-      fontFamily: PIXEL_FONT, fontSize: '12px', color: '#ffffff'
+    this.infoTitle = this.add.text(width / 2, panelY + 21, '', {
+      fontFamily: PIXEL_FONT, fontSize: '18px', color: '#ffffff'
     }).setOrigin(0.5);
 
-    this.infoSub = this.add.text(width / 2, panelY + 34, '', {
-      fontFamily: PIXEL_FONT, fontSize: '8px', color: '#aaaacc'
+    this.infoSub = this.add.text(width / 2, panelY + 51, '', {
+      fontFamily: PIXEL_FONT, fontSize: '12px', color: '#aaaacc'
     }).setOrigin(0.5);
 
     this.infoStars = [];
     for (let s = 0; s < 3; s++) {
-      const star = this.add.image(width / 2 + 155 + s * 14, panelY + 14, 'star_empty')
-        .setScale(0.5);
+      const star = this.add.image(panelX + panelW - 45 + s * 14, panelY + 21, 'star_empty')
+        .setScale(0.75);
       this.infoStars.push(star);
     }
   }
@@ -717,32 +807,32 @@ export class MenuScene extends Phaser.Scene {
     );
     blocker.on('pointerdown', () => {});
 
-    // Panel background
+    // Panel background — scaled to 480x300
     const bg = _add(this.add.graphics());
     bg.fillStyle(0x000000, 0.6);
     bg.fillRect(0, 0, width, height);
     bg.fillStyle(0x0d0d1a, 0.98);
-    bg.fillRect(cx - 160, cy - 100, 320, 200);
+    bg.fillRect(cx - 240, cy - 150, 480, 300);
     // Border
     bg.fillStyle(0x333366, 1);
-    bg.fillRect(cx - 160, cy - 100, 320, 2);
-    bg.fillRect(cx - 160, cy + 98, 320, 2);
-    bg.fillRect(cx - 160, cy - 100, 2, 200);
-    bg.fillRect(cx + 158, cy - 100, 2, 200);
+    bg.fillRect(cx - 240, cy - 150, 480, 2);
+    bg.fillRect(cx - 240, cy + 148, 480, 2);
+    bg.fillRect(cx - 240, cy - 150, 2, 300);
+    bg.fillRect(cx + 238, cy - 150, 2, 300);
 
     // Title
-    _add(this.add.text(cx, cy - 80, 'Settings', {
-      fontFamily: PIXEL_FONT, fontSize: '14px', color: '#ffffff'
+    _add(this.add.text(cx, cy - 120, 'Settings', {
+      fontFamily: PIXEL_FONT, fontSize: '21px', color: '#ffffff'
     }).setOrigin(0.5));
 
     // Separator
     const sep = _add(this.add.graphics());
     sep.fillStyle(0x333366, 0.3);
-    sep.fillRect(cx - 140, cy - 60, 280, 1);
+    sep.fillRect(cx - 210, cy - 90, 420, 1);
 
     // Colorblind toggle
-    const cbText = _add(this.add.text(cx - 130, cy - 35, `Colorblind Mode: ${settings.colorblindMode ? 'ON' : 'OFF'}`, {
-      fontFamily: PIXEL_FONT, fontSize: '10px', color: '#aaaacc'
+    const cbText = _add(this.add.text(cx - 195, cy - 52, `Colorblind Mode: ${settings.colorblindMode ? 'ON' : 'OFF'}`, {
+      fontFamily: PIXEL_FONT, fontSize: '15px', color: '#aaaacc'
     }).setInteractive({ useHandCursor: true }));
     cbText.on('pointerdown', () => {
       settings.colorblindMode = !settings.colorblindMode;
@@ -753,8 +843,8 @@ export class MenuScene extends Phaser.Scene {
     cbText.on('pointerout', () => cbText.setColor('#aaaacc'));
 
     // Reset progress
-    const resetBtn = _add(this.add.text(cx, cy + 30, '[ Reset All Progress ]', {
-      fontFamily: PIXEL_FONT, fontSize: '10px', color: '#ff4444'
+    const resetBtn = _add(this.add.text(cx, cy + 45, '[ Reset All Progress ]', {
+      fontFamily: PIXEL_FONT, fontSize: '15px', color: '#ff4444'
     }).setOrigin(0.5).setInteractive({ useHandCursor: true }));
     resetBtn.on('pointerdown', () => {
       this.progression.resetAll();
@@ -765,8 +855,8 @@ export class MenuScene extends Phaser.Scene {
     resetBtn.on('pointerout', () => resetBtn.setColor('#ff4444'));
 
     // Close button
-    const closeBtn = _add(this.add.text(cx + 140, cy - 88, 'X', {
-      fontFamily: PIXEL_FONT, fontSize: '14px', color: '#ff6666'
+    const closeBtn = _add(this.add.text(cx + 210, cy - 132, 'X', {
+      fontFamily: PIXEL_FONT, fontSize: '21px', color: '#ff6666'
     }).setOrigin(0.5).setInteractive({ useHandCursor: true }));
     closeBtn.on('pointerdown', destroyPanel);
     closeBtn.on('pointerover', () => closeBtn.setColor('#ff9999'));
