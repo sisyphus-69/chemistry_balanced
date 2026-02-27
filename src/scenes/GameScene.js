@@ -5,10 +5,8 @@ import { ScoringSystem } from '../systems/ScoringSystem.js';
 import { HintSystem } from '../systems/HintSystem.js';
 import { soundManager } from '../systems/SoundManager.js';
 import { PIXEL_FONT } from '../ui/PixelText.js';
-import { HPBar } from '../ui/HPBar.js';
 import { ProfessorAurum } from '../ui/ProfessorAurum.js';
 import { BattleUI } from '../ui/BattleUI.js';
-import elementsData from '../data/elements.json';
 
 export class GameScene extends Phaser.Scene {
   constructor() {
@@ -22,12 +20,17 @@ export class GameScene extends Phaser.Scene {
     this.startTime = 0;
     this.levelComplete = false;
     this.focusedSlotIdx = -1;
-    this._prevBalancedSet = new Set();
   }
 
   create() {
     const { width, height } = this.cameras.main;
     this.startTime = Date.now();
+    this.UI_PAD = 16;
+
+    // New layout: slim bottom strip instead of 160px panel
+    this.STRIP_H = 54;
+    this.STRIP_Y = height - this.STRIP_H;
+    this.PANEL_Y = this.STRIP_Y; // keep for divider compat
 
     // Systems
     this.coeffManager = new CoefficientManager(this, this.equation);
@@ -35,13 +38,8 @@ export class GameScene extends Phaser.Scene {
     this.professor = new ProfessorAurum(this);
 
     // Layout constants (relative to viewport)
-    this.EQUATION_Y = height * 0.45;
-    this.SCALE_Y = height * 0.18;
-    
-    // Bottom control panel area (y: 440 to 600)
-    this.HP_BAR_Y = 470;
-    this.GRID_CENTER_Y = 520;
-    this.CHECK_CENTER_Y = 520;
+    this.EQUATION_Y = height * 0.35;
+    this.TALLY_Y = this.EQUATION_Y + 80;
 
     // Background
     this._buildLabEnvironment(width, height);
@@ -49,17 +47,19 @@ export class GameScene extends Phaser.Scene {
     // ── Header bar ──
     this._buildHeader(width, height);
 
+    // ── Bottom strip background ──
+    this._buildBottomStrip(width, height);
+
     // ── Build UI sections ──
-    this._buildControlPanel(width, height);
     this._buildEquationDisplay();
-    this._buildScale();
-    this._buildHPBars();
-    this._buildGrid(width, height);
+    this._buildSteppers();
+    this._buildAtomTally();
+    this._buildNumberStrip(width, height);
     this._buildCheckButton(width, height);
     this._buildHintButton(width);
 
     // Timer display
-    this.timerText = this.add.text(width - 15, 10, '0:00', {
+    this.timerText = this.add.text(width - this.UI_PAD, 10, '0:00', {
       fontFamily: PIXEL_FONT, fontSize: '14px', color: '#aaaacc'
     }).setOrigin(1, 0);
 
@@ -68,8 +68,7 @@ export class GameScene extends Phaser.Scene {
     // Wire up coefficient change callback
     this.coeffManager.onChange = () => {
       this._updateEquationDisplay();
-      this._updateHPBars();
-      this._updateScale();
+      this._updateAtomTally();
       this._updateMoleculeVisuals();
       this.hintSystem.resetIdle();
     };
@@ -80,8 +79,11 @@ export class GameScene extends Phaser.Scene {
     // Keyboard support
     this._setupKeyboard();
 
+    // Ensure handlers are cleaned on scene shutdown/restart.
+    this.events.once(Phaser.Scenes.Events.SHUTDOWN, this._cleanupInputHandlers, this);
+
     // Click background to defocus slot
-    this.input.on('pointerdown', (pointer) => {
+    this._onScenePointerDown = (pointer) => {
       if (this.focusedSlotIdx >= 0) {
         let hitSlot = false;
         this.equationSlots.forEach(s => {
@@ -90,7 +92,8 @@ export class GameScene extends Phaser.Scene {
         });
         if (!hitSlot) this._defocusSlot();
       }
-    });
+    };
+    this.input.on('pointerdown', this._onScenePointerDown);
   }
 
   update(time, delta) {
@@ -108,17 +111,18 @@ export class GameScene extends Phaser.Scene {
     if (autoHint) this._showHint(autoHint);
 
     // Animate
-    this._animateScale(delta);
-    this._animateMolecules(time);
     this._animateFocusCursor(time);
   }
 
   // ─────────────────────────────────────────────
-  // BOTTOM CONTROL PANEL
+  // BOTTOM STRIP (slim replacement for control panel)
   // ─────────────────────────────────────────────
-  _buildControlPanel(width, height) {
-    const panelY = height - 160;
-    this.add.image(0, panelY, 'control_panel').setOrigin(0, 0);
+  _buildBottomStrip(width, height) {
+    const g = this.add.graphics();
+    g.fillStyle(0x0d0d1e, 0.95);
+    g.fillRect(0, this.STRIP_Y, width, this.STRIP_H);
+    g.fillStyle(0x333366, 0.4);
+    g.fillRect(0, this.STRIP_Y, width, 1);
   }
 
   // ─────────────────────────────────────────────
@@ -135,14 +139,6 @@ export class GameScene extends Phaser.Scene {
     graphics.fillStyle(0x0f1520, 1);
     graphics.fillRect(0, 0, width, horizonY);
     
-    // Some glowing wall panels
-    graphics.fillStyle(0x112233, 0.8);
-    graphics.fillRect(width * 0.1, horizonY - 80, width * 0.2, 40);
-    graphics.fillRect(width * 0.7, horizonY - 80, width * 0.2, 40);
-    
-    graphics.fillStyle(0x00ff88, 0.2);
-    graphics.fillRect(width * 0.1, horizonY - 40, width * 0.2, 2);
-    graphics.fillRect(width * 0.7, horizonY - 40, width * 0.2, 2);
 
     // --- Floor Perspective Grid ---
     graphics.lineStyle(1, 0x00ff88, 0.15);
@@ -150,7 +146,7 @@ export class GameScene extends Phaser.Scene {
     // Horizontal lines (getting thicker/spaced out towards bottom)
     let y = horizonY;
     let step = 5;
-    while (y < height - 160) {
+    while (y < (this.STRIP_Y ?? (height - 54))) {
       graphics.lineBetween(0, y, width, y);
       y += step;
       step *= 1.25;
@@ -168,15 +164,16 @@ export class GameScene extends Phaser.Scene {
   // HEADER BAR
   // ─────────────────────────────────────────────
   _buildHeader(width, height) {
+    const pad = this.UI_PAD || 16;
     // Header background
     const hdr = this.add.graphics();
     hdr.fillStyle(0x0d0d1e, 0.9);
-    hdr.fillRect(0, 0, width, 32);
+    hdr.fillRect(0, 0, width, 34);
     hdr.fillStyle(0x333366, 0.4);
-    hdr.fillRect(0, 31, width, 1);
+    hdr.fillRect(0, 33, width, 1);
 
     // Back button
-    const backBtn = this.add.text(10, 10, '< Back', {
+    const backBtn = this.add.text(pad, 10, '< Back', {
       fontFamily: PIXEL_FONT, fontSize: '10px', color: '#8888aa'
     }).setInteractive({ useHandCursor: true });
     backBtn.on('pointerdown', () => {
@@ -212,7 +209,8 @@ export class GameScene extends Phaser.Scene {
     const arrowSlots = 1;
     const plusCount = this.equation.reactants.length - 1 + this.equation.products.length - 1;
     const totalSlots = allMolecules.length + arrowSlots + plusCount;
-    const spacing = Math.min(90, (width - 80) / totalSlots);
+    const usableWidth = width - (this.UI_PAD || 16) * 2 - 40;
+    const spacing = Math.min(90, usableWidth / totalSlots);
     const startX = width / 2 - (totalSlots * spacing) / 2 + spacing / 2;
 
     let slotIdx = 0;
@@ -221,14 +219,16 @@ export class GameScene extends Phaser.Scene {
       const x = startX + slotIdx * spacing;
       const y = this.EQUATION_Y;
 
-      // Coefficient slot
-      const slotBg = this.add.image(x - 26, y, 'coeff_slot').setScale(1.0);
-      const slotText = this.add.text(x - 26, y, '1', {
+      // Coefficient slot — centered at slotX, formula left-aligned at formulaX
+      const slotX = x - 16;
+      const formulaX = x + 8;
+      const slotBg = this.add.image(slotX, y, 'coeff_slot').setScale(1.0);
+      const slotText = this.add.text(slotX, y, '1', {
         fontFamily: PIXEL_FONT, fontSize: '16px', color: '#7777cc'
       }).setOrigin(0.5);
 
       // Focus cursor (hidden by default)
-      const cursor = this.add.rectangle(x - 22, y + 12, 16, 2, 0x00ccff).setAlpha(0);
+      const cursor = this.add.rectangle(slotX, y + 12, 16, 2, 0x00ccff).setAlpha(0);
 
       // Click to focus this slot for text input
       slotBg.setInteractive({ useHandCursor: true });
@@ -262,14 +262,14 @@ export class GameScene extends Phaser.Scene {
         side: mol.side, index: mol.index
       });
 
-      // Formula text
-      const formulaText = this.add.text(x + 12, y, mol.formula, {
+      // Formula text — left-aligned so it never overlaps the coefficient slot
+      const formulaText = this.add.text(formulaX, y, mol.formula, {
         fontFamily: PIXEL_FONT, fontSize: '14px', color: '#ffffff'
-      }).setOrigin(0.5);
+      }).setOrigin(0, 0.5);
       this.equationTexts.push(formulaText);
 
-      // Mini molecule orbs
-      const orbContainer = this.add.container(x + 10, y + 28);
+      // Mini molecule orbs — float above the equation row
+      const orbContainer = this.add.container(x, y - 42);
       let orbIdx = 0;
       for (const [element, count] of Object.entries(mol.elements)) {
         for (let c = 0; c < Math.min(count, 4); c++) {
@@ -373,155 +373,49 @@ export class GameScene extends Phaser.Scene {
   }
 
   // ─────────────────────────────────────────────
-  // BALANCE SCALE
+  // INLINE STEPPERS (▲/▼ on each coefficient slot)
   // ─────────────────────────────────────────────
-  _buildScale() {
+  _buildSteppers() {
+    this.steppers = BattleUI.buildSteppers(this, this.equationSlots, this.coeffManager, {
+      arrowTint: 0x8899cc,
+      soundCoeffChange: () => soundManager.coeffChange()
+    });
+  }
+
+  // ─────────────────────────────────────────────
+  // ATOM TALLY BARS (visual balance feedback)
+  // ─────────────────────────────────────────────
+  _buildAtomTally() {
     const { width } = this.cameras.main;
-    const cx = width / 2;
-    const cy = this.SCALE_Y;
+    const pad = this.UI_PAD || 16;
+    const tallyMaxW = Math.min(width - pad * 2, 460);
+    const tallyX = (width - tallyMaxW) / 2;
 
-    // We no longer draw the medieval scale base/beam in the new design
-    // Instead we place two separate pseudo-3D cylindrical platforms
-    
-    // Left platform (Reactants)
-    this.leftPan = this.add.image(cx - 150, cy + 40, 'scale_pan').setScale(1.2);
-    
-    // Right platform (Products)
-    this.rightPan = this.add.image(cx + 150, cy + 40, 'scale_pan').setScale(1.2);
-
-    // Balance text indicator (now floating between platforms)
-    this.balanceText = this.add.text(cx, cy + 10, '', {
-      fontFamily: PIXEL_FONT, fontSize: '12px', color: '#ffdd44'
-    }).setOrigin(0.5);
-
-    this.targetAngle = 0;
-    this.currentAngle = 0;
+    this.atomTally = BattleUI.buildAtomTally(this, this.equation, {
+      x: tallyX,
+      y: this.TALLY_Y,
+      width: tallyMaxW
+    });
   }
 
-  _updateScale() {
-    const result = EquationEngine.validate(
-      this.equation,
+  _updateAtomTally() {
+    if (!this.atomTally) return;
+    this.atomTally.update(
       this.coeffManager.reactantCoeffs,
-      this.coeffManager.productCoeffs
+      this.coeffManager.productCoeffs,
+      () => soundManager.elementBalanced()
     );
-
-    let leftTotal = 0, rightTotal = 0;
-    for (const el of Object.values(result.elements)) {
-      leftTotal += el.left;
-      rightTotal += el.right;
-    }
-
-    const diff = leftTotal - rightTotal;
-    const maxTilt = 15;
-    this.targetAngle = Math.max(-maxTilt, Math.min(maxTilt, diff * 2));
-
-    if (result.balanced) {
-      this.targetAngle = 0;
-      this.balanceText.setText('BALANCED!').setColor('#00ff88');
-    } else if (leftTotal > rightTotal) {
-      this.balanceText.setText('Reactants heavier').setColor('#ffdd44');
-    } else {
-      this.balanceText.setText('Products heavier').setColor('#ffdd44');
-    }
-  }
-
-  _animateScale(delta) {
-    // Medieval scale animation removed.
-    // Instead we can just do a gentle float on the platforms.
-    const time = Date.now();
-    const floatOffsetL = Math.sin(time * 0.002) * 3;
-    const floatOffsetR = Math.sin(time * 0.002 + Math.PI) * 3;
-    
-    if (this.leftPan) this.leftPan.y = this.SCALE_Y + 40 + floatOffsetL;
-    if (this.rightPan) this.rightPan.y = this.SCALE_Y + 40 + floatOffsetR;
-  }
-
-  _animateMolecules(time) {
-    this.moleculeContainers.forEach((mc, i) => {
-      // Molecules float above the platform instead of below text
-      const offset = Math.sin(time * 0.002 + i * 0.5) * 4;
-      const isReactant = mc.mol.side === 'reactant';
-      // Anchor them to their respective platforms
-      const platformY = isReactant ? this.leftPan.y : this.rightPan.y;
-      
-      // Override the container's Y to sit on platform (roughly -30px above center)
-      mc.container.y = platformY - 30 + offset;
-    });
   }
 
   // ─────────────────────────────────────────────
-  // DIVIDER LINE
+  // NUMBER STRIP (compact 1-row 1–9 picker)
   // ─────────────────────────────────────────────
-  _buildDivider(width) {
-    BattleUI.drawDivider(this, this.DIVIDER_Y, width, 0x333366);
-  }
-
-  // ─────────────────────────────────────────────
-  // HP BARS (replaces atom count table)
-  // ─────────────────────────────────────────────
-  _buildHPBars() {
-    const { width } = this.cameras.main;
-    const allElements = EquationEngine.getElements(this.equation);
-    const barWidth = 140; // Fixed width for panel
-    const rowH = 24;
-    const startY = this.HP_BAR_Y;
-    const barX = 40; // Left side of panel
-
-    // Title
-    this.add.text(barX + barWidth / 2 + 20, startY - 10, 'ATOM COUNT', {
-      fontFamily: PIXEL_FONT, fontSize: '10px', color: '#6677bb'
-    }).setOrigin(0.5);
-
-    this.hpBars = [];
-    allElements.forEach((el, i) => {
-      const y = startY + i * rowH + rowH / 2;
-      const elData = elementsData[el] || {};
-      const bar = new HPBar(this, barX, y, barWidth, el, elData.color || '#ffffff');
-      this.hpBars.push({ element: el, bar });
-    });
-  }
-
-  _updateHPBars() {
-    const result = EquationEngine.validate(
-      this.equation,
-      this.coeffManager.reactantCoeffs,
-      this.coeffManager.productCoeffs
-    );
-
-    this.hpBars.forEach(({ element, bar }) => {
-      const elInfo = result.elements[element] || { left: 0, right: 0, balanced: false };
-      bar.update(elInfo.left, elInfo.right, elInfo.balanced);
-
-      if (elInfo.balanced) {
-        if (!this._prevBalancedSet.has(element)) {
-          this._prevBalancedSet.add(element);
-          soundManager.elementBalanced();
-          bar.flash();
-        }
-      } else {
-        this._prevBalancedSet.delete(element);
-      }
-    });
-  }
-
-  // ─────────────────────────────────────────────
-  // 3×3 COEFFICIENT GRID
-  // ─────────────────────────────────────────────
-  _buildGrid(width, height) {
-    const gridX = width - 150; // Right side of panel
-    const gridY = this.GRID_CENTER_Y;
-
-    // Instruction text
-    this.add.text(gridX, gridY - 55, 'COEFFICIENT', {
-      fontFamily: PIXEL_FONT, fontSize: '10px', color: '#ffffff'
-    }).setOrigin(0.5);
-
-    BattleUI.buildGrid(this, {
-      gridCenterX: gridX,
-      gridCenterY: gridY + 10,
+  _buildNumberStrip(width, height) {
+    BattleUI.buildNumberStrip(this, {
+      centerX: width / 2,
+      centerY: this.STRIP_Y + this.STRIP_H / 2,
       numColor: '#aaccff',
       onTap: (n) => {
-        // Apply to focused slot
         if (this.focusedSlotIdx >= 0 && !this.levelComplete) {
           const slot = this.equationSlots[this.focusedSlotIdx];
           if (slot.side === 'reactant') {
@@ -530,25 +424,11 @@ export class GameScene extends Phaser.Scene {
             this.coeffManager.setProductCoeff(slot.index, n);
           }
           soundManager.coeffChange();
-          // Auto-advance
           const next = this.focusedSlotIdx + 1;
           if (next < this.equationSlots.length) {
             this._focusSlot(next);
           }
         }
-      },
-      onDragEnd: (n, pointer) => {
-        this.equationSlots.forEach(slot => {
-          const bounds = slot.bg.getBounds();
-          if (bounds.contains(pointer.x, pointer.y)) {
-            if (slot.side === 'reactant') {
-              this.coeffManager.setReactantCoeff(slot.index, n);
-            } else {
-              this.coeffManager.setProductCoeff(slot.index, n);
-            }
-            soundManager.coeffChange();
-          }
-        });
       }
     });
   }
@@ -557,26 +437,48 @@ export class GameScene extends Phaser.Scene {
   // CHECK / HINT BUTTONS
   // ─────────────────────────────────────────────
   _buildCheckButton(width, height) {
-    const checkX = width / 2; // Center of panel
-    const checkY = this.CHECK_CENTER_Y;
+    const cx = width / 2;
+    const cy = this.STRIP_Y - 28;
+    const btnW = 120, btnH = 34;
 
-    const checkBtn = this.add.image(checkX, checkY, 'btn_check').setScale(1.2);
-    this.add.text(checkX, checkY, 'CHECK', {
-      fontFamily: PIXEL_FONT, fontSize: '14px', color: '#ffffff'
+    const bg = this.add.graphics();
+    const draw = (hover) => {
+      bg.clear();
+      bg.fillStyle(hover ? 0x004422 : 0x002a14, 1);
+      bg.fillRect(cx - btnW / 2, cy - btnH / 2, btnW, btnH);
+      bg.fillStyle(hover ? 0x007744 : 0x004433, 1);
+      bg.fillRect(cx - btnW / 2 + 2, cy - btnH / 2 + 2, btnW - 4, btnH - 4);
+      bg.fillStyle(hover ? 0x66ffaa : 0x33ff88, 0.12);
+      bg.fillRect(cx - btnW / 2 + 2, cy - btnH / 2 + 2, btnW - 4, 4);
+      bg.fillStyle(hover ? 0x66ffaa : 0x33ff88, 0.45);
+      bg.fillRect(cx - btnW / 2, cy - btnH / 2, btnW, 1);
+      bg.fillRect(cx - btnW / 2, cy + btnH / 2 - 1, btnW, 1);
+      bg.fillRect(cx - btnW / 2, cy - btnH / 2, 1, btnH);
+      bg.fillRect(cx + btnW / 2 - 1, cy - btnH / 2, 1, btnH);
+    };
+    draw(false);
+
+    const label = this.add.text(cx, cy, 'CHECK', {
+      fontFamily: PIXEL_FONT, fontSize: '14px', color: '#00ff88'
     }).setOrigin(0.5);
 
-    checkBtn.setInteractive({ useHandCursor: true });
-    checkBtn.on('pointerover', () => checkBtn.setTint(0x66ff99));
-    checkBtn.on('pointerout', () => checkBtn.clearTint());
-    checkBtn.on('pointerdown', () => {
+    const zone = this.add.zone(cx, cy, btnW, btnH).setInteractive({ useHandCursor: true });
+    zone.on('pointerover', () => { draw(true); label.setColor('#66ffbb'); });
+    zone.on('pointerout', () => { draw(false); label.setColor('#00ff88'); });
+    zone.on('pointerdown', () => {
       soundManager.buttonPress();
-      this._checkAnswer();
+      this.tweens.add({
+        targets: label, scaleX: 0.9, scaleY: 0.9, duration: 60,
+        yoyo: true, ease: 'Quad.easeInOut',
+        onComplete: () => this._checkAnswer()
+      });
     });
   }
 
   _buildHintButton(width) {
-    const hintBtn = this.add.image(width - 30, 50, 'btn_hint').setScale(1.0);
-    this.add.text(width - 30, 50, '?', {
+    const x = width - (this.UI_PAD || 16) - 14;
+    const hintBtn = this.add.image(x, 58, 'btn_hint').setScale(1.0);
+    this.add.text(x, 58, '?', {
       fontFamily: PIXEL_FONT, fontSize: '16px', color: '#ffffff'
     }).setOrigin(0.5);
 
@@ -594,7 +496,8 @@ export class GameScene extends Phaser.Scene {
   // ─────────────────────────────────────────────
   _showHint(text) {
     const tier = this.hintSystem.getTier();
-    this.professor.show(text, tier, this.SCALE_Y + 80);
+    const hintY = this.STRIP_Y - 80;
+    this.professor.show(text, tier, hintY);
   }
 
   // ─────────────────────────────────────────────
@@ -638,7 +541,6 @@ export class GameScene extends Phaser.Scene {
     this.progression.completeLevel(this.equation.id, stars, timeSeconds, score);
     this._checkAchievements(timeSeconds, hintsUsed, streak);
     this._playVictoryAnimation();
-    this.balanceText.setText('PERFECTLY BALANCED!').setColor('#00ff88');
 
     this.time.delayedCall(2000, () => {
       this.scene.start('ResultScene', {
@@ -655,22 +557,9 @@ export class GameScene extends Phaser.Scene {
 
     this.cameras.main.shake(100, 0.005);
 
-    // Shake unbalanced HP bars
-    const result = EquationEngine.validate(
-      this.equation,
-      this.coeffManager.reactantCoeffs,
-      this.coeffManager.productCoeffs
-    );
-    this.hpBars.forEach(({ element, bar }) => {
-      const elInfo = result.elements[element];
-      if (elInfo && !elInfo.balanced) {
-        bar.shake();
-      }
-    });
-
     const { width } = this.cameras.main;
     if (this.textures.exists('particle_red')) {
-      const emitter = this.add.particles(width / 2, this.SCALE_Y, 'particle_red', {
+      const emitter = this.add.particles(width / 2, this.EQUATION_Y, 'particle_red', {
         speed: { min: 50, max: 150 }, angle: { min: 0, max: 360 },
         scale: { start: 1, end: 0 }, lifespan: 600, quantity: 10, emitting: false
       });
@@ -683,7 +572,7 @@ export class GameScene extends Phaser.Scene {
     const { width } = this.cameras.main;
 
     if (this.textures.exists('particle_gold')) {
-      const emitter = this.add.particles(width / 2, this.SCALE_Y, 'particle_gold', {
+      const emitter = this.add.particles(width / 2, this.EQUATION_Y, 'particle_gold', {
         speed: { min: 80, max: 200 }, angle: { min: 220, max: 320 },
         scale: { start: 1.5, end: 0 }, lifespan: 1500, quantity: 30, emitting: false
       });
@@ -721,11 +610,26 @@ export class GameScene extends Phaser.Scene {
     if (completedCount >= 20) this.progression.unlockAchievement('level_20');
   }
 
+  _cleanupInputHandlers() {
+    if (this._onScenePointerDown) {
+      this.input.off('pointerdown', this._onScenePointerDown);
+      this._onScenePointerDown = null;
+    }
+    if (this._onKeyDown && this.input?.keyboard) {
+      this.input.keyboard.off('keydown', this._onKeyDown);
+      this._onKeyDown = null;
+    }
+  }
+
   // ─────────────────────────────────────────────
   // KEYBOARD (text input + slot navigation)
   // ─────────────────────────────────────────────
   _setupKeyboard() {
-    this.input.keyboard.on('keydown', (event) => {
+    if (this._onKeyDown) {
+      this.input.keyboard.off('keydown', this._onKeyDown);
+    }
+
+    this._onKeyDown = (event) => {
       if (this.levelComplete) return;
       const key = event.key;
 
@@ -797,6 +701,8 @@ export class GameScene extends Phaser.Scene {
         const hint = this.hintSystem.getNextHint();
         if (hint) this._showHint(hint);
       }
-    });
+    };
+
+    this.input.keyboard.on('keydown', this._onKeyDown);
   }
 }

@@ -1,15 +1,45 @@
 [
   {
-    "id": "lvl_001", "level": 1, "difficulty": "easy", "type": "synthesis",
+    "id": "lvl_001",
+    "level": 1,
+    "difficulty": "easy",
+    "type": "synthesis",
     "display": "_H₂ + _O₂ → _H₂O",
     "reactants": [
-      { "molecule": "H2", "formula": "H₂", "elements": { "H": 2 } },
-      { "molecule": "O2", "formula": "O₂", "elements": { "O": 2 } }
+      {
+        "molecule": "H2",
+        "formula": "H₂",
+        "elements": {
+          "H": 2
+        }
+      },
+      {
+        "molecule": "O2",
+        "formula": "O₂",
+        "elements": {
+          "O": 2
+        }
+      }
     ],
     "products": [
-      { "molecule": "H2O", "formula": "H₂O", "elements": { "H": 2, "O": 1 } }
+      {
+        "molecule": "H2O",
+        "formula": "H₂O",
+        "elements": {
+          "H": 2,
+          "O": 1
+        }
+      }
     ],
-    "solution": { "reactants": [2, 1], "products": [2] },
+    "solution": {
+      "reactants": [
+        2,
+        1
+      ],
+      "products": [
+        2
+      ]
+    },
     "par_time": 30,
     "hints": [
       "Count the hydrogen atoms on each side.",
@@ -18,16 +48,46 @@
     ]
   },
   {
-    "id": "lvl_002", "level": 2, "difficulty": "easy", "type": "synthesis",
+    "id": "lvl_002",
+    "level": 2,
+    "difficulty": "easy",
+    "type": "synthesis",
     "display": "_N₂ + _H₂ → _NH₃",
     "reactants": [
-      { "molecule": "N2", "formula": "N₂", "elements": { "N": 2 } },
-      { "molecule": "H2", "formula": "H₂", "elements": { "H": 2 } }
+      {
+        "molecule": "N2",
+        "formula": "N₂",
+        "elements": {
+          "N": 2
+        }
+      },
+      {
+        "molecule": "H2",
+        "formula": "H₂",
+        "elements": {
+          "H": 2
+        }
+      }
     ],
     "products": [
-      { "molecule": "NH3", "formula": "NH₃", "elements": { "N": 1, "H": 3 } }
+      {
+        "molecule": "NH3",
+        "formula": "NH₃",
+        "elements": {
+          "N": 1,
+          "H": 3
+        }
+      }
     ],
-    "solution": { "reactants": [1, 3], "products": [2] },
+    "solution": {
+      "reactants": [
+        1,
+        3
+      ],
+      "products": [
+        2
+      ]
+    },
     "par_time": 45,
     "hints": [
       "Count the nitrogen atoms on each side.",
@@ -36,16 +96,46 @@
     ]
   },
   {
-    "id": "lvl_003", "level": 3, "difficulty": "easy", "type": "synthesis",
+    "id": "lvl_003",
+    "level": 3,
+    "difficulty": "easy",
+    "type": "synthesis",
     "display": "_Na + _Cl₂ → _NaCl",
     "reactants": [
-      { "molecule": "Na", "formula": "Na", "elements": { "Na": 1 } },
-      { "molecule": "Cl2", "formula": "Cl₂", "elements": { "Cl": 2 } }
+      {
+        "molecule": "Na",
+        "formula": "Na",
+        "elements": {
+          "Na": 1
+        }
+      },
+      {
+        "molecule": "Cl2",
+        "formula": "Cl₂",
+        "elements": {
+          "Cl": 2
+        }
+      }
     ],
     "products": [
-      { "molecule": "NaCl", "formula": "NaCl", "elements": { "Na": 1, "Cl": 1 } }
+      {
+        "molecule": "NaCl",
+        "formula": "NaCl",
+        "elements": {
+          "Na": 1,
+          "Cl": 1
+        }
+      }
     ],
-    "solution": { "reactants": [2, 1], "products": [2] },
+    "solution": {
+      "reactants": [
+        2,
+        1
+      ],
+      "products": [
+        2
+      ]
+    },
     "par_time": 30,
     "hints": [
       "How many chlorine atoms are on the left?",
@@ -54,16 +144,46 @@
     ]
   },
   {
-    "id": "lvl_004", "level": 4, "difficulty": "easy", "type": "synthesis",
+    "id": "lvl_004",
+    "level": 4,
+    "difficulty": "easy",
+    "type": "synthesis",
     "display": "_C + _O₂ → _CO₂",
     "reactants": [
-      { "molecule": "C", "formula": "C", "elements": { "C": 1 } },
-      { "molecule": "O2", "formula": "O₂", "elements": { "O": 2 } }
+      {
+        "molecule": "C",
+        "formula": "C",
+        "elements": {
+          "C": 1
+        }
+      },
+      {
+        "molecule": "O2",
+        "formula": "O₂",
+        "elements": {
+          "O": 2
+        }
+      }
     ],
     "products": [
-      { "molecule": "CO2", "formula": "CO₂", "elements": { "C": 1, "O": 2 } }
+      {
+        "molecule": "CO2",
+        "formula": "CO₂",
+        "elements": {
+          "C": 1,
+          "O": 2
+        }
+      }
     ],
-    "solution": { "reactants": [1, 1], "products": [1] },
+    "solution": {
+      "reactants": [
+        1,
+        1
+      ],
+      "products": [
+        1
+      ]
+    },
     "par_time": 15,
     "hints": [
       "Count each element on both sides.",
@@ -72,16 +192,46 @@
     ]
   },
   {
-    "id": "lvl_005", "level": 5, "difficulty": "easy", "type": "synthesis",
+    "id": "lvl_005",
+    "level": 5,
+    "difficulty": "easy",
+    "type": "synthesis",
     "display": "_Mg + _O₂ → _MgO",
     "reactants": [
-      { "molecule": "Mg", "formula": "Mg", "elements": { "Mg": 1 } },
-      { "molecule": "O2", "formula": "O₂", "elements": { "O": 2 } }
+      {
+        "molecule": "Mg",
+        "formula": "Mg",
+        "elements": {
+          "Mg": 1
+        }
+      },
+      {
+        "molecule": "O2",
+        "formula": "O₂",
+        "elements": {
+          "O": 2
+        }
+      }
     ],
     "products": [
-      { "molecule": "MgO", "formula": "MgO", "elements": { "Mg": 1, "O": 1 } }
+      {
+        "molecule": "MgO",
+        "formula": "MgO",
+        "elements": {
+          "Mg": 1,
+          "O": 1
+        }
+      }
     ],
-    "solution": { "reactants": [2, 1], "products": [2] },
+    "solution": {
+      "reactants": [
+        2,
+        1
+      ],
+      "products": [
+        2
+      ]
+    },
     "par_time": 30,
     "hints": [
       "Count the oxygen atoms on each side.",
@@ -90,16 +240,46 @@
     ]
   },
   {
-    "id": "lvl_006", "level": 6, "difficulty": "medium", "type": "synthesis",
+    "id": "lvl_006",
+    "level": 6,
+    "difficulty": "medium",
+    "type": "synthesis",
     "display": "_Fe + _O₂ → _Fe₂O₃",
     "reactants": [
-      { "molecule": "Fe", "formula": "Fe", "elements": { "Fe": 1 } },
-      { "molecule": "O2", "formula": "O₂", "elements": { "O": 2 } }
+      {
+        "molecule": "Fe",
+        "formula": "Fe",
+        "elements": {
+          "Fe": 1
+        }
+      },
+      {
+        "molecule": "O2",
+        "formula": "O₂",
+        "elements": {
+          "O": 2
+        }
+      }
     ],
     "products": [
-      { "molecule": "Fe2O3", "formula": "Fe₂O₃", "elements": { "Fe": 2, "O": 3 } }
+      {
+        "molecule": "Fe2O3",
+        "formula": "Fe₂O₃",
+        "elements": {
+          "Fe": 2,
+          "O": 3
+        }
+      }
     ],
-    "solution": { "reactants": [4, 3], "products": [2] },
+    "solution": {
+      "reactants": [
+        4,
+        3
+      ],
+      "products": [
+        2
+      ]
+    },
     "par_time": 60,
     "hints": [
       "The product has both Fe and O — balance one element at a time.",
@@ -108,16 +288,46 @@
     ]
   },
   {
-    "id": "lvl_007", "level": 7, "difficulty": "medium", "type": "synthesis",
+    "id": "lvl_007",
+    "level": 7,
+    "difficulty": "medium",
+    "type": "synthesis",
     "display": "_Al + _O₂ → _Al₂O₃",
     "reactants": [
-      { "molecule": "Al", "formula": "Al", "elements": { "Al": 1 } },
-      { "molecule": "O2", "formula": "O₂", "elements": { "O": 2 } }
+      {
+        "molecule": "Al",
+        "formula": "Al",
+        "elements": {
+          "Al": 1
+        }
+      },
+      {
+        "molecule": "O2",
+        "formula": "O₂",
+        "elements": {
+          "O": 2
+        }
+      }
     ],
     "products": [
-      { "molecule": "Al2O3", "formula": "Al₂O₃", "elements": { "Al": 2, "O": 3 } }
+      {
+        "molecule": "Al2O3",
+        "formula": "Al₂O₃",
+        "elements": {
+          "Al": 2,
+          "O": 3
+        }
+      }
     ],
-    "solution": { "reactants": [4, 3], "products": [2] },
+    "solution": {
+      "reactants": [
+        4,
+        3
+      ],
+      "products": [
+        2
+      ]
+    },
     "par_time": 60,
     "hints": [
       "This is similar to the iron oxide equation.",
@@ -126,16 +336,46 @@
     ]
   },
   {
-    "id": "lvl_008", "level": 8, "difficulty": "easy", "type": "synthesis",
+    "id": "lvl_008",
+    "level": 8,
+    "difficulty": "easy",
+    "type": "synthesis",
     "display": "_Ca + _O₂ → _CaO",
     "reactants": [
-      { "molecule": "Ca", "formula": "Ca", "elements": { "Ca": 1 } },
-      { "molecule": "O2", "formula": "O₂", "elements": { "O": 2 } }
+      {
+        "molecule": "Ca",
+        "formula": "Ca",
+        "elements": {
+          "Ca": 1
+        }
+      },
+      {
+        "molecule": "O2",
+        "formula": "O₂",
+        "elements": {
+          "O": 2
+        }
+      }
     ],
     "products": [
-      { "molecule": "CaO", "formula": "CaO", "elements": { "Ca": 1, "O": 1 } }
+      {
+        "molecule": "CaO",
+        "formula": "CaO",
+        "elements": {
+          "Ca": 1,
+          "O": 1
+        }
+      }
     ],
-    "solution": { "reactants": [2, 1], "products": [2] },
+    "solution": {
+      "reactants": [
+        2,
+        1
+      ],
+      "products": [
+        2
+      ]
+    },
     "par_time": 30,
     "hints": [
       "Count the oxygen atoms on each side.",
@@ -144,16 +384,46 @@
     ]
   },
   {
-    "id": "lvl_009", "level": 9, "difficulty": "medium", "type": "synthesis",
+    "id": "lvl_009",
+    "level": 9,
+    "difficulty": "medium",
+    "type": "synthesis",
     "display": "_P + _O₂ → _P₂O₅",
     "reactants": [
-      { "molecule": "P", "formula": "P", "elements": { "P": 1 } },
-      { "molecule": "O2", "formula": "O₂", "elements": { "O": 2 } }
+      {
+        "molecule": "P",
+        "formula": "P",
+        "elements": {
+          "P": 1
+        }
+      },
+      {
+        "molecule": "O2",
+        "formula": "O₂",
+        "elements": {
+          "O": 2
+        }
+      }
     ],
     "products": [
-      { "molecule": "P2O5", "formula": "P₂O₅", "elements": { "P": 2, "O": 5 } }
+      {
+        "molecule": "P2O5",
+        "formula": "P₂O₅",
+        "elements": {
+          "P": 2,
+          "O": 5
+        }
+      }
     ],
-    "solution": { "reactants": [4, 5], "products": [2] },
+    "solution": {
+      "reactants": [
+        4,
+        5
+      ],
+      "products": [
+        2
+      ]
+    },
     "par_time": 90,
     "hints": [
       "The product has 5 oxygens — an odd number. Try doubling the product.",
@@ -162,16 +432,47 @@
     ]
   },
   {
-    "id": "lvl_010", "level": 10, "difficulty": "medium", "type": "synthesis", "boss": true,
+    "id": "lvl_010",
+    "level": 10,
+    "difficulty": "medium",
+    "type": "synthesis",
+    "boss": true,
     "display": "_Li + _N₂ → _Li₃N",
     "reactants": [
-      { "molecule": "Li", "formula": "Li", "elements": { "Li": 1 } },
-      { "molecule": "N2", "formula": "N₂", "elements": { "N": 2 } }
+      {
+        "molecule": "Li",
+        "formula": "Li",
+        "elements": {
+          "Li": 1
+        }
+      },
+      {
+        "molecule": "N2",
+        "formula": "N₂",
+        "elements": {
+          "N": 2
+        }
+      }
     ],
     "products": [
-      { "molecule": "Li3N", "formula": "Li₃N", "elements": { "Li": 3, "N": 1 } }
+      {
+        "molecule": "Li3N",
+        "formula": "Li₃N",
+        "elements": {
+          "Li": 3,
+          "N": 1
+        }
+      }
     ],
-    "solution": { "reactants": [6, 1], "products": [2] },
+    "solution": {
+      "reactants": [
+        6,
+        1
+      ],
+      "products": [
+        2
+      ]
+    },
     "par_time": 60,
     "hints": [
       "N₂ has 2 nitrogens. How many Li₃N do you need to have 2 N?",
@@ -180,16 +481,47 @@
     ]
   },
   {
-    "id": "lvl_011", "level": 11, "difficulty": "easy", "type": "decomposition",
+    "id": "lvl_011",
+    "level": 11,
+    "difficulty": "easy",
+    "type": "decomposition",
     "display": "_H₂O₂ → _H₂O + _O₂",
     "reactants": [
-      { "molecule": "H2O2", "formula": "H₂O₂", "elements": { "H": 2, "O": 2 } }
+      {
+        "molecule": "H2O2",
+        "formula": "H₂O₂",
+        "elements": {
+          "H": 2,
+          "O": 2
+        }
+      }
     ],
     "products": [
-      { "molecule": "H2O", "formula": "H₂O", "elements": { "H": 2, "O": 1 } },
-      { "molecule": "O2", "formula": "O₂", "elements": { "O": 2 } }
+      {
+        "molecule": "H2O",
+        "formula": "H₂O",
+        "elements": {
+          "H": 2,
+          "O": 1
+        }
+      },
+      {
+        "molecule": "O2",
+        "formula": "O₂",
+        "elements": {
+          "O": 2
+        }
+      }
     ],
-    "solution": { "reactants": [2], "products": [2, 1] },
+    "solution": {
+      "reactants": [
+        2
+      ],
+      "products": [
+        2,
+        1
+      ]
+    },
     "par_time": 45,
     "hints": [
       "Count the oxygen atoms on each side.",
@@ -198,16 +530,48 @@
     ]
   },
   {
-    "id": "lvl_012", "level": 12, "difficulty": "medium", "type": "decomposition",
+    "id": "lvl_012",
+    "level": 12,
+    "difficulty": "medium",
+    "type": "decomposition",
     "display": "_KClO₃ → _KCl + _O₂",
     "reactants": [
-      { "molecule": "KClO3", "formula": "KClO₃", "elements": { "K": 1, "Cl": 1, "O": 3 } }
+      {
+        "molecule": "KClO3",
+        "formula": "KClO₃",
+        "elements": {
+          "K": 1,
+          "Cl": 1,
+          "O": 3
+        }
+      }
     ],
     "products": [
-      { "molecule": "KCl", "formula": "KCl", "elements": { "K": 1, "Cl": 1 } },
-      { "molecule": "O2", "formula": "O₂", "elements": { "O": 2 } }
+      {
+        "molecule": "KCl",
+        "formula": "KCl",
+        "elements": {
+          "K": 1,
+          "Cl": 1
+        }
+      },
+      {
+        "molecule": "O2",
+        "formula": "O₂",
+        "elements": {
+          "O": 2
+        }
+      }
     ],
-    "solution": { "reactants": [2], "products": [2, 3] },
+    "solution": {
+      "reactants": [
+        2
+      ],
+      "products": [
+        2,
+        3
+      ]
+    },
     "par_time": 60,
     "hints": [
       "Focus on oxygen — it has 3 in the reactant but comes in pairs on the right.",
@@ -216,16 +580,46 @@
     ]
   },
   {
-    "id": "lvl_013", "level": 13, "difficulty": "medium", "type": "decomposition",
+    "id": "lvl_013",
+    "level": 13,
+    "difficulty": "medium",
+    "type": "decomposition",
     "display": "_NaN₃ → _Na + _N₂",
     "reactants": [
-      { "molecule": "NaN3", "formula": "NaN₃", "elements": { "Na": 1, "N": 3 } }
+      {
+        "molecule": "NaN3",
+        "formula": "NaN₃",
+        "elements": {
+          "Na": 1,
+          "N": 3
+        }
+      }
     ],
     "products": [
-      { "molecule": "Na", "formula": "Na", "elements": { "Na": 1 } },
-      { "molecule": "N2", "formula": "N₂", "elements": { "N": 2 } }
+      {
+        "molecule": "Na",
+        "formula": "Na",
+        "elements": {
+          "Na": 1
+        }
+      },
+      {
+        "molecule": "N2",
+        "formula": "N₂",
+        "elements": {
+          "N": 2
+        }
+      }
     ],
-    "solution": { "reactants": [2], "products": [2, 3] },
+    "solution": {
+      "reactants": [
+        2
+      ],
+      "products": [
+        2,
+        3
+      ]
+    },
     "par_time": 60,
     "hints": [
       "NaN₃ has 3 nitrogens, but N₂ comes in pairs.",
@@ -234,16 +628,46 @@
     ]
   },
   {
-    "id": "lvl_014", "level": 14, "difficulty": "easy", "type": "decomposition",
+    "id": "lvl_014",
+    "level": 14,
+    "difficulty": "easy",
+    "type": "decomposition",
     "display": "_H₂O → _H₂ + _O₂",
     "reactants": [
-      { "molecule": "H2O", "formula": "H₂O", "elements": { "H": 2, "O": 1 } }
+      {
+        "molecule": "H2O",
+        "formula": "H₂O",
+        "elements": {
+          "H": 2,
+          "O": 1
+        }
+      }
     ],
     "products": [
-      { "molecule": "H2", "formula": "H₂", "elements": { "H": 2 } },
-      { "molecule": "O2", "formula": "O₂", "elements": { "O": 2 } }
+      {
+        "molecule": "H2",
+        "formula": "H₂",
+        "elements": {
+          "H": 2
+        }
+      },
+      {
+        "molecule": "O2",
+        "formula": "O₂",
+        "elements": {
+          "O": 2
+        }
+      }
     ],
-    "solution": { "reactants": [2], "products": [2, 1] },
+    "solution": {
+      "reactants": [
+        2
+      ],
+      "products": [
+        2,
+        1
+      ]
+    },
     "par_time": 30,
     "hints": [
       "Count the oxygen atoms on each side.",
@@ -252,16 +676,49 @@
     ]
   },
   {
-    "id": "lvl_015", "level": 15, "difficulty": "medium", "type": "decomposition",
+    "id": "lvl_015",
+    "level": 15,
+    "difficulty": "medium",
+    "type": "decomposition",
     "display": "_NH₄NO₃ → _N₂O + _H₂O",
     "reactants": [
-      { "molecule": "NH4NO3", "formula": "NH₄NO₃", "elements": { "N": 2, "H": 4, "O": 3 } }
+      {
+        "molecule": "NH4NO3",
+        "formula": "NH₄NO₃",
+        "elements": {
+          "N": 2,
+          "H": 4,
+          "O": 3
+        }
+      }
     ],
     "products": [
-      { "molecule": "N2O", "formula": "N₂O", "elements": { "N": 2, "O": 1 } },
-      { "molecule": "H2O", "formula": "H₂O", "elements": { "H": 2, "O": 1 } }
+      {
+        "molecule": "N2O",
+        "formula": "N₂O",
+        "elements": {
+          "N": 2,
+          "O": 1
+        }
+      },
+      {
+        "molecule": "H2O",
+        "formula": "H₂O",
+        "elements": {
+          "H": 2,
+          "O": 1
+        }
+      }
     ],
-    "solution": { "reactants": [1], "products": [1, 2] },
+    "solution": {
+      "reactants": [
+        1
+      ],
+      "products": [
+        1,
+        2
+      ]
+    },
     "par_time": 45,
     "hints": [
       "Count hydrogen: 4 on the left, 2 per H₂O on the right.",
@@ -270,17 +727,55 @@
     ]
   },
   {
-    "id": "lvl_016", "level": 16, "difficulty": "medium", "type": "single_replacement",
+    "id": "lvl_016",
+    "level": 16,
+    "difficulty": "medium",
+    "type": "single_replacement",
     "display": "_Zn + _HCl → _ZnCl₂ + _H₂",
     "reactants": [
-      { "molecule": "Zn", "formula": "Zn", "elements": { "Zn": 1 } },
-      { "molecule": "HCl", "formula": "HCl", "elements": { "H": 1, "Cl": 1 } }
+      {
+        "molecule": "Zn",
+        "formula": "Zn",
+        "elements": {
+          "Zn": 1
+        }
+      },
+      {
+        "molecule": "HCl",
+        "formula": "HCl",
+        "elements": {
+          "H": 1,
+          "Cl": 1
+        }
+      }
     ],
     "products": [
-      { "molecule": "ZnCl2", "formula": "ZnCl₂", "elements": { "Zn": 1, "Cl": 2 } },
-      { "molecule": "H2", "formula": "H₂", "elements": { "H": 2 } }
+      {
+        "molecule": "ZnCl2",
+        "formula": "ZnCl₂",
+        "elements": {
+          "Zn": 1,
+          "Cl": 2
+        }
+      },
+      {
+        "molecule": "H2",
+        "formula": "H₂",
+        "elements": {
+          "H": 2
+        }
+      }
     ],
-    "solution": { "reactants": [1, 2], "products": [1, 1] },
+    "solution": {
+      "reactants": [
+        1,
+        2
+      ],
+      "products": [
+        1,
+        1
+      ]
+    },
     "par_time": 45,
     "hints": [
       "ZnCl₂ needs 2 chlorines. How many does HCl give you?",
@@ -289,17 +784,57 @@
     ]
   },
   {
-    "id": "lvl_017", "level": 17, "difficulty": "easy", "type": "single_replacement",
+    "id": "lvl_017",
+    "level": 17,
+    "difficulty": "easy",
+    "type": "single_replacement",
     "display": "_Fe + _CuSO₄ → _FeSO₄ + _Cu",
     "reactants": [
-      { "molecule": "Fe", "formula": "Fe", "elements": { "Fe": 1 } },
-      { "molecule": "CuSO4", "formula": "CuSO₄", "elements": { "Cu": 1, "S": 1, "O": 4 } }
+      {
+        "molecule": "Fe",
+        "formula": "Fe",
+        "elements": {
+          "Fe": 1
+        }
+      },
+      {
+        "molecule": "CuSO4",
+        "formula": "CuSO₄",
+        "elements": {
+          "Cu": 1,
+          "S": 1,
+          "O": 4
+        }
+      }
     ],
     "products": [
-      { "molecule": "FeSO4", "formula": "FeSO₄", "elements": { "Fe": 1, "S": 1, "O": 4 } },
-      { "molecule": "Cu", "formula": "Cu", "elements": { "Cu": 1 } }
+      {
+        "molecule": "FeSO4",
+        "formula": "FeSO₄",
+        "elements": {
+          "Fe": 1,
+          "S": 1,
+          "O": 4
+        }
+      },
+      {
+        "molecule": "Cu",
+        "formula": "Cu",
+        "elements": {
+          "Cu": 1
+        }
+      }
     ],
-    "solution": { "reactants": [1, 1], "products": [1, 1] },
+    "solution": {
+      "reactants": [
+        1,
+        1
+      ],
+      "products": [
+        1,
+        1
+      ]
+    },
     "par_time": 15,
     "hints": [
       "Count each element on both sides.",
@@ -308,17 +843,55 @@
     ]
   },
   {
-    "id": "lvl_018", "level": 18, "difficulty": "medium", "type": "single_replacement",
+    "id": "lvl_018",
+    "level": 18,
+    "difficulty": "medium",
+    "type": "single_replacement",
     "display": "_Mg + _HCl → _MgCl₂ + _H₂",
     "reactants": [
-      { "molecule": "Mg", "formula": "Mg", "elements": { "Mg": 1 } },
-      { "molecule": "HCl", "formula": "HCl", "elements": { "H": 1, "Cl": 1 } }
+      {
+        "molecule": "Mg",
+        "formula": "Mg",
+        "elements": {
+          "Mg": 1
+        }
+      },
+      {
+        "molecule": "HCl",
+        "formula": "HCl",
+        "elements": {
+          "H": 1,
+          "Cl": 1
+        }
+      }
     ],
     "products": [
-      { "molecule": "MgCl2", "formula": "MgCl₂", "elements": { "Mg": 1, "Cl": 2 } },
-      { "molecule": "H2", "formula": "H₂", "elements": { "H": 2 } }
+      {
+        "molecule": "MgCl2",
+        "formula": "MgCl₂",
+        "elements": {
+          "Mg": 1,
+          "Cl": 2
+        }
+      },
+      {
+        "molecule": "H2",
+        "formula": "H₂",
+        "elements": {
+          "H": 2
+        }
+      }
     ],
-    "solution": { "reactants": [1, 2], "products": [1, 1] },
+    "solution": {
+      "reactants": [
+        1,
+        2
+      ],
+      "products": [
+        1,
+        1
+      ]
+    },
     "par_time": 45,
     "hints": [
       "MgCl₂ needs 2 chlorines.",
@@ -327,17 +900,55 @@
     ]
   },
   {
-    "id": "lvl_019", "level": 19, "difficulty": "hard", "type": "single_replacement",
+    "id": "lvl_019",
+    "level": 19,
+    "difficulty": "hard",
+    "type": "single_replacement",
     "display": "_Al + _HCl → _AlCl₃ + _H₂",
     "reactants": [
-      { "molecule": "Al", "formula": "Al", "elements": { "Al": 1 } },
-      { "molecule": "HCl", "formula": "HCl", "elements": { "H": 1, "Cl": 1 } }
+      {
+        "molecule": "Al",
+        "formula": "Al",
+        "elements": {
+          "Al": 1
+        }
+      },
+      {
+        "molecule": "HCl",
+        "formula": "HCl",
+        "elements": {
+          "H": 1,
+          "Cl": 1
+        }
+      }
     ],
     "products": [
-      { "molecule": "AlCl3", "formula": "AlCl₃", "elements": { "Al": 1, "Cl": 3 } },
-      { "molecule": "H2", "formula": "H₂", "elements": { "H": 2 } }
+      {
+        "molecule": "AlCl3",
+        "formula": "AlCl₃",
+        "elements": {
+          "Al": 1,
+          "Cl": 3
+        }
+      },
+      {
+        "molecule": "H2",
+        "formula": "H₂",
+        "elements": {
+          "H": 2
+        }
+      }
     ],
-    "solution": { "reactants": [2, 6], "products": [2, 3] },
+    "solution": {
+      "reactants": [
+        2,
+        6
+      ],
+      "products": [
+        2,
+        3
+      ]
+    },
     "par_time": 90,
     "hints": [
       "AlCl₃ has 3 Cl but H₂ needs even H. Try balancing Cl first.",
@@ -346,17 +957,57 @@
     ]
   },
   {
-    "id": "lvl_020", "level": 20, "difficulty": "medium", "type": "combustion", "boss": true,
+    "id": "lvl_020",
+    "level": 20,
+    "difficulty": "medium",
+    "type": "combustion",
+    "boss": true,
     "display": "_CH₄ + _O₂ → _CO₂ + _H₂O",
     "reactants": [
-      { "molecule": "CH4", "formula": "CH₄", "elements": { "C": 1, "H": 4 } },
-      { "molecule": "O2", "formula": "O₂", "elements": { "O": 2 } }
+      {
+        "molecule": "CH4",
+        "formula": "CH₄",
+        "elements": {
+          "C": 1,
+          "H": 4
+        }
+      },
+      {
+        "molecule": "O2",
+        "formula": "O₂",
+        "elements": {
+          "O": 2
+        }
+      }
     ],
     "products": [
-      { "molecule": "CO2", "formula": "CO₂", "elements": { "C": 1, "O": 2 } },
-      { "molecule": "H2O", "formula": "H₂O", "elements": { "H": 2, "O": 1 } }
+      {
+        "molecule": "CO2",
+        "formula": "CO₂",
+        "elements": {
+          "C": 1,
+          "O": 2
+        }
+      },
+      {
+        "molecule": "H2O",
+        "formula": "H₂O",
+        "elements": {
+          "H": 2,
+          "O": 1
+        }
+      }
     ],
-    "solution": { "reactants": [1, 2], "products": [1, 2] },
+    "solution": {
+      "reactants": [
+        1,
+        2
+      ],
+      "products": [
+        1,
+        2
+      ]
+    },
     "par_time": 60,
     "hints": [
       "Balance C first, then H, then O.",
@@ -365,17 +1016,58 @@
     ]
   },
   {
-    "id": "lvl_021", "level": 21, "difficulty": "medium", "type": "double_replacement",
+    "id": "lvl_021",
+    "level": 21,
+    "difficulty": "medium",
+    "type": "double_replacement",
     "display": "_NaOH + _HCl → _NaCl + _H₂O",
     "reactants": [
-      { "molecule": "NaOH", "formula": "NaOH", "elements": { "Na": 1, "O": 1, "H": 1 } },
-      { "molecule": "HCl", "formula": "HCl", "elements": { "H": 1, "Cl": 1 } }
+      {
+        "molecule": "NaOH",
+        "formula": "NaOH",
+        "elements": {
+          "Na": 1,
+          "O": 1,
+          "H": 1
+        }
+      },
+      {
+        "molecule": "HCl",
+        "formula": "HCl",
+        "elements": {
+          "H": 1,
+          "Cl": 1
+        }
+      }
     ],
     "products": [
-      { "molecule": "NaCl", "formula": "NaCl", "elements": { "Na": 1, "Cl": 1 } },
-      { "molecule": "H2O", "formula": "H₂O", "elements": { "H": 2, "O": 1 } }
+      {
+        "molecule": "NaCl",
+        "formula": "NaCl",
+        "elements": {
+          "Na": 1,
+          "Cl": 1
+        }
+      },
+      {
+        "molecule": "H2O",
+        "formula": "H₂O",
+        "elements": {
+          "H": 2,
+          "O": 1
+        }
+      }
     ],
-    "solution": { "reactants": [1, 1], "products": [1, 1] },
+    "solution": {
+      "reactants": [
+        1,
+        1
+      ],
+      "products": [
+        1,
+        1
+      ]
+    },
     "par_time": 20,
     "hints": [
       "Count each element on both sides.",
@@ -384,17 +1076,59 @@
     ]
   },
   {
-    "id": "lvl_022", "level": 22, "difficulty": "medium", "type": "double_replacement",
+    "id": "lvl_022",
+    "level": 22,
+    "difficulty": "medium",
+    "type": "double_replacement",
     "display": "_AgNO₃ + _NaCl → _AgCl + _NaNO₃",
     "reactants": [
-      { "molecule": "AgNO3", "formula": "AgNO₃", "elements": { "Ag": 1, "N": 1, "O": 3 } },
-      { "molecule": "NaCl", "formula": "NaCl", "elements": { "Na": 1, "Cl": 1 } }
+      {
+        "molecule": "AgNO3",
+        "formula": "AgNO₃",
+        "elements": {
+          "Ag": 1,
+          "N": 1,
+          "O": 3
+        }
+      },
+      {
+        "molecule": "NaCl",
+        "formula": "NaCl",
+        "elements": {
+          "Na": 1,
+          "Cl": 1
+        }
+      }
     ],
     "products": [
-      { "molecule": "AgCl", "formula": "AgCl", "elements": { "Ag": 1, "Cl": 1 } },
-      { "molecule": "NaNO3", "formula": "NaNO₃", "elements": { "Na": 1, "N": 1, "O": 3 } }
+      {
+        "molecule": "AgCl",
+        "formula": "AgCl",
+        "elements": {
+          "Ag": 1,
+          "Cl": 1
+        }
+      },
+      {
+        "molecule": "NaNO3",
+        "formula": "NaNO₃",
+        "elements": {
+          "Na": 1,
+          "N": 1,
+          "O": 3
+        }
+      }
     ],
-    "solution": { "reactants": [1, 1], "products": [1, 1] },
+    "solution": {
+      "reactants": [
+        1,
+        1
+      ],
+      "products": [
+        1,
+        1
+      ]
+    },
     "par_time": 20,
     "hints": [
       "Count all elements on each side.",
@@ -403,17 +1137,59 @@
     ]
   },
   {
-    "id": "lvl_023", "level": 23, "difficulty": "medium", "type": "double_replacement",
+    "id": "lvl_023",
+    "level": 23,
+    "difficulty": "medium",
+    "type": "double_replacement",
     "display": "_BaCl₂ + _Na₂SO₄ → _BaSO₄ + _NaCl",
     "reactants": [
-      { "molecule": "BaCl2", "formula": "BaCl₂", "elements": { "Ba": 1, "Cl": 2 } },
-      { "molecule": "Na2SO4", "formula": "Na₂SO₄", "elements": { "Na": 2, "S": 1, "O": 4 } }
+      {
+        "molecule": "BaCl2",
+        "formula": "BaCl₂",
+        "elements": {
+          "Ba": 1,
+          "Cl": 2
+        }
+      },
+      {
+        "molecule": "Na2SO4",
+        "formula": "Na₂SO₄",
+        "elements": {
+          "Na": 2,
+          "S": 1,
+          "O": 4
+        }
+      }
     ],
     "products": [
-      { "molecule": "BaSO4", "formula": "BaSO₄", "elements": { "Ba": 1, "S": 1, "O": 4 } },
-      { "molecule": "NaCl", "formula": "NaCl", "elements": { "Na": 1, "Cl": 1 } }
+      {
+        "molecule": "BaSO4",
+        "formula": "BaSO₄",
+        "elements": {
+          "Ba": 1,
+          "S": 1,
+          "O": 4
+        }
+      },
+      {
+        "molecule": "NaCl",
+        "formula": "NaCl",
+        "elements": {
+          "Na": 1,
+          "Cl": 1
+        }
+      }
     ],
-    "solution": { "reactants": [1, 1], "products": [1, 2] },
+    "solution": {
+      "reactants": [
+        1,
+        1
+      ],
+      "products": [
+        1,
+        2
+      ]
+    },
     "par_time": 45,
     "hints": [
       "Count Na: 2 on left, 1 per NaCl on right.",
@@ -422,17 +1198,59 @@
     ]
   },
   {
-    "id": "lvl_024", "level": 24, "difficulty": "hard", "type": "double_replacement",
+    "id": "lvl_024",
+    "level": 24,
+    "difficulty": "hard",
+    "type": "double_replacement",
     "display": "_Pb(NO₃)₂ + _KI → _PbI₂ + _KNO₃",
     "reactants": [
-      { "molecule": "Pb(NO3)2", "formula": "Pb(NO₃)₂", "elements": { "Pb": 1, "N": 2, "O": 6 } },
-      { "molecule": "KI", "formula": "KI", "elements": { "K": 1, "I": 1 } }
+      {
+        "molecule": "Pb(NO3)2",
+        "formula": "Pb(NO₃)₂",
+        "elements": {
+          "Pb": 1,
+          "N": 2,
+          "O": 6
+        }
+      },
+      {
+        "molecule": "KI",
+        "formula": "KI",
+        "elements": {
+          "K": 1,
+          "I": 1
+        }
+      }
     ],
     "products": [
-      { "molecule": "PbI2", "formula": "PbI₂", "elements": { "Pb": 1, "I": 2 } },
-      { "molecule": "KNO3", "formula": "KNO₃", "elements": { "K": 1, "N": 1, "O": 3 } }
+      {
+        "molecule": "PbI2",
+        "formula": "PbI₂",
+        "elements": {
+          "Pb": 1,
+          "I": 2
+        }
+      },
+      {
+        "molecule": "KNO3",
+        "formula": "KNO₃",
+        "elements": {
+          "K": 1,
+          "N": 1,
+          "O": 3
+        }
+      }
     ],
-    "solution": { "reactants": [1, 2], "products": [1, 2] },
+    "solution": {
+      "reactants": [
+        1,
+        2
+      ],
+      "products": [
+        1,
+        2
+      ]
+    },
     "par_time": 60,
     "hints": [
       "PbI₂ needs 2 iodines. How many KI?",
@@ -441,17 +1259,60 @@
     ]
   },
   {
-    "id": "lvl_025", "level": 25, "difficulty": "hard", "type": "double_replacement",
+    "id": "lvl_025",
+    "level": 25,
+    "difficulty": "hard",
+    "type": "double_replacement",
     "display": "_H₂SO₄ + _NaOH → _Na₂SO₄ + _H₂O",
     "reactants": [
-      { "molecule": "H2SO4", "formula": "H₂SO₄", "elements": { "H": 2, "S": 1, "O": 4 } },
-      { "molecule": "NaOH", "formula": "NaOH", "elements": { "Na": 1, "O": 1, "H": 1 } }
+      {
+        "molecule": "H2SO4",
+        "formula": "H₂SO₄",
+        "elements": {
+          "H": 2,
+          "S": 1,
+          "O": 4
+        }
+      },
+      {
+        "molecule": "NaOH",
+        "formula": "NaOH",
+        "elements": {
+          "Na": 1,
+          "O": 1,
+          "H": 1
+        }
+      }
     ],
     "products": [
-      { "molecule": "Na2SO4", "formula": "Na₂SO₄", "elements": { "Na": 2, "S": 1, "O": 4 } },
-      { "molecule": "H2O", "formula": "H₂O", "elements": { "H": 2, "O": 1 } }
+      {
+        "molecule": "Na2SO4",
+        "formula": "Na₂SO₄",
+        "elements": {
+          "Na": 2,
+          "S": 1,
+          "O": 4
+        }
+      },
+      {
+        "molecule": "H2O",
+        "formula": "H₂O",
+        "elements": {
+          "H": 2,
+          "O": 1
+        }
+      }
     ],
-    "solution": { "reactants": [1, 2], "products": [1, 2] },
+    "solution": {
+      "reactants": [
+        1,
+        2
+      ],
+      "products": [
+        1,
+        2
+      ]
+    },
     "par_time": 60,
     "hints": [
       "Na₂SO₄ needs 2 Na. NaOH only has 1.",
@@ -460,17 +1321,56 @@
     ]
   },
   {
-    "id": "lvl_026", "level": 26, "difficulty": "medium", "type": "single_replacement",
+    "id": "lvl_026",
+    "level": 26,
+    "difficulty": "medium",
+    "type": "single_replacement",
     "display": "_Ca + _H₂O → _Ca(OH)₂ + _H₂",
     "reactants": [
-      { "molecule": "Ca", "formula": "Ca", "elements": { "Ca": 1 } },
-      { "molecule": "H2O", "formula": "H₂O", "elements": { "H": 2, "O": 1 } }
+      {
+        "molecule": "Ca",
+        "formula": "Ca",
+        "elements": {
+          "Ca": 1
+        }
+      },
+      {
+        "molecule": "H2O",
+        "formula": "H₂O",
+        "elements": {
+          "H": 2,
+          "O": 1
+        }
+      }
     ],
     "products": [
-      { "molecule": "Ca(OH)2", "formula": "Ca(OH)₂", "elements": { "Ca": 1, "O": 2, "H": 2 } },
-      { "molecule": "H2", "formula": "H₂", "elements": { "H": 2 } }
+      {
+        "molecule": "Ca(OH)2",
+        "formula": "Ca(OH)₂",
+        "elements": {
+          "Ca": 1,
+          "O": 2,
+          "H": 2
+        }
+      },
+      {
+        "molecule": "H2",
+        "formula": "H₂",
+        "elements": {
+          "H": 2
+        }
+      }
     ],
-    "solution": { "reactants": [1, 2], "products": [1, 1] },
+    "solution": {
+      "reactants": [
+        1,
+        2
+      ],
+      "products": [
+        1,
+        1
+      ]
+    },
     "par_time": 45,
     "hints": [
       "Ca(OH)₂ needs 2 oxygens. Each H₂O has 1.",
@@ -479,17 +1379,56 @@
     ]
   },
   {
-    "id": "lvl_027", "level": 27, "difficulty": "hard", "type": "combustion",
+    "id": "lvl_027",
+    "level": 27,
+    "difficulty": "hard",
+    "type": "combustion",
     "display": "_C₂H₆ + _O₂ → _CO₂ + _H₂O",
     "reactants": [
-      { "molecule": "C2H6", "formula": "C₂H₆", "elements": { "C": 2, "H": 6 } },
-      { "molecule": "O2", "formula": "O₂", "elements": { "O": 2 } }
+      {
+        "molecule": "C2H6",
+        "formula": "C₂H₆",
+        "elements": {
+          "C": 2,
+          "H": 6
+        }
+      },
+      {
+        "molecule": "O2",
+        "formula": "O₂",
+        "elements": {
+          "O": 2
+        }
+      }
     ],
     "products": [
-      { "molecule": "CO2", "formula": "CO₂", "elements": { "C": 1, "O": 2 } },
-      { "molecule": "H2O", "formula": "H₂O", "elements": { "H": 2, "O": 1 } }
+      {
+        "molecule": "CO2",
+        "formula": "CO₂",
+        "elements": {
+          "C": 1,
+          "O": 2
+        }
+      },
+      {
+        "molecule": "H2O",
+        "formula": "H₂O",
+        "elements": {
+          "H": 2,
+          "O": 1
+        }
+      }
     ],
-    "solution": { "reactants": [2, 7], "products": [4, 6] },
+    "solution": {
+      "reactants": [
+        2,
+        7
+      ],
+      "products": [
+        4,
+        6
+      ]
+    },
     "par_time": 90,
     "hints": [
       "Balance C first: 2 C left → 2 CO₂ right.",
@@ -498,17 +1437,56 @@
     ]
   },
   {
-    "id": "lvl_028", "level": 28, "difficulty": "hard", "type": "combustion",
+    "id": "lvl_028",
+    "level": 28,
+    "difficulty": "hard",
+    "type": "combustion",
     "display": "_C₃H₈ + _O₂ → _CO₂ + _H₂O",
     "reactants": [
-      { "molecule": "C3H8", "formula": "C₃H₈", "elements": { "C": 3, "H": 8 } },
-      { "molecule": "O2", "formula": "O₂", "elements": { "O": 2 } }
+      {
+        "molecule": "C3H8",
+        "formula": "C₃H₈",
+        "elements": {
+          "C": 3,
+          "H": 8
+        }
+      },
+      {
+        "molecule": "O2",
+        "formula": "O₂",
+        "elements": {
+          "O": 2
+        }
+      }
     ],
     "products": [
-      { "molecule": "CO2", "formula": "CO₂", "elements": { "C": 1, "O": 2 } },
-      { "molecule": "H2O", "formula": "H₂O", "elements": { "H": 2, "O": 1 } }
+      {
+        "molecule": "CO2",
+        "formula": "CO₂",
+        "elements": {
+          "C": 1,
+          "O": 2
+        }
+      },
+      {
+        "molecule": "H2O",
+        "formula": "H₂O",
+        "elements": {
+          "H": 2,
+          "O": 1
+        }
+      }
     ],
-    "solution": { "reactants": [1, 5], "products": [3, 4] },
+    "solution": {
+      "reactants": [
+        1,
+        5
+      ],
+      "products": [
+        3,
+        4
+      ]
+    },
     "par_time": 90,
     "hints": [
       "Balance C first: 3 C → 3 CO₂.",
@@ -517,17 +1495,57 @@
     ]
   },
   {
-    "id": "lvl_029", "level": 29, "difficulty": "hard", "type": "combustion",
+    "id": "lvl_029",
+    "level": 29,
+    "difficulty": "hard",
+    "type": "combustion",
     "display": "_C₂H₅OH + _O₂ → _CO₂ + _H₂O",
     "reactants": [
-      { "molecule": "C2H5OH", "formula": "C₂H₅OH", "elements": { "C": 2, "H": 6, "O": 1 } },
-      { "molecule": "O2", "formula": "O₂", "elements": { "O": 2 } }
+      {
+        "molecule": "C2H5OH",
+        "formula": "C₂H₅OH",
+        "elements": {
+          "C": 2,
+          "H": 6,
+          "O": 1
+        }
+      },
+      {
+        "molecule": "O2",
+        "formula": "O₂",
+        "elements": {
+          "O": 2
+        }
+      }
     ],
     "products": [
-      { "molecule": "CO2", "formula": "CO₂", "elements": { "C": 1, "O": 2 } },
-      { "molecule": "H2O", "formula": "H₂O", "elements": { "H": 2, "O": 1 } }
+      {
+        "molecule": "CO2",
+        "formula": "CO₂",
+        "elements": {
+          "C": 1,
+          "O": 2
+        }
+      },
+      {
+        "molecule": "H2O",
+        "formula": "H₂O",
+        "elements": {
+          "H": 2,
+          "O": 1
+        }
+      }
     ],
-    "solution": { "reactants": [1, 3], "products": [2, 3] },
+    "solution": {
+      "reactants": [
+        1,
+        3
+      ],
+      "products": [
+        2,
+        3
+      ]
+    },
     "par_time": 90,
     "hints": [
       "Balance C: 2 → 2 CO₂. Balance H: 6 → 3 H₂O.",
@@ -536,17 +1554,58 @@
     ]
   },
   {
-    "id": "lvl_030", "level": 30, "difficulty": "hard", "type": "combustion", "boss": true,
+    "id": "lvl_030",
+    "level": 30,
+    "difficulty": "hard",
+    "type": "combustion",
+    "boss": true,
     "display": "_C₆H₁₂O₆ + _O₂ → _CO₂ + _H₂O",
     "reactants": [
-      { "molecule": "C6H12O6", "formula": "C₆H₁₂O₆", "elements": { "C": 6, "H": 12, "O": 6 } },
-      { "molecule": "O2", "formula": "O₂", "elements": { "O": 2 } }
+      {
+        "molecule": "C6H12O6",
+        "formula": "C₆H₁₂O₆",
+        "elements": {
+          "C": 6,
+          "H": 12,
+          "O": 6
+        }
+      },
+      {
+        "molecule": "O2",
+        "formula": "O₂",
+        "elements": {
+          "O": 2
+        }
+      }
     ],
     "products": [
-      { "molecule": "CO2", "formula": "CO₂", "elements": { "C": 1, "O": 2 } },
-      { "molecule": "H2O", "formula": "H₂O", "elements": { "H": 2, "O": 1 } }
+      {
+        "molecule": "CO2",
+        "formula": "CO₂",
+        "elements": {
+          "C": 1,
+          "O": 2
+        }
+      },
+      {
+        "molecule": "H2O",
+        "formula": "H₂O",
+        "elements": {
+          "H": 2,
+          "O": 1
+        }
+      }
     ],
-    "solution": { "reactants": [1, 6], "products": [6, 6] },
+    "solution": {
+      "reactants": [
+        1,
+        6
+      ],
+      "products": [
+        6,
+        6
+      ]
+    },
     "par_time": 120,
     "hints": [
       "Balance C: 6 → 6 CO₂. Balance H: 12 → 6 H₂O.",
@@ -555,17 +1614,57 @@
     ]
   },
   {
-    "id": "lvl_031", "level": 31, "difficulty": "hard", "type": "double_replacement",
+    "id": "lvl_031",
+    "level": 31,
+    "difficulty": "hard",
+    "type": "double_replacement",
     "display": "_Fe₂O₃ + _HCl → _FeCl₃ + _H₂O",
     "reactants": [
-      { "molecule": "Fe2O3", "formula": "Fe₂O₃", "elements": { "Fe": 2, "O": 3 } },
-      { "molecule": "HCl", "formula": "HCl", "elements": { "H": 1, "Cl": 1 } }
+      {
+        "molecule": "Fe2O3",
+        "formula": "Fe₂O₃",
+        "elements": {
+          "Fe": 2,
+          "O": 3
+        }
+      },
+      {
+        "molecule": "HCl",
+        "formula": "HCl",
+        "elements": {
+          "H": 1,
+          "Cl": 1
+        }
+      }
     ],
     "products": [
-      { "molecule": "FeCl3", "formula": "FeCl₃", "elements": { "Fe": 1, "Cl": 3 } },
-      { "molecule": "H2O", "formula": "H₂O", "elements": { "H": 2, "O": 1 } }
+      {
+        "molecule": "FeCl3",
+        "formula": "FeCl₃",
+        "elements": {
+          "Fe": 1,
+          "Cl": 3
+        }
+      },
+      {
+        "molecule": "H2O",
+        "formula": "H₂O",
+        "elements": {
+          "H": 2,
+          "O": 1
+        }
+      }
     ],
-    "solution": { "reactants": [1, 6], "products": [2, 3] },
+    "solution": {
+      "reactants": [
+        1,
+        6
+      ],
+      "products": [
+        2,
+        3
+      ]
+    },
     "par_time": 90,
     "hints": [
       "Fe₂O₃ has 2 Fe → need 2 FeCl₃.",
@@ -574,17 +1673,55 @@
     ]
   },
   {
-    "id": "lvl_032", "level": 32, "difficulty": "hard", "type": "single_replacement",
+    "id": "lvl_032",
+    "level": 32,
+    "difficulty": "hard",
+    "type": "single_replacement",
     "display": "_Al + _Fe₂O₃ → _Al₂O₃ + _Fe",
     "reactants": [
-      { "molecule": "Al", "formula": "Al", "elements": { "Al": 1 } },
-      { "molecule": "Fe2O3", "formula": "Fe₂O₃", "elements": { "Fe": 2, "O": 3 } }
+      {
+        "molecule": "Al",
+        "formula": "Al",
+        "elements": {
+          "Al": 1
+        }
+      },
+      {
+        "molecule": "Fe2O3",
+        "formula": "Fe₂O₃",
+        "elements": {
+          "Fe": 2,
+          "O": 3
+        }
+      }
     ],
     "products": [
-      { "molecule": "Al2O3", "formula": "Al₂O₃", "elements": { "Al": 2, "O": 3 } },
-      { "molecule": "Fe", "formula": "Fe", "elements": { "Fe": 1 } }
+      {
+        "molecule": "Al2O3",
+        "formula": "Al₂O₃",
+        "elements": {
+          "Al": 2,
+          "O": 3
+        }
+      },
+      {
+        "molecule": "Fe",
+        "formula": "Fe",
+        "elements": {
+          "Fe": 1
+        }
+      }
     ],
-    "solution": { "reactants": [2, 1], "products": [1, 2] },
+    "solution": {
+      "reactants": [
+        2,
+        1
+      ],
+      "products": [
+        1,
+        2
+      ]
+    },
     "par_time": 60,
     "hints": [
       "Al₂O₃ needs 2 Al on the left.",
@@ -593,18 +1730,67 @@
     ]
   },
   {
-    "id": "lvl_033", "level": 33, "difficulty": "hard", "type": "double_replacement",
+    "id": "lvl_033",
+    "level": 33,
+    "difficulty": "hard",
+    "type": "double_replacement",
     "display": "_Na₂CO₃ + _HCl → _NaCl + _H₂O + _CO₂",
     "reactants": [
-      { "molecule": "Na2CO3", "formula": "Na₂CO₃", "elements": { "Na": 2, "C": 1, "O": 3 } },
-      { "molecule": "HCl", "formula": "HCl", "elements": { "H": 1, "Cl": 1 } }
+      {
+        "molecule": "Na2CO3",
+        "formula": "Na₂CO₃",
+        "elements": {
+          "Na": 2,
+          "C": 1,
+          "O": 3
+        }
+      },
+      {
+        "molecule": "HCl",
+        "formula": "HCl",
+        "elements": {
+          "H": 1,
+          "Cl": 1
+        }
+      }
     ],
     "products": [
-      { "molecule": "NaCl", "formula": "NaCl", "elements": { "Na": 1, "Cl": 1 } },
-      { "molecule": "H2O", "formula": "H₂O", "elements": { "H": 2, "O": 1 } },
-      { "molecule": "CO2", "formula": "CO₂", "elements": { "C": 1, "O": 2 } }
+      {
+        "molecule": "NaCl",
+        "formula": "NaCl",
+        "elements": {
+          "Na": 1,
+          "Cl": 1
+        }
+      },
+      {
+        "molecule": "H2O",
+        "formula": "H₂O",
+        "elements": {
+          "H": 2,
+          "O": 1
+        }
+      },
+      {
+        "molecule": "CO2",
+        "formula": "CO₂",
+        "elements": {
+          "C": 1,
+          "O": 2
+        }
+      }
     ],
-    "solution": { "reactants": [1, 2], "products": [2, 1, 1] },
+    "solution": {
+      "reactants": [
+        1,
+        2
+      ],
+      "products": [
+        2,
+        1,
+        1
+      ]
+    },
     "par_time": 60,
     "hints": [
       "Na₂CO₃ has 2 Na → need 2 NaCl.",
@@ -613,16 +1799,46 @@
     ]
   },
   {
-    "id": "lvl_034", "level": 34, "difficulty": "hard", "type": "synthesis",
+    "id": "lvl_034",
+    "level": 34,
+    "difficulty": "hard",
+    "type": "synthesis",
     "display": "_N₂ + _O₂ → _N₂O₅",
     "reactants": [
-      { "molecule": "N2", "formula": "N₂", "elements": { "N": 2 } },
-      { "molecule": "O2", "formula": "O₂", "elements": { "O": 2 } }
+      {
+        "molecule": "N2",
+        "formula": "N₂",
+        "elements": {
+          "N": 2
+        }
+      },
+      {
+        "molecule": "O2",
+        "formula": "O₂",
+        "elements": {
+          "O": 2
+        }
+      }
     ],
     "products": [
-      { "molecule": "N2O5", "formula": "N₂O₅", "elements": { "N": 2, "O": 5 } }
+      {
+        "molecule": "N2O5",
+        "formula": "N₂O₅",
+        "elements": {
+          "N": 2,
+          "O": 5
+        }
+      }
     ],
-    "solution": { "reactants": [2, 5], "products": [2] },
+    "solution": {
+      "reactants": [
+        2,
+        5
+      ],
+      "products": [
+        2
+      ]
+    },
     "par_time": 60,
     "hints": [
       "N₂O₅ has 5 oxygens — odd number. Try doubling.",
@@ -631,17 +1847,56 @@
     ]
   },
   {
-    "id": "lvl_035", "level": 35, "difficulty": "hard", "type": "single_replacement",
+    "id": "lvl_035",
+    "level": 35,
+    "difficulty": "hard",
+    "type": "single_replacement",
     "display": "_K + _H₂O → _KOH + _H₂",
     "reactants": [
-      { "molecule": "K", "formula": "K", "elements": { "K": 1 } },
-      { "molecule": "H2O", "formula": "H₂O", "elements": { "H": 2, "O": 1 } }
+      {
+        "molecule": "K",
+        "formula": "K",
+        "elements": {
+          "K": 1
+        }
+      },
+      {
+        "molecule": "H2O",
+        "formula": "H₂O",
+        "elements": {
+          "H": 2,
+          "O": 1
+        }
+      }
     ],
     "products": [
-      { "molecule": "KOH", "formula": "KOH", "elements": { "K": 1, "O": 1, "H": 1 } },
-      { "molecule": "H2", "formula": "H₂", "elements": { "H": 2 } }
+      {
+        "molecule": "KOH",
+        "formula": "KOH",
+        "elements": {
+          "K": 1,
+          "O": 1,
+          "H": 1
+        }
+      },
+      {
+        "molecule": "H2",
+        "formula": "H₂",
+        "elements": {
+          "H": 2
+        }
+      }
     ],
-    "solution": { "reactants": [2, 2], "products": [2, 1] },
+    "solution": {
+      "reactants": [
+        2,
+        2
+      ],
+      "products": [
+        2,
+        1
+      ]
+    },
     "par_time": 60,
     "hints": [
       "Count H: H₂O has 2, KOH has 1, H₂ has 2.",
@@ -650,37 +1905,125 @@
     ]
   },
   {
-    "id": "lvl_036", "level": 36, "difficulty": "hard", "type": "combustion",
-    "display": "_C₄H₁₀ + _O₂ → _CO₂ + _H₂O",
+    "id": "lvl_036",
+    "level": 36,
+    "difficulty": "hard",
+    "type": "combustion",
+    "display": "_C₃H₈ + _O₂ → _CO₂ + _H₂O",
     "reactants": [
-      { "molecule": "C4H10", "formula": "C₄H₁₀", "elements": { "C": 4, "H": 10 } },
-      { "molecule": "O2", "formula": "O₂", "elements": { "O": 2 } }
+      {
+        "molecule": "C3H8",
+        "formula": "C₃H₈",
+        "elements": {
+          "C": 3,
+          "H": 8
+        }
+      },
+      {
+        "molecule": "O2",
+        "formula": "O₂",
+        "elements": {
+          "O": 2
+        }
+      }
     ],
     "products": [
-      { "molecule": "CO2", "formula": "CO₂", "elements": { "C": 1, "O": 2 } },
-      { "molecule": "H2O", "formula": "H₂O", "elements": { "H": 2, "O": 1 } }
+      {
+        "molecule": "CO2",
+        "formula": "CO₂",
+        "elements": {
+          "C": 1,
+          "O": 2
+        }
+      },
+      {
+        "molecule": "H2O",
+        "formula": "H₂O",
+        "elements": {
+          "H": 2,
+          "O": 1
+        }
+      }
     ],
-    "solution": { "reactants": [2, 13], "products": [8, 10] },
-    "par_time": 120,
+    "solution": {
+      "reactants": [
+        1,
+        5
+      ],
+      "products": [
+        3,
+        4
+      ]
+    },
+    "par_time": 90,
     "hints": [
-      "Balance C: 4 → 4 CO₂. Balance H: 10 → 5 H₂O.",
-      "O on right: 8+5=13 — odd! Double everything.",
-      "2C₄H₁₀ + 13O₂ → 8CO₂ + 10H₂O."
+      "Balance carbon first, then hydrogen, and leave oxygen for last.",
+      "Oxygen often needs the largest coefficient in combustion equations.",
+      "C₃H₈ + 5O₂ → 3CO₂ + 4H₂O."
     ]
   },
   {
-    "id": "lvl_037", "level": 37, "difficulty": "hard", "type": "double_replacement",
+    "id": "lvl_037",
+    "level": 37,
+    "difficulty": "hard",
+    "type": "double_replacement",
     "display": "_CaCO₃ + _HCl → _CaCl₂ + _H₂O + _CO₂",
     "reactants": [
-      { "molecule": "CaCO3", "formula": "CaCO₃", "elements": { "Ca": 1, "C": 1, "O": 3 } },
-      { "molecule": "HCl", "formula": "HCl", "elements": { "H": 1, "Cl": 1 } }
+      {
+        "molecule": "CaCO3",
+        "formula": "CaCO₃",
+        "elements": {
+          "Ca": 1,
+          "C": 1,
+          "O": 3
+        }
+      },
+      {
+        "molecule": "HCl",
+        "formula": "HCl",
+        "elements": {
+          "H": 1,
+          "Cl": 1
+        }
+      }
     ],
     "products": [
-      { "molecule": "CaCl2", "formula": "CaCl₂", "elements": { "Ca": 1, "Cl": 2 } },
-      { "molecule": "H2O", "formula": "H₂O", "elements": { "H": 2, "O": 1 } },
-      { "molecule": "CO2", "formula": "CO₂", "elements": { "C": 1, "O": 2 } }
+      {
+        "molecule": "CaCl2",
+        "formula": "CaCl₂",
+        "elements": {
+          "Ca": 1,
+          "Cl": 2
+        }
+      },
+      {
+        "molecule": "H2O",
+        "formula": "H₂O",
+        "elements": {
+          "H": 2,
+          "O": 1
+        }
+      },
+      {
+        "molecule": "CO2",
+        "formula": "CO₂",
+        "elements": {
+          "C": 1,
+          "O": 2
+        }
+      }
     ],
-    "solution": { "reactants": [1, 2], "products": [1, 1, 1] },
+    "solution": {
+      "reactants": [
+        1,
+        2
+      ],
+      "products": [
+        1,
+        1,
+        1
+      ]
+    },
     "par_time": 60,
     "hints": [
       "CaCl₂ needs 2 Cl → 2 HCl.",
@@ -689,17 +2032,57 @@
     ]
   },
   {
-    "id": "lvl_038", "level": 38, "difficulty": "hard", "type": "single_replacement",
+    "id": "lvl_038",
+    "level": 38,
+    "difficulty": "hard",
+    "type": "single_replacement",
     "display": "_Zn + _CuSO₄ → _ZnSO₄ + _Cu",
     "reactants": [
-      { "molecule": "Zn", "formula": "Zn", "elements": { "Zn": 1 } },
-      { "molecule": "CuSO4", "formula": "CuSO₄", "elements": { "Cu": 1, "S": 1, "O": 4 } }
+      {
+        "molecule": "Zn",
+        "formula": "Zn",
+        "elements": {
+          "Zn": 1
+        }
+      },
+      {
+        "molecule": "CuSO4",
+        "formula": "CuSO₄",
+        "elements": {
+          "Cu": 1,
+          "S": 1,
+          "O": 4
+        }
+      }
     ],
     "products": [
-      { "molecule": "ZnSO4", "formula": "ZnSO₄", "elements": { "Zn": 1, "S": 1, "O": 4 } },
-      { "molecule": "Cu", "formula": "Cu", "elements": { "Cu": 1 } }
+      {
+        "molecule": "ZnSO4",
+        "formula": "ZnSO₄",
+        "elements": {
+          "Zn": 1,
+          "S": 1,
+          "O": 4
+        }
+      },
+      {
+        "molecule": "Cu",
+        "formula": "Cu",
+        "elements": {
+          "Cu": 1
+        }
+      }
     ],
-    "solution": { "reactants": [1, 1], "products": [1, 1] },
+    "solution": {
+      "reactants": [
+        1,
+        1
+      ],
+      "products": [
+        1,
+        1
+      ]
+    },
     "par_time": 15,
     "hints": [
       "Count each element on both sides.",
@@ -708,17 +2091,61 @@
     ]
   },
   {
-    "id": "lvl_039", "level": 39, "difficulty": "hard", "type": "double_replacement",
+    "id": "lvl_039",
+    "level": 39,
+    "difficulty": "hard",
+    "type": "double_replacement",
     "display": "_Al₂(SO₄)₃ + _NaOH → _Al(OH)₃ + _Na₂SO₄",
     "reactants": [
-      { "molecule": "Al2(SO4)3", "formula": "Al₂(SO₄)₃", "elements": { "Al": 2, "S": 3, "O": 12 } },
-      { "molecule": "NaOH", "formula": "NaOH", "elements": { "Na": 1, "O": 1, "H": 1 } }
+      {
+        "molecule": "Al2(SO4)3",
+        "formula": "Al₂(SO₄)₃",
+        "elements": {
+          "Al": 2,
+          "S": 3,
+          "O": 12
+        }
+      },
+      {
+        "molecule": "NaOH",
+        "formula": "NaOH",
+        "elements": {
+          "Na": 1,
+          "O": 1,
+          "H": 1
+        }
+      }
     ],
     "products": [
-      { "molecule": "Al(OH)3", "formula": "Al(OH)₃", "elements": { "Al": 1, "O": 3, "H": 3 } },
-      { "molecule": "Na2SO4", "formula": "Na₂SO₄", "elements": { "Na": 2, "S": 1, "O": 4 } }
+      {
+        "molecule": "Al(OH)3",
+        "formula": "Al(OH)₃",
+        "elements": {
+          "Al": 1,
+          "O": 3,
+          "H": 3
+        }
+      },
+      {
+        "molecule": "Na2SO4",
+        "formula": "Na₂SO₄",
+        "elements": {
+          "Na": 2,
+          "S": 1,
+          "O": 4
+        }
+      }
     ],
-    "solution": { "reactants": [1, 6], "products": [2, 3] },
+    "solution": {
+      "reactants": [
+        1,
+        6
+      ],
+      "products": [
+        2,
+        3
+      ]
+    },
     "par_time": 120,
     "hints": [
       "2 Al left → 2 Al(OH)₃. 3 S left → 3 Na₂SO₄.",
@@ -727,17 +2154,62 @@
     ]
   },
   {
-    "id": "lvl_040", "level": 40, "difficulty": "hard", "type": "double_replacement", "boss": true,
+    "id": "lvl_040",
+    "level": 40,
+    "difficulty": "hard",
+    "type": "double_replacement",
+    "boss": true,
     "display": "_Fe₂(SO₄)₃ + _KOH → _Fe(OH)₃ + _K₂SO₄",
     "reactants": [
-      { "molecule": "Fe2(SO4)3", "formula": "Fe₂(SO₄)₃", "elements": { "Fe": 2, "S": 3, "O": 12 } },
-      { "molecule": "KOH", "formula": "KOH", "elements": { "K": 1, "O": 1, "H": 1 } }
+      {
+        "molecule": "Fe2(SO4)3",
+        "formula": "Fe₂(SO₄)₃",
+        "elements": {
+          "Fe": 2,
+          "S": 3,
+          "O": 12
+        }
+      },
+      {
+        "molecule": "KOH",
+        "formula": "KOH",
+        "elements": {
+          "K": 1,
+          "O": 1,
+          "H": 1
+        }
+      }
     ],
     "products": [
-      { "molecule": "Fe(OH)3", "formula": "Fe(OH)₃", "elements": { "Fe": 1, "O": 3, "H": 3 } },
-      { "molecule": "K2SO4", "formula": "K₂SO₄", "elements": { "K": 2, "S": 1, "O": 4 } }
+      {
+        "molecule": "Fe(OH)3",
+        "formula": "Fe(OH)₃",
+        "elements": {
+          "Fe": 1,
+          "O": 3,
+          "H": 3
+        }
+      },
+      {
+        "molecule": "K2SO4",
+        "formula": "K₂SO₄",
+        "elements": {
+          "K": 2,
+          "S": 1,
+          "O": 4
+        }
+      }
     ],
-    "solution": { "reactants": [1, 6], "products": [2, 3] },
+    "solution": {
+      "reactants": [
+        1,
+        6
+      ],
+      "products": [
+        2,
+        3
+      ]
+    },
     "par_time": 120,
     "hints": [
       "2 Fe → 2 Fe(OH)₃. 3 S → 3 K₂SO₄.",
@@ -746,17 +2218,56 @@
     ]
   },
   {
-    "id": "lvl_041", "level": 41, "difficulty": "hard", "type": "combustion",
+    "id": "lvl_041",
+    "level": 41,
+    "difficulty": "hard",
+    "type": "combustion",
     "display": "_C₂H₂ + _O₂ → _CO₂ + _H₂O",
     "reactants": [
-      { "molecule": "C2H2", "formula": "C₂H₂", "elements": { "C": 2, "H": 2 } },
-      { "molecule": "O2", "formula": "O₂", "elements": { "O": 2 } }
+      {
+        "molecule": "C2H2",
+        "formula": "C₂H₂",
+        "elements": {
+          "C": 2,
+          "H": 2
+        }
+      },
+      {
+        "molecule": "O2",
+        "formula": "O₂",
+        "elements": {
+          "O": 2
+        }
+      }
     ],
     "products": [
-      { "molecule": "CO2", "formula": "CO₂", "elements": { "C": 1, "O": 2 } },
-      { "molecule": "H2O", "formula": "H₂O", "elements": { "H": 2, "O": 1 } }
+      {
+        "molecule": "CO2",
+        "formula": "CO₂",
+        "elements": {
+          "C": 1,
+          "O": 2
+        }
+      },
+      {
+        "molecule": "H2O",
+        "formula": "H₂O",
+        "elements": {
+          "H": 2,
+          "O": 1
+        }
+      }
     ],
-    "solution": { "reactants": [2, 5], "products": [4, 2] },
+    "solution": {
+      "reactants": [
+        2,
+        5
+      ],
+      "products": [
+        4,
+        2
+      ]
+    },
     "par_time": 90,
     "hints": [
       "Balance C: 2 → 2 CO₂. Balance H: 2 → 1 H₂O.",
@@ -765,35 +2276,108 @@
     ]
   },
   {
-    "id": "lvl_042", "level": 42, "difficulty": "hard", "type": "combustion",
-    "display": "_C₆H₆ + _O₂ → _CO₂ + _H₂O",
+    "id": "lvl_042",
+    "level": 42,
+    "difficulty": "hard",
+    "type": "combustion",
+    "display": "_C₂H₅OH + _O₂ → _CO₂ + _H₂O",
     "reactants": [
-      { "molecule": "C6H6", "formula": "C₆H₆", "elements": { "C": 6, "H": 6 } },
-      { "molecule": "O2", "formula": "O₂", "elements": { "O": 2 } }
+      {
+        "molecule": "C2H5OH",
+        "formula": "C₂H₅OH",
+        "elements": {
+          "C": 2,
+          "H": 6,
+          "O": 1
+        }
+      },
+      {
+        "molecule": "O2",
+        "formula": "O₂",
+        "elements": {
+          "O": 2
+        }
+      }
     ],
     "products": [
-      { "molecule": "CO2", "formula": "CO₂", "elements": { "C": 1, "O": 2 } },
-      { "molecule": "H2O", "formula": "H₂O", "elements": { "H": 2, "O": 1 } }
+      {
+        "molecule": "CO2",
+        "formula": "CO₂",
+        "elements": {
+          "C": 1,
+          "O": 2
+        }
+      },
+      {
+        "molecule": "H2O",
+        "formula": "H₂O",
+        "elements": {
+          "H": 2,
+          "O": 1
+        }
+      }
     ],
-    "solution": { "reactants": [2, 15], "products": [12, 6] },
-    "par_time": 120,
+    "solution": {
+      "reactants": [
+        1,
+        3
+      ],
+      "products": [
+        2,
+        3
+      ]
+    },
+    "par_time": 90,
     "hints": [
-      "Balance C: 6 → 6 CO₂. Balance H: 6 → 3 H₂O.",
-      "O on right: 12+3=15 — odd! Double everything.",
-      "2C₆H₆ + 15O₂ → 12CO₂ + 6H₂O."
+      "Balance carbon first, then hydrogen, and leave oxygen for last.",
+      "Oxygen often needs the largest coefficient in combustion equations.",
+      "C₂H₅OH + 3O₂ → 2CO₂ + 3H₂O."
     ]
   },
   {
-    "id": "lvl_043", "level": 43, "difficulty": "hard", "type": "decomposition",
+    "id": "lvl_043",
+    "level": 43,
+    "difficulty": "hard",
+    "type": "decomposition",
     "display": "_Ca(OH)₂ → _CaO + _H₂O",
     "reactants": [
-      { "molecule": "Ca(OH)2", "formula": "Ca(OH)₂", "elements": { "Ca": 1, "O": 2, "H": 2 } }
+      {
+        "molecule": "Ca(OH)2",
+        "formula": "Ca(OH)₂",
+        "elements": {
+          "Ca": 1,
+          "O": 2,
+          "H": 2
+        }
+      }
     ],
     "products": [
-      { "molecule": "CaO", "formula": "CaO", "elements": { "Ca": 1, "O": 1 } },
-      { "molecule": "H2O", "formula": "H₂O", "elements": { "H": 2, "O": 1 } }
+      {
+        "molecule": "CaO",
+        "formula": "CaO",
+        "elements": {
+          "Ca": 1,
+          "O": 1
+        }
+      },
+      {
+        "molecule": "H2O",
+        "formula": "H₂O",
+        "elements": {
+          "H": 2,
+          "O": 1
+        }
+      }
     ],
-    "solution": { "reactants": [1], "products": [1, 1] },
+    "solution": {
+      "reactants": [
+        1
+      ],
+      "products": [
+        1,
+        1
+      ]
+    },
     "par_time": 20,
     "hints": [
       "Count each element on both sides.",
@@ -802,17 +2386,55 @@
     ]
   },
   {
-    "id": "lvl_044", "level": 44, "difficulty": "hard", "type": "single_replacement",
+    "id": "lvl_044",
+    "level": 44,
+    "difficulty": "hard",
+    "type": "single_replacement",
     "display": "_Mg + _Fe₂O₃ → _MgO + _Fe",
     "reactants": [
-      { "molecule": "Mg", "formula": "Mg", "elements": { "Mg": 1 } },
-      { "molecule": "Fe2O3", "formula": "Fe₂O₃", "elements": { "Fe": 2, "O": 3 } }
+      {
+        "molecule": "Mg",
+        "formula": "Mg",
+        "elements": {
+          "Mg": 1
+        }
+      },
+      {
+        "molecule": "Fe2O3",
+        "formula": "Fe₂O₃",
+        "elements": {
+          "Fe": 2,
+          "O": 3
+        }
+      }
     ],
     "products": [
-      { "molecule": "MgO", "formula": "MgO", "elements": { "Mg": 1, "O": 1 } },
-      { "molecule": "Fe", "formula": "Fe", "elements": { "Fe": 1 } }
+      {
+        "molecule": "MgO",
+        "formula": "MgO",
+        "elements": {
+          "Mg": 1,
+          "O": 1
+        }
+      },
+      {
+        "molecule": "Fe",
+        "formula": "Fe",
+        "elements": {
+          "Fe": 1
+        }
+      }
     ],
-    "solution": { "reactants": [3, 1], "products": [3, 2] },
+    "solution": {
+      "reactants": [
+        3,
+        1
+      ],
+      "products": [
+        3,
+        2
+      ]
+    },
     "par_time": 60,
     "hints": [
       "Fe₂O₃ has 3 O → need 3 MgO.",
@@ -821,16 +2443,46 @@
     ]
   },
   {
-    "id": "lvl_045", "level": 45, "difficulty": "hard", "type": "synthesis",
+    "id": "lvl_045",
+    "level": 45,
+    "difficulty": "hard",
+    "type": "synthesis",
     "display": "_Fe + _Cl₂ → _FeCl₃",
     "reactants": [
-      { "molecule": "Fe", "formula": "Fe", "elements": { "Fe": 1 } },
-      { "molecule": "Cl2", "formula": "Cl₂", "elements": { "Cl": 2 } }
+      {
+        "molecule": "Fe",
+        "formula": "Fe",
+        "elements": {
+          "Fe": 1
+        }
+      },
+      {
+        "molecule": "Cl2",
+        "formula": "Cl₂",
+        "elements": {
+          "Cl": 2
+        }
+      }
     ],
     "products": [
-      { "molecule": "FeCl3", "formula": "FeCl₃", "elements": { "Fe": 1, "Cl": 3 } }
+      {
+        "molecule": "FeCl3",
+        "formula": "FeCl₃",
+        "elements": {
+          "Fe": 1,
+          "Cl": 3
+        }
+      }
     ],
-    "solution": { "reactants": [2, 3], "products": [2] },
+    "solution": {
+      "reactants": [
+        2,
+        3
+      ],
+      "products": [
+        2
+      ]
+    },
     "par_time": 60,
     "hints": [
       "FeCl₃ has 3 Cl but Cl₂ comes in pairs.",
@@ -839,18 +2491,68 @@
     ]
   },
   {
-    "id": "lvl_046", "level": 46, "difficulty": "hard", "type": "double_replacement",
+    "id": "lvl_046",
+    "level": 46,
+    "difficulty": "hard",
+    "type": "double_replacement",
     "display": "_NaHCO₃ + _HCl → _NaCl + _H₂O + _CO₂",
     "reactants": [
-      { "molecule": "NaHCO3", "formula": "NaHCO₃", "elements": { "Na": 1, "H": 1, "C": 1, "O": 3 } },
-      { "molecule": "HCl", "formula": "HCl", "elements": { "H": 1, "Cl": 1 } }
+      {
+        "molecule": "NaHCO3",
+        "formula": "NaHCO₃",
+        "elements": {
+          "Na": 1,
+          "H": 1,
+          "C": 1,
+          "O": 3
+        }
+      },
+      {
+        "molecule": "HCl",
+        "formula": "HCl",
+        "elements": {
+          "H": 1,
+          "Cl": 1
+        }
+      }
     ],
     "products": [
-      { "molecule": "NaCl", "formula": "NaCl", "elements": { "Na": 1, "Cl": 1 } },
-      { "molecule": "H2O", "formula": "H₂O", "elements": { "H": 2, "O": 1 } },
-      { "molecule": "CO2", "formula": "CO₂", "elements": { "C": 1, "O": 2 } }
+      {
+        "molecule": "NaCl",
+        "formula": "NaCl",
+        "elements": {
+          "Na": 1,
+          "Cl": 1
+        }
+      },
+      {
+        "molecule": "H2O",
+        "formula": "H₂O",
+        "elements": {
+          "H": 2,
+          "O": 1
+        }
+      },
+      {
+        "molecule": "CO2",
+        "formula": "CO₂",
+        "elements": {
+          "C": 1,
+          "O": 2
+        }
+      }
     ],
-    "solution": { "reactants": [1, 1], "products": [1, 1, 1] },
+    "solution": {
+      "reactants": [
+        1,
+        1
+      ],
+      "products": [
+        1,
+        1,
+        1
+      ]
+    },
     "par_time": 30,
     "hints": [
       "Count each element carefully.",
@@ -859,17 +2561,59 @@
     ]
   },
   {
-    "id": "lvl_047", "level": 47, "difficulty": "hard", "type": "double_replacement",
+    "id": "lvl_047",
+    "level": 47,
+    "difficulty": "hard",
+    "type": "double_replacement",
     "display": "_MgCl₂ + _NaOH → _Mg(OH)₂ + _NaCl",
     "reactants": [
-      { "molecule": "MgCl2", "formula": "MgCl₂", "elements": { "Mg": 1, "Cl": 2 } },
-      { "molecule": "NaOH", "formula": "NaOH", "elements": { "Na": 1, "O": 1, "H": 1 } }
+      {
+        "molecule": "MgCl2",
+        "formula": "MgCl₂",
+        "elements": {
+          "Mg": 1,
+          "Cl": 2
+        }
+      },
+      {
+        "molecule": "NaOH",
+        "formula": "NaOH",
+        "elements": {
+          "Na": 1,
+          "O": 1,
+          "H": 1
+        }
+      }
     ],
     "products": [
-      { "molecule": "Mg(OH)2", "formula": "Mg(OH)₂", "elements": { "Mg": 1, "O": 2, "H": 2 } },
-      { "molecule": "NaCl", "formula": "NaCl", "elements": { "Na": 1, "Cl": 1 } }
+      {
+        "molecule": "Mg(OH)2",
+        "formula": "Mg(OH)₂",
+        "elements": {
+          "Mg": 1,
+          "O": 2,
+          "H": 2
+        }
+      },
+      {
+        "molecule": "NaCl",
+        "formula": "NaCl",
+        "elements": {
+          "Na": 1,
+          "Cl": 1
+        }
+      }
     ],
-    "solution": { "reactants": [1, 2], "products": [1, 2] },
+    "solution": {
+      "reactants": [
+        1,
+        2
+      ],
+      "products": [
+        1,
+        2
+      ]
+    },
     "par_time": 45,
     "hints": [
       "Mg(OH)₂ needs 2 OH → 2 NaOH.",
@@ -878,17 +2622,56 @@
     ]
   },
   {
-    "id": "lvl_048", "level": 48, "difficulty": "hard", "type": "combustion",
+    "id": "lvl_048",
+    "level": 48,
+    "difficulty": "hard",
+    "type": "combustion",
     "display": "_C₅H₁₂ + _O₂ → _CO₂ + _H₂O",
     "reactants": [
-      { "molecule": "C5H12", "formula": "C₅H₁₂", "elements": { "C": 5, "H": 12 } },
-      { "molecule": "O2", "formula": "O₂", "elements": { "O": 2 } }
+      {
+        "molecule": "C5H12",
+        "formula": "C₅H₁₂",
+        "elements": {
+          "C": 5,
+          "H": 12
+        }
+      },
+      {
+        "molecule": "O2",
+        "formula": "O₂",
+        "elements": {
+          "O": 2
+        }
+      }
     ],
     "products": [
-      { "molecule": "CO2", "formula": "CO₂", "elements": { "C": 1, "O": 2 } },
-      { "molecule": "H2O", "formula": "H₂O", "elements": { "H": 2, "O": 1 } }
+      {
+        "molecule": "CO2",
+        "formula": "CO₂",
+        "elements": {
+          "C": 1,
+          "O": 2
+        }
+      },
+      {
+        "molecule": "H2O",
+        "formula": "H₂O",
+        "elements": {
+          "H": 2,
+          "O": 1
+        }
+      }
     ],
-    "solution": { "reactants": [1, 8], "products": [5, 6] },
+    "solution": {
+      "reactants": [
+        1,
+        8
+      ],
+      "products": [
+        5,
+        6
+      ]
+    },
     "par_time": 90,
     "hints": [
       "Balance C: 5 → 5 CO₂. Balance H: 12 → 6 H₂O.",
@@ -897,17 +2680,60 @@
     ]
   },
   {
-    "id": "lvl_049", "level": 49, "difficulty": "hard", "type": "double_replacement",
+    "id": "lvl_049",
+    "level": 49,
+    "difficulty": "hard",
+    "type": "double_replacement",
     "display": "_Ca(OH)₂ + _H₃PO₄ → _Ca₃(PO₄)₂ + _H₂O",
     "reactants": [
-      { "molecule": "Ca(OH)2", "formula": "Ca(OH)₂", "elements": { "Ca": 1, "O": 2, "H": 2 } },
-      { "molecule": "H3PO4", "formula": "H₃PO₄", "elements": { "H": 3, "P": 1, "O": 4 } }
+      {
+        "molecule": "Ca(OH)2",
+        "formula": "Ca(OH)₂",
+        "elements": {
+          "Ca": 1,
+          "O": 2,
+          "H": 2
+        }
+      },
+      {
+        "molecule": "H3PO4",
+        "formula": "H₃PO₄",
+        "elements": {
+          "H": 3,
+          "P": 1,
+          "O": 4
+        }
+      }
     ],
     "products": [
-      { "molecule": "Ca3(PO4)2", "formula": "Ca₃(PO₄)₂", "elements": { "Ca": 3, "P": 2, "O": 8 } },
-      { "molecule": "H2O", "formula": "H₂O", "elements": { "H": 2, "O": 1 } }
+      {
+        "molecule": "Ca3(PO4)2",
+        "formula": "Ca₃(PO₄)₂",
+        "elements": {
+          "Ca": 3,
+          "P": 2,
+          "O": 8
+        }
+      },
+      {
+        "molecule": "H2O",
+        "formula": "H₂O",
+        "elements": {
+          "H": 2,
+          "O": 1
+        }
+      }
     ],
-    "solution": { "reactants": [3, 2], "products": [1, 6] },
+    "solution": {
+      "reactants": [
+        3,
+        2
+      ],
+      "products": [
+        1,
+        6
+      ]
+    },
     "par_time": 120,
     "hints": [
       "Ca₃(PO₄)₂ needs 3 Ca → 3 Ca(OH)₂. And 2 P → 2 H₃PO₄.",
@@ -916,22 +2742,2999 @@
     ]
   },
   {
-    "id": "lvl_050", "level": 50, "difficulty": "hard", "type": "combustion", "boss": true,
-    "display": "_C₈H₁₈ + _O₂ → _CO₂ + _H₂O",
+    "id": "lvl_050",
+    "level": 50,
+    "difficulty": "hard",
+    "type": "combustion",
+    "boss": true,
+    "display": "_C₅H₁₂ + _O₂ → _CO₂ + _H₂O",
     "reactants": [
-      { "molecule": "C8H18", "formula": "C₈H₁₈", "elements": { "C": 8, "H": 18 } },
-      { "molecule": "O2", "formula": "O₂", "elements": { "O": 2 } }
+      {
+        "molecule": "C5H12",
+        "formula": "C₅H₁₂",
+        "elements": {
+          "C": 5,
+          "H": 12
+        }
+      },
+      {
+        "molecule": "O2",
+        "formula": "O₂",
+        "elements": {
+          "O": 2
+        }
+      }
     ],
     "products": [
-      { "molecule": "CO2", "formula": "CO₂", "elements": { "C": 1, "O": 2 } },
-      { "molecule": "H2O", "formula": "H₂O", "elements": { "H": 2, "O": 1 } }
+      {
+        "molecule": "CO2",
+        "formula": "CO₂",
+        "elements": {
+          "C": 1,
+          "O": 2
+        }
+      },
+      {
+        "molecule": "H2O",
+        "formula": "H₂O",
+        "elements": {
+          "H": 2,
+          "O": 1
+        }
+      }
     ],
-    "solution": { "reactants": [2, 25], "products": [16, 18] },
+    "solution": {
+      "reactants": [
+        1,
+        8
+      ],
+      "products": [
+        5,
+        6
+      ]
+    },
     "par_time": 120,
     "hints": [
-      "Balance C: 8 → 8 CO₂. Balance H: 18 → 9 H₂O.",
-      "O on right: 16+9=25. Odd! Double everything.",
-      "2C₈H₁₈ + 25O₂ → 16CO₂ + 18H₂O."
+      "Balance carbon first, then hydrogen, and leave oxygen for last.",
+      "Oxygen often needs the largest coefficient in combustion equations.",
+      "C₅H₁₂ + 8O₂ → 5CO₂ + 6H₂O."
+    ]
+  },
+  {
+    "id": "lvl_051",
+    "level": 51,
+    "difficulty": "easy",
+    "type": "double_replacement",
+    "display": "_HCl + _NaOH → _NaCl + _H₂O",
+    "reactants": [
+      {
+        "molecule": "HCl",
+        "formula": "HCl",
+        "elements": {
+          "H": 1,
+          "Cl": 1
+        }
+      },
+      {
+        "molecule": "NaOH",
+        "formula": "NaOH",
+        "elements": {
+          "Na": 1,
+          "O": 1,
+          "H": 1
+        }
+      }
+    ],
+    "products": [
+      {
+        "molecule": "NaCl",
+        "formula": "NaCl",
+        "elements": {
+          "Na": 1,
+          "Cl": 1
+        }
+      },
+      {
+        "molecule": "H2O",
+        "formula": "H₂O",
+        "elements": {
+          "H": 2,
+          "O": 1
+        }
+      }
+    ],
+    "solution": {
+      "reactants": [
+        1,
+        1
+      ],
+      "products": [
+        1,
+        1
+      ]
+    },
+    "par_time": 25,
+    "hints": [
+      "Match each ion count after the partner swap.",
+      "If a polyatomic ion stays intact, balance it as a single unit.",
+      "HCl + NaOH → NaCl + H₂O."
+    ]
+  },
+  {
+    "id": "lvl_052",
+    "level": 52,
+    "difficulty": "medium",
+    "type": "double_replacement",
+    "display": "_H₂SO₄ + _NaOH → _Na₂SO₄ + _H₂O",
+    "reactants": [
+      {
+        "molecule": "H2SO4",
+        "formula": "H₂SO₄",
+        "elements": {
+          "H": 2,
+          "S": 1,
+          "O": 4
+        }
+      },
+      {
+        "molecule": "NaOH",
+        "formula": "NaOH",
+        "elements": {
+          "Na": 1,
+          "O": 1,
+          "H": 1
+        }
+      }
+    ],
+    "products": [
+      {
+        "molecule": "Na2SO4",
+        "formula": "Na₂SO₄",
+        "elements": {
+          "Na": 2,
+          "S": 1,
+          "O": 4
+        }
+      },
+      {
+        "molecule": "H2O",
+        "formula": "H₂O",
+        "elements": {
+          "H": 2,
+          "O": 1
+        }
+      }
+    ],
+    "solution": {
+      "reactants": [
+        1,
+        2
+      ],
+      "products": [
+        1,
+        2
+      ]
+    },
+    "par_time": 50,
+    "hints": [
+      "Match each ion count after the partner swap.",
+      "If a polyatomic ion stays intact, balance it as a single unit.",
+      "H₂SO₄ + 2NaOH → Na₂SO₄ + 2H₂O."
+    ]
+  },
+  {
+    "id": "lvl_053",
+    "level": 53,
+    "difficulty": "easy",
+    "type": "double_replacement",
+    "display": "_HNO₃ + _KOH → _KNO₃ + _H₂O",
+    "reactants": [
+      {
+        "molecule": "HNO3",
+        "formula": "HNO₃",
+        "elements": {
+          "H": 1,
+          "N": 1,
+          "O": 3
+        }
+      },
+      {
+        "molecule": "KOH",
+        "formula": "KOH",
+        "elements": {
+          "K": 1,
+          "O": 1,
+          "H": 1
+        }
+      }
+    ],
+    "products": [
+      {
+        "molecule": "KNO3",
+        "formula": "KNO₃",
+        "elements": {
+          "K": 1,
+          "N": 1,
+          "O": 3
+        }
+      },
+      {
+        "molecule": "H2O",
+        "formula": "H₂O",
+        "elements": {
+          "H": 2,
+          "O": 1
+        }
+      }
+    ],
+    "solution": {
+      "reactants": [
+        1,
+        1
+      ],
+      "products": [
+        1,
+        1
+      ]
+    },
+    "par_time": 20,
+    "hints": [
+      "Match each ion count after the partner swap.",
+      "If a polyatomic ion stays intact, balance it as a single unit.",
+      "HNO₃ + KOH → KNO₃ + H₂O."
+    ]
+  },
+  {
+    "id": "lvl_054",
+    "level": 54,
+    "difficulty": "easy",
+    "type": "synthesis",
+    "display": "_SO₃ + _H₂O → _H₂SO₄",
+    "reactants": [
+      {
+        "molecule": "SO3",
+        "formula": "SO₃",
+        "elements": {
+          "S": 1,
+          "O": 3
+        }
+      },
+      {
+        "molecule": "H2O",
+        "formula": "H₂O",
+        "elements": {
+          "H": 2,
+          "O": 1
+        }
+      }
+    ],
+    "products": [
+      {
+        "molecule": "H2SO4",
+        "formula": "H₂SO₄",
+        "elements": {
+          "H": 2,
+          "S": 1,
+          "O": 4
+        }
+      }
+    ],
+    "solution": {
+      "reactants": [
+        1,
+        1
+      ],
+      "products": [
+        1
+      ]
+    },
+    "par_time": 15,
+    "hints": [
+      "Combine atom counts from both reactants into the product side.",
+      "If one reactant is diatomic, account for both atoms before finalizing.",
+      "SO₃ + H₂O → H₂SO₄."
+    ]
+  },
+  {
+    "id": "lvl_055",
+    "level": 55,
+    "difficulty": "medium",
+    "type": "double_replacement",
+    "display": "_H₂CO₃ + _KOH → _K₂CO₃ + _H₂O",
+    "reactants": [
+      {
+        "molecule": "H2CO3",
+        "formula": "H₂CO₃",
+        "elements": {
+          "H": 2,
+          "C": 1,
+          "O": 3
+        }
+      },
+      {
+        "molecule": "KOH",
+        "formula": "KOH",
+        "elements": {
+          "K": 1,
+          "O": 1,
+          "H": 1
+        }
+      }
+    ],
+    "products": [
+      {
+        "molecule": "K2CO3",
+        "formula": "K₂CO₃",
+        "elements": {
+          "K": 2,
+          "C": 1,
+          "O": 3
+        }
+      },
+      {
+        "molecule": "H2O",
+        "formula": "H₂O",
+        "elements": {
+          "H": 2,
+          "O": 1
+        }
+      }
+    ],
+    "solution": {
+      "reactants": [
+        1,
+        2
+      ],
+      "products": [
+        1,
+        2
+      ]
+    },
+    "par_time": 45,
+    "hints": [
+      "Match each ion count after the partner swap.",
+      "If a polyatomic ion stays intact, balance it as a single unit.",
+      "H₂CO₃ + 2KOH → K₂CO₃ + 2H₂O."
+    ]
+  },
+  {
+    "id": "lvl_056",
+    "level": 56,
+    "difficulty": "medium",
+    "type": "double_replacement",
+    "display": "_HBr + _Mg(OH)₂ → _MgBr₂ + _H₂O",
+    "reactants": [
+      {
+        "molecule": "HBr",
+        "formula": "HBr",
+        "elements": {
+          "H": 1,
+          "Br": 1
+        }
+      },
+      {
+        "molecule": "Mg(OH)2",
+        "formula": "Mg(OH)₂",
+        "elements": {
+          "Mg": 1,
+          "O": 2,
+          "H": 2
+        }
+      }
+    ],
+    "products": [
+      {
+        "molecule": "MgBr2",
+        "formula": "MgBr₂",
+        "elements": {
+          "Mg": 1,
+          "Br": 2
+        }
+      },
+      {
+        "molecule": "H2O",
+        "formula": "H₂O",
+        "elements": {
+          "H": 2,
+          "O": 1
+        }
+      }
+    ],
+    "solution": {
+      "reactants": [
+        2,
+        1
+      ],
+      "products": [
+        1,
+        2
+      ]
+    },
+    "par_time": 50,
+    "hints": [
+      "Match each ion count after the partner swap.",
+      "If a polyatomic ion stays intact, balance it as a single unit.",
+      "2HBr + Mg(OH)₂ → MgBr₂ + 2H₂O."
+    ]
+  },
+  {
+    "id": "lvl_057",
+    "level": 57,
+    "difficulty": "medium",
+    "type": "double_replacement",
+    "display": "_H₂SO₄ + _Ba(OH)₂ → _BaSO₄ + _H₂O",
+    "reactants": [
+      {
+        "molecule": "H2SO4",
+        "formula": "H₂SO₄",
+        "elements": {
+          "H": 2,
+          "S": 1,
+          "O": 4
+        }
+      },
+      {
+        "molecule": "Ba(OH)2",
+        "formula": "Ba(OH)₂",
+        "elements": {
+          "Ba": 1,
+          "O": 2,
+          "H": 2
+        }
+      }
+    ],
+    "products": [
+      {
+        "molecule": "BaSO4",
+        "formula": "BaSO₄",
+        "elements": {
+          "Ba": 1,
+          "S": 1,
+          "O": 4
+        }
+      },
+      {
+        "molecule": "H2O",
+        "formula": "H₂O",
+        "elements": {
+          "H": 2,
+          "O": 1
+        }
+      }
+    ],
+    "solution": {
+      "reactants": [
+        1,
+        1
+      ],
+      "products": [
+        1,
+        2
+      ]
+    },
+    "par_time": 50,
+    "hints": [
+      "Match each ion count after the partner swap.",
+      "If a polyatomic ion stays intact, balance it as a single unit.",
+      "H₂SO₄ + Ba(OH)₂ → BaSO₄ + 2H₂O."
+    ]
+  },
+  {
+    "id": "lvl_058",
+    "level": 58,
+    "difficulty": "hard",
+    "type": "double_replacement",
+    "display": "_HCl + _Sr(OH)₂ → _SrCl₂ + _H₂O",
+    "reactants": [
+      {
+        "molecule": "HCl",
+        "formula": "HCl",
+        "elements": {
+          "H": 1,
+          "Cl": 1
+        }
+      },
+      {
+        "molecule": "Sr(OH)2",
+        "formula": "Sr(OH)₂",
+        "elements": {
+          "Sr": 1,
+          "O": 2,
+          "H": 2
+        }
+      }
+    ],
+    "products": [
+      {
+        "molecule": "SrCl2",
+        "formula": "SrCl₂",
+        "elements": {
+          "Sr": 1,
+          "Cl": 2
+        }
+      },
+      {
+        "molecule": "H2O",
+        "formula": "H₂O",
+        "elements": {
+          "H": 2,
+          "O": 1
+        }
+      }
+    ],
+    "solution": {
+      "reactants": [
+        2,
+        1
+      ],
+      "products": [
+        1,
+        2
+      ]
+    },
+    "par_time": 60,
+    "hints": [
+      "Match each ion count after the partner swap.",
+      "If a polyatomic ion stays intact, balance it as a single unit.",
+      "2HCl + Sr(OH)₂ → SrCl₂ + 2H₂O."
+    ]
+  },
+  {
+    "id": "lvl_059",
+    "level": 59,
+    "difficulty": "medium",
+    "type": "synthesis",
+    "display": "_N₂O₅ + _H₂O → _HNO₃",
+    "reactants": [
+      {
+        "molecule": "N2O5",
+        "formula": "N₂O₅",
+        "elements": {
+          "N": 2,
+          "O": 5
+        }
+      },
+      {
+        "molecule": "H2O",
+        "formula": "H₂O",
+        "elements": {
+          "H": 2,
+          "O": 1
+        }
+      }
+    ],
+    "products": [
+      {
+        "molecule": "HNO3",
+        "formula": "HNO₃",
+        "elements": {
+          "H": 1,
+          "N": 1,
+          "O": 3
+        }
+      }
+    ],
+    "solution": {
+      "reactants": [
+        1,
+        1
+      ],
+      "products": [
+        2
+      ]
+    },
+    "par_time": 45,
+    "hints": [
+      "Combine atom counts from both reactants into the product side.",
+      "If one reactant is diatomic, account for both atoms before finalizing.",
+      "N₂O₅ + H₂O → 2HNO₃."
+    ]
+  },
+  {
+    "id": "lvl_060",
+    "level": 60,
+    "difficulty": "hard",
+    "type": "double_replacement",
+    "boss": true,
+    "display": "_H₂SO₄ + _Al(OH)₃ → _Al₂(SO₄)₃ + _H₂O",
+    "reactants": [
+      {
+        "molecule": "H2SO4",
+        "formula": "H₂SO₄",
+        "elements": {
+          "H": 2,
+          "S": 1,
+          "O": 4
+        }
+      },
+      {
+        "molecule": "Al(OH)3",
+        "formula": "Al(OH)₃",
+        "elements": {
+          "Al": 1,
+          "O": 3,
+          "H": 3
+        }
+      }
+    ],
+    "products": [
+      {
+        "molecule": "Al2(SO4)3",
+        "formula": "Al₂(SO₄)₃",
+        "elements": {
+          "Al": 2,
+          "S": 3,
+          "O": 12
+        }
+      },
+      {
+        "molecule": "H2O",
+        "formula": "H₂O",
+        "elements": {
+          "H": 2,
+          "O": 1
+        }
+      }
+    ],
+    "solution": {
+      "reactants": [
+        3,
+        2
+      ],
+      "products": [
+        1,
+        6
+      ]
+    },
+    "par_time": 90,
+    "hints": [
+      "Match each ion count after the partner swap.",
+      "If a polyatomic ion stays intact, balance it as a single unit.",
+      "3H₂SO₄ + 2Al(OH)₃ → Al₂(SO₄)₃ + 6H₂O."
+    ]
+  },
+  {
+    "id": "lvl_061",
+    "level": 61,
+    "difficulty": "medium",
+    "type": "single_replacement",
+    "display": "_Fe₂O₃ + _Al → _Al₂O₃ + _Fe",
+    "reactants": [
+      {
+        "molecule": "Fe2O3",
+        "formula": "Fe₂O₃",
+        "elements": {
+          "Fe": 2,
+          "O": 3
+        }
+      },
+      {
+        "molecule": "Al",
+        "formula": "Al",
+        "elements": {
+          "Al": 1
+        }
+      }
+    ],
+    "products": [
+      {
+        "molecule": "Al2O3",
+        "formula": "Al₂O₃",
+        "elements": {
+          "Al": 2,
+          "O": 3
+        }
+      },
+      {
+        "molecule": "Fe",
+        "formula": "Fe",
+        "elements": {
+          "Fe": 1
+        }
+      }
+    ],
+    "solution": {
+      "reactants": [
+        1,
+        2
+      ],
+      "products": [
+        1,
+        2
+      ]
+    },
+    "par_time": 55,
+    "hints": [
+      "Balance the displaced element first, then the remaining atoms.",
+      "Remember diatomic elements like Cl₂, Br₂, and O₂ when needed.",
+      "Fe₂O₃ + 2Al → Al₂O₃ + 2Fe."
+    ]
+  },
+  {
+    "id": "lvl_062",
+    "level": 62,
+    "difficulty": "medium",
+    "type": "single_replacement",
+    "display": "_Cr₂O₃ + _Al → _Al₂O₃ + _Cr",
+    "reactants": [
+      {
+        "molecule": "Cr2O3",
+        "formula": "Cr₂O₃",
+        "elements": {
+          "Cr": 2,
+          "O": 3
+        }
+      },
+      {
+        "molecule": "Al",
+        "formula": "Al",
+        "elements": {
+          "Al": 1
+        }
+      }
+    ],
+    "products": [
+      {
+        "molecule": "Al2O3",
+        "formula": "Al₂O₃",
+        "elements": {
+          "Al": 2,
+          "O": 3
+        }
+      },
+      {
+        "molecule": "Cr",
+        "formula": "Cr",
+        "elements": {
+          "Cr": 1
+        }
+      }
+    ],
+    "solution": {
+      "reactants": [
+        1,
+        2
+      ],
+      "products": [
+        1,
+        2
+      ]
+    },
+    "par_time": 55,
+    "hints": [
+      "Balance the displaced element first, then the remaining atoms.",
+      "Remember diatomic elements like Cl₂, Br₂, and O₂ when needed.",
+      "Cr₂O₃ + 2Al → Al₂O₃ + 2Cr."
+    ]
+  },
+  {
+    "id": "lvl_063",
+    "level": 63,
+    "difficulty": "medium",
+    "type": "single_replacement",
+    "display": "_TiO₂ + _Mg → _MgO + _Ti",
+    "reactants": [
+      {
+        "molecule": "TiO2",
+        "formula": "TiO₂",
+        "elements": {
+          "Ti": 1,
+          "O": 2
+        }
+      },
+      {
+        "molecule": "Mg",
+        "formula": "Mg",
+        "elements": {
+          "Mg": 1
+        }
+      }
+    ],
+    "products": [
+      {
+        "molecule": "MgO",
+        "formula": "MgO",
+        "elements": {
+          "Mg": 1,
+          "O": 1
+        }
+      },
+      {
+        "molecule": "Ti",
+        "formula": "Ti",
+        "elements": {
+          "Ti": 1
+        }
+      }
+    ],
+    "solution": {
+      "reactants": [
+        1,
+        2
+      ],
+      "products": [
+        2,
+        1
+      ]
+    },
+    "par_time": 50,
+    "hints": [
+      "Balance the displaced element first, then the remaining atoms.",
+      "Remember diatomic elements like Cl₂, Br₂, and O₂ when needed.",
+      "TiO₂ + 2Mg → 2MgO + Ti."
+    ]
+  },
+  {
+    "id": "lvl_064",
+    "level": 64,
+    "difficulty": "medium",
+    "type": "single_replacement",
+    "display": "_Mg + _SiO₂ → _MgO + _Si",
+    "reactants": [
+      {
+        "molecule": "Mg",
+        "formula": "Mg",
+        "elements": {
+          "Mg": 1
+        }
+      },
+      {
+        "molecule": "SiO2",
+        "formula": "SiO₂",
+        "elements": {
+          "Si": 1,
+          "O": 2
+        }
+      }
+    ],
+    "products": [
+      {
+        "molecule": "MgO",
+        "formula": "MgO",
+        "elements": {
+          "Mg": 1,
+          "O": 1
+        }
+      },
+      {
+        "molecule": "Si",
+        "formula": "Si",
+        "elements": {
+          "Si": 1
+        }
+      }
+    ],
+    "solution": {
+      "reactants": [
+        2,
+        1
+      ],
+      "products": [
+        2,
+        1
+      ]
+    },
+    "par_time": 50,
+    "hints": [
+      "Balance the displaced element first, then the remaining atoms.",
+      "Remember diatomic elements like Cl₂, Br₂, and O₂ when needed.",
+      "2Mg + SiO₂ → 2MgO + Si."
+    ]
+  },
+  {
+    "id": "lvl_065",
+    "level": 65,
+    "difficulty": "medium",
+    "type": "single_replacement",
+    "display": "_Zn + _MnO₂ → _ZnO + _Mn",
+    "reactants": [
+      {
+        "molecule": "Zn",
+        "formula": "Zn",
+        "elements": {
+          "Zn": 1
+        }
+      },
+      {
+        "molecule": "MnO2",
+        "formula": "MnO₂",
+        "elements": {
+          "Mn": 1,
+          "O": 2
+        }
+      }
+    ],
+    "products": [
+      {
+        "molecule": "ZnO",
+        "formula": "ZnO",
+        "elements": {
+          "Zn": 1,
+          "O": 1
+        }
+      },
+      {
+        "molecule": "Mn",
+        "formula": "Mn",
+        "elements": {
+          "Mn": 1
+        }
+      }
+    ],
+    "solution": {
+      "reactants": [
+        2,
+        1
+      ],
+      "products": [
+        2,
+        1
+      ]
+    },
+    "par_time": 50,
+    "hints": [
+      "Balance the displaced element first, then the remaining atoms.",
+      "Remember diatomic elements like Cl₂, Br₂, and O₂ when needed.",
+      "2Zn + MnO₂ → 2ZnO + Mn."
+    ]
+  },
+  {
+    "id": "lvl_066",
+    "level": 66,
+    "difficulty": "medium",
+    "type": "single_replacement",
+    "display": "_SnO₂ + _H₂ → _Sn + _H₂O",
+    "reactants": [
+      {
+        "molecule": "SnO2",
+        "formula": "SnO₂",
+        "elements": {
+          "Sn": 1,
+          "O": 2
+        }
+      },
+      {
+        "molecule": "H2",
+        "formula": "H₂",
+        "elements": {
+          "H": 2
+        }
+      }
+    ],
+    "products": [
+      {
+        "molecule": "Sn",
+        "formula": "Sn",
+        "elements": {
+          "Sn": 1
+        }
+      },
+      {
+        "molecule": "H2O",
+        "formula": "H₂O",
+        "elements": {
+          "H": 2,
+          "O": 1
+        }
+      }
+    ],
+    "solution": {
+      "reactants": [
+        1,
+        2
+      ],
+      "products": [
+        1,
+        2
+      ]
+    },
+    "par_time": 50,
+    "hints": [
+      "Balance the displaced element first, then the remaining atoms.",
+      "Remember diatomic elements like Cl₂, Br₂, and O₂ when needed.",
+      "SnO₂ + 2H₂ → Sn + 2H₂O."
+    ]
+  },
+  {
+    "id": "lvl_067",
+    "level": 67,
+    "difficulty": "hard",
+    "type": "single_replacement",
+    "display": "_Al + _CuO → _Al₂O₃ + _Cu",
+    "reactants": [
+      {
+        "molecule": "Al",
+        "formula": "Al",
+        "elements": {
+          "Al": 1
+        }
+      },
+      {
+        "molecule": "CuO",
+        "formula": "CuO",
+        "elements": {
+          "Cu": 1,
+          "O": 1
+        }
+      }
+    ],
+    "products": [
+      {
+        "molecule": "Al2O3",
+        "formula": "Al₂O₃",
+        "elements": {
+          "Al": 2,
+          "O": 3
+        }
+      },
+      {
+        "molecule": "Cu",
+        "formula": "Cu",
+        "elements": {
+          "Cu": 1
+        }
+      }
+    ],
+    "solution": {
+      "reactants": [
+        2,
+        3
+      ],
+      "products": [
+        1,
+        3
+      ]
+    },
+    "par_time": 75,
+    "hints": [
+      "Balance the displaced element first, then the remaining atoms.",
+      "Remember diatomic elements like Cl₂, Br₂, and O₂ when needed.",
+      "2Al + 3CuO → Al₂O₃ + 3Cu."
+    ]
+  },
+  {
+    "id": "lvl_068",
+    "level": 68,
+    "difficulty": "easy",
+    "type": "combustion",
+    "display": "_CH₄ + _O₂ → _CO₂ + _H₂O",
+    "reactants": [
+      {
+        "molecule": "CH4",
+        "formula": "CH₄",
+        "elements": {
+          "C": 1,
+          "H": 4
+        }
+      },
+      {
+        "molecule": "O2",
+        "formula": "O₂",
+        "elements": {
+          "O": 2
+        }
+      }
+    ],
+    "products": [
+      {
+        "molecule": "CO2",
+        "formula": "CO₂",
+        "elements": {
+          "C": 1,
+          "O": 2
+        }
+      },
+      {
+        "molecule": "H2O",
+        "formula": "H₂O",
+        "elements": {
+          "H": 2,
+          "O": 1
+        }
+      }
+    ],
+    "solution": {
+      "reactants": [
+        1,
+        2
+      ],
+      "products": [
+        1,
+        2
+      ]
+    },
+    "par_time": 25,
+    "hints": [
+      "Balance carbon first, then hydrogen, and leave oxygen for last.",
+      "Oxygen often needs the largest coefficient in combustion equations.",
+      "CH₄ + 2O₂ → CO₂ + 2H₂O."
+    ]
+  },
+  {
+    "id": "lvl_069",
+    "level": 69,
+    "difficulty": "hard",
+    "type": "combustion",
+    "display": "_C₂H₆ + _O₂ → _CO₂ + _H₂O",
+    "reactants": [
+      {
+        "molecule": "C2H6",
+        "formula": "C₂H₆",
+        "elements": {
+          "C": 2,
+          "H": 6
+        }
+      },
+      {
+        "molecule": "O2",
+        "formula": "O₂",
+        "elements": {
+          "O": 2
+        }
+      }
+    ],
+    "products": [
+      {
+        "molecule": "CO2",
+        "formula": "CO₂",
+        "elements": {
+          "C": 1,
+          "O": 2
+        }
+      },
+      {
+        "molecule": "H2O",
+        "formula": "H₂O",
+        "elements": {
+          "H": 2,
+          "O": 1
+        }
+      }
+    ],
+    "solution": {
+      "reactants": [
+        2,
+        7
+      ],
+      "products": [
+        4,
+        6
+      ]
+    },
+    "par_time": 90,
+    "hints": [
+      "Balance carbon first, then hydrogen, and leave oxygen for last.",
+      "Oxygen often needs the largest coefficient in combustion equations.",
+      "2C₂H₆ + 7O₂ → 4CO₂ + 6H₂O."
+    ]
+  },
+  {
+    "id": "lvl_070",
+    "level": 70,
+    "difficulty": "hard",
+    "type": "single_replacement",
+    "boss": true,
+    "display": "_MnO₂ + _Al → _Al₂O₃ + _Mn",
+    "reactants": [
+      {
+        "molecule": "MnO2",
+        "formula": "MnO₂",
+        "elements": {
+          "Mn": 1,
+          "O": 2
+        }
+      },
+      {
+        "molecule": "Al",
+        "formula": "Al",
+        "elements": {
+          "Al": 1
+        }
+      }
+    ],
+    "products": [
+      {
+        "molecule": "Al2O3",
+        "formula": "Al₂O₃",
+        "elements": {
+          "Al": 2,
+          "O": 3
+        }
+      },
+      {
+        "molecule": "Mn",
+        "formula": "Mn",
+        "elements": {
+          "Mn": 1
+        }
+      }
+    ],
+    "solution": {
+      "reactants": [
+        3,
+        4
+      ],
+      "products": [
+        2,
+        3
+      ]
+    },
+    "par_time": 105,
+    "hints": [
+      "Balance the displaced element first, then the remaining atoms.",
+      "Remember diatomic elements like Cl₂, Br₂, and O₂ when needed.",
+      "3MnO₂ + 4Al → 2Al₂O₃ + 3Mn."
+    ]
+  },
+  {
+    "id": "lvl_071",
+    "level": 71,
+    "difficulty": "easy",
+    "type": "decomposition",
+    "display": "_CaCO₃ → _CaO + _CO₂",
+    "reactants": [
+      {
+        "molecule": "CaCO3",
+        "formula": "CaCO₃",
+        "elements": {
+          "Ca": 1,
+          "C": 1,
+          "O": 3
+        }
+      }
+    ],
+    "products": [
+      {
+        "molecule": "CaO",
+        "formula": "CaO",
+        "elements": {
+          "Ca": 1,
+          "O": 1
+        }
+      },
+      {
+        "molecule": "CO2",
+        "formula": "CO₂",
+        "elements": {
+          "C": 1,
+          "O": 2
+        }
+      }
+    ],
+    "solution": {
+      "reactants": [
+        1
+      ],
+      "products": [
+        1,
+        1
+      ]
+    },
+    "par_time": 20,
+    "hints": [
+      "Start from the single reactant and distribute atoms across all products.",
+      "Check oxygen and hydrogen last after balancing metals and nonmetals.",
+      "CaCO₃ → CaO + CO₂."
+    ]
+  },
+  {
+    "id": "lvl_072",
+    "level": 72,
+    "difficulty": "medium",
+    "type": "decomposition",
+    "display": "_NaHCO₃ → _Na₂CO₃ + _CO₂ + _H₂O",
+    "reactants": [
+      {
+        "molecule": "NaHCO3",
+        "formula": "NaHCO₃",
+        "elements": {
+          "Na": 1,
+          "H": 1,
+          "C": 1,
+          "O": 3
+        }
+      }
+    ],
+    "products": [
+      {
+        "molecule": "Na2CO3",
+        "formula": "Na₂CO₃",
+        "elements": {
+          "Na": 2,
+          "C": 1,
+          "O": 3
+        }
+      },
+      {
+        "molecule": "CO2",
+        "formula": "CO₂",
+        "elements": {
+          "C": 1,
+          "O": 2
+        }
+      },
+      {
+        "molecule": "H2O",
+        "formula": "H₂O",
+        "elements": {
+          "H": 2,
+          "O": 1
+        }
+      }
+    ],
+    "solution": {
+      "reactants": [
+        2
+      ],
+      "products": [
+        1,
+        1,
+        1
+      ]
+    },
+    "par_time": 55,
+    "hints": [
+      "Start from the single reactant and distribute atoms across all products.",
+      "Check oxygen and hydrogen last after balancing metals and nonmetals.",
+      "2NaHCO₃ → Na₂CO₃ + CO₂ + H₂O."
+    ]
+  },
+  {
+    "id": "lvl_073",
+    "level": 73,
+    "difficulty": "medium",
+    "type": "decomposition",
+    "display": "_KNO₃ → _KNO₂ + _O₂",
+    "reactants": [
+      {
+        "molecule": "KNO3",
+        "formula": "KNO₃",
+        "elements": {
+          "K": 1,
+          "N": 1,
+          "O": 3
+        }
+      }
+    ],
+    "products": [
+      {
+        "molecule": "KNO2",
+        "formula": "KNO₂",
+        "elements": {
+          "K": 1,
+          "N": 1,
+          "O": 2
+        }
+      },
+      {
+        "molecule": "O2",
+        "formula": "O₂",
+        "elements": {
+          "O": 2
+        }
+      }
+    ],
+    "solution": {
+      "reactants": [
+        2
+      ],
+      "products": [
+        2,
+        1
+      ]
+    },
+    "par_time": 50,
+    "hints": [
+      "Start from the single reactant and distribute atoms across all products.",
+      "Check oxygen and hydrogen last after balancing metals and nonmetals.",
+      "2KNO₃ → 2KNO₂ + O₂."
+    ]
+  },
+  {
+    "id": "lvl_074",
+    "level": 74,
+    "difficulty": "medium",
+    "type": "double_replacement",
+    "display": "_BaCl₂ + _Na₂SO₄ → _BaSO₄ + _NaCl",
+    "reactants": [
+      {
+        "molecule": "BaCl2",
+        "formula": "BaCl₂",
+        "elements": {
+          "Ba": 1,
+          "Cl": 2
+        }
+      },
+      {
+        "molecule": "Na2SO4",
+        "formula": "Na₂SO₄",
+        "elements": {
+          "Na": 2,
+          "S": 1,
+          "O": 4
+        }
+      }
+    ],
+    "products": [
+      {
+        "molecule": "BaSO4",
+        "formula": "BaSO₄",
+        "elements": {
+          "Ba": 1,
+          "S": 1,
+          "O": 4
+        }
+      },
+      {
+        "molecule": "NaCl",
+        "formula": "NaCl",
+        "elements": {
+          "Na": 1,
+          "Cl": 1
+        }
+      }
+    ],
+    "solution": {
+      "reactants": [
+        1,
+        1
+      ],
+      "products": [
+        1,
+        2
+      ]
+    },
+    "par_time": 45,
+    "hints": [
+      "Match each ion count after the partner swap.",
+      "If a polyatomic ion stays intact, balance it as a single unit.",
+      "BaCl₂ + Na₂SO₄ → BaSO₄ + 2NaCl."
+    ]
+  },
+  {
+    "id": "lvl_075",
+    "level": 75,
+    "difficulty": "hard",
+    "type": "double_replacement",
+    "display": "_Pb(NO₃)₂ + _KI → _PbI₂ + _KNO₃",
+    "reactants": [
+      {
+        "molecule": "Pb(NO3)2",
+        "formula": "Pb(NO₃)₂",
+        "elements": {
+          "Pb": 1,
+          "N": 2,
+          "O": 6
+        }
+      },
+      {
+        "molecule": "KI",
+        "formula": "KI",
+        "elements": {
+          "K": 1,
+          "I": 1
+        }
+      }
+    ],
+    "products": [
+      {
+        "molecule": "PbI2",
+        "formula": "PbI₂",
+        "elements": {
+          "Pb": 1,
+          "I": 2
+        }
+      },
+      {
+        "molecule": "KNO3",
+        "formula": "KNO₃",
+        "elements": {
+          "K": 1,
+          "N": 1,
+          "O": 3
+        }
+      }
+    ],
+    "solution": {
+      "reactants": [
+        1,
+        2
+      ],
+      "products": [
+        1,
+        2
+      ]
+    },
+    "par_time": 70,
+    "hints": [
+      "Match each ion count after the partner swap.",
+      "If a polyatomic ion stays intact, balance it as a single unit.",
+      "Pb(NO₃)₂ + 2KI → PbI₂ + 2KNO₃."
+    ]
+  },
+  {
+    "id": "lvl_076",
+    "level": 76,
+    "difficulty": "hard",
+    "type": "double_replacement",
+    "display": "_AgNO₃ + _BaCl₂ → _AgCl + _Ba(NO₃)₂",
+    "reactants": [
+      {
+        "molecule": "AgNO3",
+        "formula": "AgNO₃",
+        "elements": {
+          "Ag": 1,
+          "N": 1,
+          "O": 3
+        }
+      },
+      {
+        "molecule": "BaCl2",
+        "formula": "BaCl₂",
+        "elements": {
+          "Ba": 1,
+          "Cl": 2
+        }
+      }
+    ],
+    "products": [
+      {
+        "molecule": "AgCl",
+        "formula": "AgCl",
+        "elements": {
+          "Ag": 1,
+          "Cl": 1
+        }
+      },
+      {
+        "molecule": "Ba(NO3)2",
+        "formula": "Ba(NO₃)₂",
+        "elements": {
+          "Ba": 1,
+          "N": 2,
+          "O": 6
+        }
+      }
+    ],
+    "solution": {
+      "reactants": [
+        2,
+        1
+      ],
+      "products": [
+        2,
+        1
+      ]
+    },
+    "par_time": 70,
+    "hints": [
+      "Match each ion count after the partner swap.",
+      "If a polyatomic ion stays intact, balance it as a single unit.",
+      "2AgNO₃ + BaCl₂ → 2AgCl + Ba(NO₃)₂."
+    ]
+  },
+  {
+    "id": "lvl_077",
+    "level": 77,
+    "difficulty": "hard",
+    "type": "double_replacement",
+    "display": "_NH₄Cl + _Ca(OH)₂ → _CaCl₂ + _NH₃ + _H₂O",
+    "reactants": [
+      {
+        "molecule": "NH4Cl",
+        "formula": "NH₄Cl",
+        "elements": {
+          "N": 1,
+          "H": 4,
+          "Cl": 1
+        }
+      },
+      {
+        "molecule": "Ca(OH)2",
+        "formula": "Ca(OH)₂",
+        "elements": {
+          "Ca": 1,
+          "O": 2,
+          "H": 2
+        }
+      }
+    ],
+    "products": [
+      {
+        "molecule": "CaCl2",
+        "formula": "CaCl₂",
+        "elements": {
+          "Ca": 1,
+          "Cl": 2
+        }
+      },
+      {
+        "molecule": "NH3",
+        "formula": "NH₃",
+        "elements": {
+          "N": 1,
+          "H": 3
+        }
+      },
+      {
+        "molecule": "H2O",
+        "formula": "H₂O",
+        "elements": {
+          "H": 2,
+          "O": 1
+        }
+      }
+    ],
+    "solution": {
+      "reactants": [
+        2,
+        1
+      ],
+      "products": [
+        1,
+        2,
+        2
+      ]
+    },
+    "par_time": 85,
+    "hints": [
+      "Match each ion count after the partner swap.",
+      "If a polyatomic ion stays intact, balance it as a single unit.",
+      "2NH₄Cl + Ca(OH)₂ → CaCl₂ + 2NH₃ + 2H₂O."
+    ]
+  },
+  {
+    "id": "lvl_078",
+    "level": 78,
+    "difficulty": "medium",
+    "type": "double_replacement",
+    "display": "_FeS + _HCl → _FeCl₂ + _H₂S",
+    "reactants": [
+      {
+        "molecule": "FeS",
+        "formula": "FeS",
+        "elements": {
+          "Fe": 1,
+          "S": 1
+        }
+      },
+      {
+        "molecule": "HCl",
+        "formula": "HCl",
+        "elements": {
+          "H": 1,
+          "Cl": 1
+        }
+      }
+    ],
+    "products": [
+      {
+        "molecule": "FeCl2",
+        "formula": "FeCl₂",
+        "elements": {
+          "Fe": 1,
+          "Cl": 2
+        }
+      },
+      {
+        "molecule": "H2S",
+        "formula": "H₂S",
+        "elements": {
+          "H": 2,
+          "S": 1
+        }
+      }
+    ],
+    "solution": {
+      "reactants": [
+        1,
+        2
+      ],
+      "products": [
+        1,
+        1
+      ]
+    },
+    "par_time": 55,
+    "hints": [
+      "Match each ion count after the partner swap.",
+      "If a polyatomic ion stays intact, balance it as a single unit.",
+      "FeS + 2HCl → FeCl₂ + H₂S."
+    ]
+  },
+  {
+    "id": "lvl_079",
+    "level": 79,
+    "difficulty": "medium",
+    "type": "double_replacement",
+    "display": "_Ca(OH)₂ + _CO₂ → _CaCO₃ + _H₂O",
+    "reactants": [
+      {
+        "molecule": "Ca(OH)2",
+        "formula": "Ca(OH)₂",
+        "elements": {
+          "Ca": 1,
+          "O": 2,
+          "H": 2
+        }
+      },
+      {
+        "molecule": "CO2",
+        "formula": "CO₂",
+        "elements": {
+          "C": 1,
+          "O": 2
+        }
+      }
+    ],
+    "products": [
+      {
+        "molecule": "CaCO3",
+        "formula": "CaCO₃",
+        "elements": {
+          "Ca": 1,
+          "C": 1,
+          "O": 3
+        }
+      },
+      {
+        "molecule": "H2O",
+        "formula": "H₂O",
+        "elements": {
+          "H": 2,
+          "O": 1
+        }
+      }
+    ],
+    "solution": {
+      "reactants": [
+        1,
+        1
+      ],
+      "products": [
+        1,
+        1
+      ]
+    },
+    "par_time": 45,
+    "hints": [
+      "Match each ion count after the partner swap.",
+      "If a polyatomic ion stays intact, balance it as a single unit.",
+      "Ca(OH)₂ + CO₂ → CaCO₃ + H₂O."
+    ]
+  },
+  {
+    "id": "lvl_080",
+    "level": 80,
+    "difficulty": "hard",
+    "type": "decomposition",
+    "boss": true,
+    "display": "_Pb(NO₃)₂ → _PbO + _NO₂ + _O₂",
+    "reactants": [
+      {
+        "molecule": "Pb(NO3)2",
+        "formula": "Pb(NO₃)₂",
+        "elements": {
+          "Pb": 1,
+          "N": 2,
+          "O": 6
+        }
+      }
+    ],
+    "products": [
+      {
+        "molecule": "PbO",
+        "formula": "PbO",
+        "elements": {
+          "Pb": 1,
+          "O": 1
+        }
+      },
+      {
+        "molecule": "NO2",
+        "formula": "NO₂",
+        "elements": {
+          "N": 1,
+          "O": 2
+        }
+      },
+      {
+        "molecule": "O2",
+        "formula": "O₂",
+        "elements": {
+          "O": 2
+        }
+      }
+    ],
+    "solution": {
+      "reactants": [
+        2
+      ],
+      "products": [
+        2,
+        4,
+        1
+      ]
+    },
+    "par_time": 110,
+    "hints": [
+      "Start from the single reactant and distribute atoms across all products.",
+      "Check oxygen and hydrogen last after balancing metals and nonmetals.",
+      "2Pb(NO₃)₂ → 2PbO + 4NO₂ + O₂."
+    ]
+  },
+  {
+    "id": "lvl_081",
+    "level": 81,
+    "difficulty": "hard",
+    "type": "single_replacement",
+    "display": "_Al + _Cr₂O₃ → _Al₂O₃ + _Cr",
+    "reactants": [
+      {
+        "molecule": "Al",
+        "formula": "Al",
+        "elements": {
+          "Al": 1
+        }
+      },
+      {
+        "molecule": "Cr2O3",
+        "formula": "Cr₂O₃",
+        "elements": {
+          "Cr": 2,
+          "O": 3
+        }
+      }
+    ],
+    "products": [
+      {
+        "molecule": "Al2O3",
+        "formula": "Al₂O₃",
+        "elements": {
+          "Al": 2,
+          "O": 3
+        }
+      },
+      {
+        "molecule": "Cr",
+        "formula": "Cr",
+        "elements": {
+          "Cr": 1
+        }
+      }
+    ],
+    "solution": {
+      "reactants": [
+        2,
+        1
+      ],
+      "products": [
+        1,
+        2
+      ]
+    },
+    "par_time": 65,
+    "hints": [
+      "Balance the displaced element first, then the remaining atoms.",
+      "Remember diatomic elements like Cl₂, Br₂, and O₂ when needed.",
+      "2Al + Cr₂O₃ → Al₂O₃ + 2Cr."
+    ]
+  },
+  {
+    "id": "lvl_082",
+    "level": 82,
+    "difficulty": "hard",
+    "type": "single_replacement",
+    "display": "_MnO₂ + _HCl → _MnCl₂ + _Cl₂ + _H₂O",
+    "reactants": [
+      {
+        "molecule": "MnO2",
+        "formula": "MnO₂",
+        "elements": {
+          "Mn": 1,
+          "O": 2
+        }
+      },
+      {
+        "molecule": "HCl",
+        "formula": "HCl",
+        "elements": {
+          "H": 1,
+          "Cl": 1
+        }
+      }
+    ],
+    "products": [
+      {
+        "molecule": "MnCl2",
+        "formula": "MnCl₂",
+        "elements": {
+          "Mn": 1,
+          "Cl": 2
+        }
+      },
+      {
+        "molecule": "Cl2",
+        "formula": "Cl₂",
+        "elements": {
+          "Cl": 2
+        }
+      },
+      {
+        "molecule": "H2O",
+        "formula": "H₂O",
+        "elements": {
+          "H": 2,
+          "O": 1
+        }
+      }
+    ],
+    "solution": {
+      "reactants": [
+        1,
+        4
+      ],
+      "products": [
+        1,
+        1,
+        2
+      ]
+    },
+    "par_time": 80,
+    "hints": [
+      "Balance the displaced element first, then the remaining atoms.",
+      "Remember diatomic elements like Cl₂, Br₂, and O₂ when needed.",
+      "MnO₂ + 4HCl → MnCl₂ + Cl₂ + 2H₂O."
+    ]
+  },
+  {
+    "id": "lvl_083",
+    "level": 83,
+    "difficulty": "medium",
+    "type": "single_replacement",
+    "display": "_NaBr + _Cl₂ → _NaCl + _Br₂",
+    "reactants": [
+      {
+        "molecule": "NaBr",
+        "formula": "NaBr",
+        "elements": {
+          "Na": 1,
+          "Br": 1
+        }
+      },
+      {
+        "molecule": "Cl2",
+        "formula": "Cl₂",
+        "elements": {
+          "Cl": 2
+        }
+      }
+    ],
+    "products": [
+      {
+        "molecule": "NaCl",
+        "formula": "NaCl",
+        "elements": {
+          "Na": 1,
+          "Cl": 1
+        }
+      },
+      {
+        "molecule": "Br2",
+        "formula": "Br₂",
+        "elements": {
+          "Br": 2
+        }
+      }
+    ],
+    "solution": {
+      "reactants": [
+        2,
+        1
+      ],
+      "products": [
+        2,
+        1
+      ]
+    },
+    "par_time": 50,
+    "hints": [
+      "Balance the displaced element first, then the remaining atoms.",
+      "Remember diatomic elements like Cl₂, Br₂, and O₂ when needed.",
+      "2NaBr + Cl₂ → 2NaCl + Br₂."
+    ]
+  },
+  {
+    "id": "lvl_084",
+    "level": 84,
+    "difficulty": "hard",
+    "type": "double_replacement",
+    "display": "_SiCl₄ + _H₂O → _SiO₂ + _HCl",
+    "reactants": [
+      {
+        "molecule": "SiCl4",
+        "formula": "SiCl₄",
+        "elements": {
+          "Si": 1,
+          "Cl": 4
+        }
+      },
+      {
+        "molecule": "H2O",
+        "formula": "H₂O",
+        "elements": {
+          "H": 2,
+          "O": 1
+        }
+      }
+    ],
+    "products": [
+      {
+        "molecule": "SiO2",
+        "formula": "SiO₂",
+        "elements": {
+          "Si": 1,
+          "O": 2
+        }
+      },
+      {
+        "molecule": "HCl",
+        "formula": "HCl",
+        "elements": {
+          "H": 1,
+          "Cl": 1
+        }
+      }
+    ],
+    "solution": {
+      "reactants": [
+        1,
+        2
+      ],
+      "products": [
+        1,
+        4
+      ]
+    },
+    "par_time": 75,
+    "hints": [
+      "Match each ion count after the partner swap.",
+      "If a polyatomic ion stays intact, balance it as a single unit.",
+      "SiCl₄ + 2H₂O → SiO₂ + 4HCl."
+    ]
+  },
+  {
+    "id": "lvl_085",
+    "level": 85,
+    "difficulty": "hard",
+    "type": "double_replacement",
+    "display": "_TiCl₄ + _H₂O → _TiO₂ + _HCl",
+    "reactants": [
+      {
+        "molecule": "TiCl4",
+        "formula": "TiCl₄",
+        "elements": {
+          "Ti": 1,
+          "Cl": 4
+        }
+      },
+      {
+        "molecule": "H2O",
+        "formula": "H₂O",
+        "elements": {
+          "H": 2,
+          "O": 1
+        }
+      }
+    ],
+    "products": [
+      {
+        "molecule": "TiO2",
+        "formula": "TiO₂",
+        "elements": {
+          "Ti": 1,
+          "O": 2
+        }
+      },
+      {
+        "molecule": "HCl",
+        "formula": "HCl",
+        "elements": {
+          "H": 1,
+          "Cl": 1
+        }
+      }
+    ],
+    "solution": {
+      "reactants": [
+        1,
+        2
+      ],
+      "products": [
+        1,
+        4
+      ]
+    },
+    "par_time": 75,
+    "hints": [
+      "Match each ion count after the partner swap.",
+      "If a polyatomic ion stays intact, balance it as a single unit.",
+      "TiCl₄ + 2H₂O → TiO₂ + 4HCl."
+    ]
+  },
+  {
+    "id": "lvl_086",
+    "level": 86,
+    "difficulty": "hard",
+    "type": "single_replacement",
+    "display": "_SnO₂ + _C → _Sn + _CO",
+    "reactants": [
+      {
+        "molecule": "SnO2",
+        "formula": "SnO₂",
+        "elements": {
+          "Sn": 1,
+          "O": 2
+        }
+      },
+      {
+        "molecule": "C",
+        "formula": "C",
+        "elements": {
+          "C": 1
+        }
+      }
+    ],
+    "products": [
+      {
+        "molecule": "Sn",
+        "formula": "Sn",
+        "elements": {
+          "Sn": 1
+        }
+      },
+      {
+        "molecule": "CO",
+        "formula": "CO",
+        "elements": {
+          "C": 1,
+          "O": 1
+        }
+      }
+    ],
+    "solution": {
+      "reactants": [
+        1,
+        2
+      ],
+      "products": [
+        1,
+        2
+      ]
+    },
+    "par_time": 75,
+    "hints": [
+      "Balance the displaced element first, then the remaining atoms.",
+      "Remember diatomic elements like Cl₂, Br₂, and O₂ when needed.",
+      "SnO₂ + 2C → Sn + 2CO."
+    ]
+  },
+  {
+    "id": "lvl_087",
+    "level": 87,
+    "difficulty": "hard",
+    "type": "double_replacement",
+    "display": "_FeCl₃ + _Na₂CO₃ → _Fe₂(CO₃)₃ + _NaCl",
+    "reactants": [
+      {
+        "molecule": "FeCl3",
+        "formula": "FeCl₃",
+        "elements": {
+          "Fe": 1,
+          "Cl": 3
+        }
+      },
+      {
+        "molecule": "Na2CO3",
+        "formula": "Na₂CO₃",
+        "elements": {
+          "Na": 2,
+          "C": 1,
+          "O": 3
+        }
+      }
+    ],
+    "products": [
+      {
+        "molecule": "Fe2(CO3)3",
+        "formula": "Fe₂(CO₃)₃",
+        "elements": {
+          "Fe": 2,
+          "C": 3,
+          "O": 9
+        }
+      },
+      {
+        "molecule": "NaCl",
+        "formula": "NaCl",
+        "elements": {
+          "Na": 1,
+          "Cl": 1
+        }
+      }
+    ],
+    "solution": {
+      "reactants": [
+        2,
+        3
+      ],
+      "products": [
+        1,
+        6
+      ]
+    },
+    "par_time": 95,
+    "hints": [
+      "Match each ion count after the partner swap.",
+      "If a polyatomic ion stays intact, balance it as a single unit.",
+      "2FeCl₃ + 3Na₂CO₃ → Fe₂(CO₃)₃ + 6NaCl."
+    ]
+  },
+  {
+    "id": "lvl_088",
+    "level": 88,
+    "difficulty": "hard",
+    "type": "double_replacement",
+    "display": "_SrCO₃ + _HBr → _SrBr₂ + _H₂O + _CO₂",
+    "reactants": [
+      {
+        "molecule": "SrCO3",
+        "formula": "SrCO₃",
+        "elements": {
+          "Sr": 1,
+          "C": 1,
+          "O": 3
+        }
+      },
+      {
+        "molecule": "HBr",
+        "formula": "HBr",
+        "elements": {
+          "H": 1,
+          "Br": 1
+        }
+      }
+    ],
+    "products": [
+      {
+        "molecule": "SrBr2",
+        "formula": "SrBr₂",
+        "elements": {
+          "Sr": 1,
+          "Br": 2
+        }
+      },
+      {
+        "molecule": "H2O",
+        "formula": "H₂O",
+        "elements": {
+          "H": 2,
+          "O": 1
+        }
+      },
+      {
+        "molecule": "CO2",
+        "formula": "CO₂",
+        "elements": {
+          "C": 1,
+          "O": 2
+        }
+      }
+    ],
+    "solution": {
+      "reactants": [
+        1,
+        2
+      ],
+      "products": [
+        1,
+        1,
+        1
+      ]
+    },
+    "par_time": 80,
+    "hints": [
+      "Match each ion count after the partner swap.",
+      "If a polyatomic ion stays intact, balance it as a single unit.",
+      "SrCO₃ + 2HBr → SrBr₂ + H₂O + CO₂."
+    ]
+  },
+  {
+    "id": "lvl_089",
+    "level": 89,
+    "difficulty": "hard",
+    "type": "decomposition",
+    "display": "_KClO₄ → _KCl + _O₂",
+    "reactants": [
+      {
+        "molecule": "KClO4",
+        "formula": "KClO₄",
+        "elements": {
+          "K": 1,
+          "Cl": 1,
+          "O": 4
+        }
+      }
+    ],
+    "products": [
+      {
+        "molecule": "KCl",
+        "formula": "KCl",
+        "elements": {
+          "K": 1,
+          "Cl": 1
+        }
+      },
+      {
+        "molecule": "O2",
+        "formula": "O₂",
+        "elements": {
+          "O": 2
+        }
+      }
+    ],
+    "solution": {
+      "reactants": [
+        2
+      ],
+      "products": [
+        2,
+        4
+      ]
+    },
+    "par_time": 90,
+    "hints": [
+      "Start from the single reactant and distribute atoms across all products.",
+      "Check oxygen and hydrogen last after balancing metals and nonmetals.",
+      "2KClO₄ → 2KCl + 4O₂."
+    ]
+  },
+  {
+    "id": "lvl_090",
+    "level": 90,
+    "difficulty": "hard",
+    "type": "single_replacement",
+    "boss": true,
+    "display": "_Cr₂O₃ + _CO → _Cr + _CO₂",
+    "reactants": [
+      {
+        "molecule": "Cr2O3",
+        "formula": "Cr₂O₃",
+        "elements": {
+          "Cr": 2,
+          "O": 3
+        }
+      },
+      {
+        "molecule": "CO",
+        "formula": "CO",
+        "elements": {
+          "C": 1,
+          "O": 1
+        }
+      }
+    ],
+    "products": [
+      {
+        "molecule": "Cr",
+        "formula": "Cr",
+        "elements": {
+          "Cr": 1
+        }
+      },
+      {
+        "molecule": "CO2",
+        "formula": "CO₂",
+        "elements": {
+          "C": 1,
+          "O": 2
+        }
+      }
+    ],
+    "solution": {
+      "reactants": [
+        1,
+        3
+      ],
+      "products": [
+        2,
+        3
+      ]
+    },
+    "par_time": 100,
+    "hints": [
+      "Balance the displaced element first, then the remaining atoms.",
+      "Remember diatomic elements like Cl₂, Br₂, and O₂ when needed.",
+      "Cr₂O₃ + 3CO → 2Cr + 3CO₂."
+    ]
+  },
+  {
+    "id": "lvl_091",
+    "level": 91,
+    "difficulty": "hard",
+    "type": "single_replacement",
+    "display": "_Al + _H₂SO₄ → _Al₂(SO₄)₃ + _H₂",
+    "reactants": [
+      {
+        "molecule": "Al",
+        "formula": "Al",
+        "elements": {
+          "Al": 1
+        }
+      },
+      {
+        "molecule": "H2SO4",
+        "formula": "H₂SO₄",
+        "elements": {
+          "H": 2,
+          "S": 1,
+          "O": 4
+        }
+      }
+    ],
+    "products": [
+      {
+        "molecule": "Al2(SO4)3",
+        "formula": "Al₂(SO₄)₃",
+        "elements": {
+          "Al": 2,
+          "S": 3,
+          "O": 12
+        }
+      },
+      {
+        "molecule": "H2",
+        "formula": "H₂",
+        "elements": {
+          "H": 2
+        }
+      }
+    ],
+    "solution": {
+      "reactants": [
+        2,
+        3
+      ],
+      "products": [
+        1,
+        3
+      ]
+    },
+    "par_time": 80,
+    "hints": [
+      "Balance the displaced element first, then the remaining atoms.",
+      "Remember diatomic elements like Cl₂, Br₂, and O₂ when needed.",
+      "2Al + 3H₂SO₄ → Al₂(SO₄)₃ + 3H₂."
+    ]
+  },
+  {
+    "id": "lvl_092",
+    "level": 92,
+    "difficulty": "hard",
+    "type": "combustion",
+    "display": "_NH₃ + _O₂ → _NO + _H₂O",
+    "reactants": [
+      {
+        "molecule": "NH3",
+        "formula": "NH₃",
+        "elements": {
+          "N": 1,
+          "H": 3
+        }
+      },
+      {
+        "molecule": "O2",
+        "formula": "O₂",
+        "elements": {
+          "O": 2
+        }
+      }
+    ],
+    "products": [
+      {
+        "molecule": "NO",
+        "formula": "NO",
+        "elements": {
+          "N": 1,
+          "O": 1
+        }
+      },
+      {
+        "molecule": "H2O",
+        "formula": "H₂O",
+        "elements": {
+          "H": 2,
+          "O": 1
+        }
+      }
+    ],
+    "solution": {
+      "reactants": [
+        4,
+        5
+      ],
+      "products": [
+        4,
+        6
+      ]
+    },
+    "par_time": 100,
+    "hints": [
+      "Balance carbon first, then hydrogen, and leave oxygen for last.",
+      "Oxygen often needs the largest coefficient in combustion equations.",
+      "4NH₃ + 5O₂ → 4NO + 6H₂O."
+    ]
+  },
+  {
+    "id": "lvl_093",
+    "level": 93,
+    "difficulty": "hard",
+    "type": "decomposition",
+    "display": "_KMnO₄ → _K₂MnO₄ + _MnO₂ + _O₂",
+    "reactants": [
+      {
+        "molecule": "KMnO4",
+        "formula": "KMnO₄",
+        "elements": {
+          "K": 1,
+          "Mn": 1,
+          "O": 4
+        }
+      }
+    ],
+    "products": [
+      {
+        "molecule": "K2MnO4",
+        "formula": "K₂MnO₄",
+        "elements": {
+          "K": 2,
+          "Mn": 1,
+          "O": 4
+        }
+      },
+      {
+        "molecule": "MnO2",
+        "formula": "MnO₂",
+        "elements": {
+          "Mn": 1,
+          "O": 2
+        }
+      },
+      {
+        "molecule": "O2",
+        "formula": "O₂",
+        "elements": {
+          "O": 2
+        }
+      }
+    ],
+    "solution": {
+      "reactants": [
+        2
+      ],
+      "products": [
+        1,
+        1,
+        1
+      ]
+    },
+    "par_time": 95,
+    "hints": [
+      "Start from the single reactant and distribute atoms across all products.",
+      "Check oxygen and hydrogen last after balancing metals and nonmetals.",
+      "2KMnO₄ → K₂MnO₄ + MnO₂ + O₂."
+    ]
+  },
+  {
+    "id": "lvl_094",
+    "level": 94,
+    "difficulty": "hard",
+    "type": "decomposition",
+    "display": "_CrO₃ → _Cr₂O₃ + _O₂",
+    "reactants": [
+      {
+        "molecule": "CrO3",
+        "formula": "CrO₃",
+        "elements": {
+          "Cr": 1,
+          "O": 3
+        }
+      }
+    ],
+    "products": [
+      {
+        "molecule": "Cr2O3",
+        "formula": "Cr₂O₃",
+        "elements": {
+          "Cr": 2,
+          "O": 3
+        }
+      },
+      {
+        "molecule": "O2",
+        "formula": "O₂",
+        "elements": {
+          "O": 2
+        }
+      }
+    ],
+    "solution": {
+      "reactants": [
+        4
+      ],
+      "products": [
+        2,
+        3
+      ]
+    },
+    "par_time": 85,
+    "hints": [
+      "Start from the single reactant and distribute atoms across all products.",
+      "Check oxygen and hydrogen last after balancing metals and nonmetals.",
+      "4CrO₃ → 2Cr₂O₃ + 3O₂."
+    ]
+  },
+  {
+    "id": "lvl_095",
+    "level": 95,
+    "difficulty": "hard",
+    "type": "single_replacement",
+    "display": "_Sn + _H₃PO₄ → _Sn₃(PO₄)₂ + _H₂",
+    "reactants": [
+      {
+        "molecule": "Sn",
+        "formula": "Sn",
+        "elements": {
+          "Sn": 1
+        }
+      },
+      {
+        "molecule": "H3PO4",
+        "formula": "H₃PO₄",
+        "elements": {
+          "H": 3,
+          "P": 1,
+          "O": 4
+        }
+      }
+    ],
+    "products": [
+      {
+        "molecule": "Sn3(PO4)2",
+        "formula": "Sn₃(PO₄)₂",
+        "elements": {
+          "Sn": 3,
+          "P": 2,
+          "O": 8
+        }
+      },
+      {
+        "molecule": "H2",
+        "formula": "H₂",
+        "elements": {
+          "H": 2
+        }
+      }
+    ],
+    "solution": {
+      "reactants": [
+        3,
+        2
+      ],
+      "products": [
+        1,
+        3
+      ]
+    },
+    "par_time": 90,
+    "hints": [
+      "Balance the displaced element first, then the remaining atoms.",
+      "Remember diatomic elements like Cl₂, Br₂, and O₂ when needed.",
+      "3Sn + 2H₃PO₄ → Sn₃(PO₄)₂ + 3H₂."
+    ]
+  },
+  {
+    "id": "lvl_096",
+    "level": 96,
+    "difficulty": "hard",
+    "type": "double_replacement",
+    "display": "_SiO₂ + _HF → _SiF₄ + _H₂O",
+    "reactants": [
+      {
+        "molecule": "SiO2",
+        "formula": "SiO₂",
+        "elements": {
+          "Si": 1,
+          "O": 2
+        }
+      },
+      {
+        "molecule": "HF",
+        "formula": "HF",
+        "elements": {
+          "H": 1,
+          "F": 1
+        }
+      }
+    ],
+    "products": [
+      {
+        "molecule": "SiF4",
+        "formula": "SiF₄",
+        "elements": {
+          "Si": 1,
+          "F": 4
+        }
+      },
+      {
+        "molecule": "H2O",
+        "formula": "H₂O",
+        "elements": {
+          "H": 2,
+          "O": 1
+        }
+      }
+    ],
+    "solution": {
+      "reactants": [
+        1,
+        4
+      ],
+      "products": [
+        1,
+        2
+      ]
+    },
+    "par_time": 85,
+    "hints": [
+      "Match each ion count after the partner swap.",
+      "If a polyatomic ion stays intact, balance it as a single unit.",
+      "SiO₂ + 4HF → SiF₄ + 2H₂O."
+    ]
+  },
+  {
+    "id": "lvl_097",
+    "level": 97,
+    "difficulty": "medium",
+    "type": "synthesis",
+    "display": "_Sr + _O₂ → _SrO",
+    "reactants": [
+      {
+        "molecule": "Sr",
+        "formula": "Sr",
+        "elements": {
+          "Sr": 1
+        }
+      },
+      {
+        "molecule": "O2",
+        "formula": "O₂",
+        "elements": {
+          "O": 2
+        }
+      }
+    ],
+    "products": [
+      {
+        "molecule": "SrO",
+        "formula": "SrO",
+        "elements": {
+          "Sr": 1,
+          "O": 1
+        }
+      }
+    ],
+    "solution": {
+      "reactants": [
+        2,
+        1
+      ],
+      "products": [
+        2
+      ]
+    },
+    "par_time": 60,
+    "hints": [
+      "Combine atom counts from both reactants into the product side.",
+      "If one reactant is diatomic, account for both atoms before finalizing.",
+      "2Sr + O₂ → 2SrO."
+    ]
+  },
+  {
+    "id": "lvl_098",
+    "level": 98,
+    "difficulty": "hard",
+    "type": "double_replacement",
+    "display": "_BaCO₃ + _HNO₃ → _Ba(NO₃)₂ + _H₂O + _CO₂",
+    "reactants": [
+      {
+        "molecule": "BaCO3",
+        "formula": "BaCO₃",
+        "elements": {
+          "Ba": 1,
+          "C": 1,
+          "O": 3
+        }
+      },
+      {
+        "molecule": "HNO3",
+        "formula": "HNO₃",
+        "elements": {
+          "H": 1,
+          "N": 1,
+          "O": 3
+        }
+      }
+    ],
+    "products": [
+      {
+        "molecule": "Ba(NO3)2",
+        "formula": "Ba(NO₃)₂",
+        "elements": {
+          "Ba": 1,
+          "N": 2,
+          "O": 6
+        }
+      },
+      {
+        "molecule": "H2O",
+        "formula": "H₂O",
+        "elements": {
+          "H": 2,
+          "O": 1
+        }
+      },
+      {
+        "molecule": "CO2",
+        "formula": "CO₂",
+        "elements": {
+          "C": 1,
+          "O": 2
+        }
+      }
+    ],
+    "solution": {
+      "reactants": [
+        1,
+        2
+      ],
+      "products": [
+        1,
+        1,
+        1
+      ]
+    },
+    "par_time": 80,
+    "hints": [
+      "Match each ion count after the partner swap.",
+      "If a polyatomic ion stays intact, balance it as a single unit.",
+      "BaCO₃ + 2HNO₃ → Ba(NO₃)₂ + H₂O + CO₂."
+    ]
+  },
+  {
+    "id": "lvl_099",
+    "level": 99,
+    "difficulty": "hard",
+    "type": "single_replacement",
+    "display": "_TiCl₃ + _Mg → _MgCl₂ + _Ti",
+    "reactants": [
+      {
+        "molecule": "TiCl3",
+        "formula": "TiCl₃",
+        "elements": {
+          "Ti": 1,
+          "Cl": 3
+        }
+      },
+      {
+        "molecule": "Mg",
+        "formula": "Mg",
+        "elements": {
+          "Mg": 1
+        }
+      }
+    ],
+    "products": [
+      {
+        "molecule": "MgCl2",
+        "formula": "MgCl₂",
+        "elements": {
+          "Mg": 1,
+          "Cl": 2
+        }
+      },
+      {
+        "molecule": "Ti",
+        "formula": "Ti",
+        "elements": {
+          "Ti": 1
+        }
+      }
+    ],
+    "solution": {
+      "reactants": [
+        2,
+        3
+      ],
+      "products": [
+        3,
+        2
+      ]
+    },
+    "par_time": 105,
+    "hints": [
+      "Balance the displaced element first, then the remaining atoms.",
+      "Remember diatomic elements like Cl₂, Br₂, and O₂ when needed.",
+      "2TiCl₃ + 3Mg → 3MgCl₂ + 2Ti."
+    ]
+  },
+  {
+    "id": "lvl_100",
+    "level": 100,
+    "difficulty": "hard",
+    "type": "combustion",
+    "boss": true,
+    "display": "_FeS + _O₂ → _Fe₂O₃ + _SO₂",
+    "reactants": [
+      {
+        "molecule": "FeS",
+        "formula": "FeS",
+        "elements": {
+          "Fe": 1,
+          "S": 1
+        }
+      },
+      {
+        "molecule": "O2",
+        "formula": "O₂",
+        "elements": {
+          "O": 2
+        }
+      }
+    ],
+    "products": [
+      {
+        "molecule": "Fe2O3",
+        "formula": "Fe₂O₃",
+        "elements": {
+          "Fe": 2,
+          "O": 3
+        }
+      },
+      {
+        "molecule": "SO2",
+        "formula": "SO₂",
+        "elements": {
+          "S": 1,
+          "O": 2
+        }
+      }
+    ],
+    "solution": {
+      "reactants": [
+        4,
+        7
+      ],
+      "products": [
+        2,
+        4
+      ]
+    },
+    "par_time": 120,
+    "hints": [
+      "Balance carbon first, then hydrogen, and leave oxygen for last.",
+      "Oxygen often needs the largest coefficient in combustion equations.",
+      "4FeS + 7O₂ → 2Fe₂O₃ + 4SO₂."
     ]
   }
 ]

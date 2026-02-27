@@ -37,6 +37,8 @@ export class MenuScene extends Phaser.Scene {
 
   create() {
     const { width, height } = this.cameras.main;
+    this.UI_PAD = 16;
+    this.FOOTER_GAP = 34;
     this._buildRegionMap(width, height);
     this._buildHUD(width, height);
     this._buildInfoPanel(width, height);
@@ -46,12 +48,19 @@ export class MenuScene extends Phaser.Scene {
     this.cursors = this.input.keyboard.createCursorKeys();
     this.enterKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ENTER);
     this.spaceKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
+    this.escKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.ESC);
     this.lastMoveTime = 0;
   }
 
   update(time) {
     if (this.playerMoving) return;
-    if (this.settingsPanel) return;
+
+    if (this.settingsPanel) {
+      if (Phaser.Input.Keyboard.JustDown(this.escKey)) {
+        this._toggleSettings();
+      }
+      return;
+    }
 
     const debounce = 180;
 
@@ -195,14 +204,6 @@ export class MenuScene extends Phaser.Scene {
       ease: 'Sine.easeInOut'
     });
 
-    // Region name banner
-    this.add.text(width / 2, 50, region.name, {
-      fontFamily: PIXEL_FONT, fontSize: '16px', color: region.palette.accentHex
-    }).setOrigin(0.5);
-
-    this.add.text(width / 2, 70, region.subtitle, {
-      fontFamily: PIXEL_FONT, fontSize: '10px', color: region.palette.text
-    }).setOrigin(0.5);
   }
 
   _drawDecorations(width, height, region) {
@@ -526,6 +527,9 @@ export class MenuScene extends Phaser.Scene {
   // HUD
   // ─────────────────────────────────────────────
   _buildHUD(width, height) {
+    const pad = this.UI_PAD || 16;
+    const footerY = height - pad;
+
     const rank = this.progression.getRank();
     const nextRank = this.progression.getNextRank();
     const xp = this.progression.getXP();
@@ -538,19 +542,19 @@ export class MenuScene extends Phaser.Scene {
     titleBar.fillRect(0, 39, width, 1);
 
     // Title
-    this.add.text(16, 10, 'ChemQuest', {
+    this.add.text(pad, 10, 'ChemQuest', {
       fontFamily: PIXEL_FONT, fontSize: '14px', color: '#00ff88'
     });
 
     // Rank
-    this.add.text(16, 28, rank.title, {
+    this.add.text(pad, 28, rank.title, {
       fontFamily: PIXEL_FONT, fontSize: '10px', color: '#ffdd44'
     });
 
     // XP bar
     if (nextRank) {
       const barW = 120, barH = 6;
-      const barX = width - barW - 16;
+      const barX = width - barW - pad;
       const barY = 10;
       const pct = Math.min(1, (xp - rank.xp) / (nextRank.xp - rank.xp));
 
@@ -562,7 +566,7 @@ export class MenuScene extends Phaser.Scene {
       xpFill.fillStyle(0x00ff88, 1);
       xpFill.fillRect(barX, barY, barW * pct, barH);
 
-      this.add.text(width - 16, barY + 12, `${xp} XP`, {
+      this.add.text(width - pad, barY + 12, `${xp} XP`, {
         fontFamily: PIXEL_FONT, fontSize: '8px', color: '#aaaacc'
       }).setOrigin(1, 0);
     }
@@ -570,19 +574,16 @@ export class MenuScene extends Phaser.Scene {
     // Streak
     const streak = this.progression.getStreak();
     if (streak > 0) {
-      this.add.text(width - 16, 28, `Streak: ${streak}`, {
+      this.add.text(width - pad, 28, `Streak: ${streak}`, {
         fontFamily: PIXEL_FONT, fontSize: '8px',
         color: streak >= 5 ? '#ff6644' : '#ffdd44'
       }).setOrigin(1, 0);
     }
 
     // Region navigation arrows
-    const region = REGIONS[this.currentRegionIdx];
-    const maxUnlocked = this.progression.getMaxUnlockedLevel();
-
     // Left arrow (previous region)
     if (this.currentRegionIdx > 0) {
-      const prevBtn = this.add.text(20, height - 20, '< Prev Region', {
+      const prevBtn = this.add.text(pad, footerY, '< Prev Region', {
         fontFamily: PIXEL_FONT, fontSize: '10px', color: '#8888aa'
       }).setOrigin(0, 1).setInteractive({ useHandCursor: true });
       prevBtn.on('pointerdown', () => {
@@ -600,57 +601,53 @@ export class MenuScene extends Phaser.Scene {
     // Right arrow (next region)
     if (this.currentRegionIdx < REGIONS.length - 1) {
       const nextRegion = REGIONS[this.currentRegionIdx + 1];
-      const nextUnlocked = nextRegion.levels[0] <= maxUnlocked;
-      if (nextUnlocked) {
-        const nextBtn = this.add.text(width - 20, height - 20, 'Next Region >', {
-          fontFamily: PIXEL_FONT, fontSize: '10px', color: '#8888aa'
-        }).setOrigin(1, 1).setInteractive({ useHandCursor: true });
-        nextBtn.on('pointerdown', () => {
-          const firstEq = equationsData.find(eq => eq.level === nextRegion.levels[0]);
-          if (firstEq) {
-            const idx = equationsData.findIndex(e => e.id === firstEq.id);
-            this.currentNodeIdx = idx;
-            this.currentRegionIdx = this.currentRegionIdx + 1;
-            this.scene.restart({ progression: this.progression, startNode: idx });
-          }
-        });
-      }
+      const nextBtn = this.add.text(width - pad, footerY, 'Next Region >', {
+        fontFamily: PIXEL_FONT, fontSize: '10px', color: '#8888aa'
+      }).setOrigin(1, 1).setInteractive({ useHandCursor: true });
+      nextBtn.on('pointerdown', () => {
+        const firstEq = equationsData.find(eq => eq.level === nextRegion.levels[0]);
+        if (firstEq) {
+          const idx = equationsData.findIndex(e => e.id === firstEq.id);
+          this.currentNodeIdx = idx;
+          this.currentRegionIdx = this.currentRegionIdx + 1;
+          this.scene.restart({ progression: this.progression, startNode: idx });
+        }
+      });
     }
 
-    // Settings button
-    const settingsBtn = this.add.text(width / 2, height - 8, '[Settings]', {
-      fontFamily: PIXEL_FONT, fontSize: '10px', color: '#6666aa'
-    }).setOrigin(0.5, 1).setInteractive({ useHandCursor: true });
+    // Settings button (bottom-left)
+    const settingsBtn = this.add.text(pad, footerY, '⚙', {
+      fontFamily: PIXEL_FONT, fontSize: '14px', color: '#6666aa'
+    }).setOrigin(0, 1).setInteractive({ useHandCursor: true });
+    settingsBtn.on('pointerover', () => settingsBtn.setColor('#aaaacc'));
+    settingsBtn.on('pointerout', () => settingsBtn.setColor('#6666aa'));
     settingsBtn.on('pointerdown', () => this._toggleSettings());
-
-    // Controls hint
-    this.add.text(width / 2, height - 24, 'Arrow keys to move | Enter to play', {
-      fontFamily: PIXEL_FONT, fontSize: '8px', color: '#555577'
-    }).setOrigin(0.5, 1);
   }
 
   _buildInfoPanel(width, height) {
-    const panelH = 50;
-    const panelY = height - panelH - 30;
+    const pad = this.UI_PAD || 16;
+    const panelH = 44;
+    const panelW = Math.min(340, width - pad * 2);
+    const panelX = width / 2 - panelW / 2;
+    const panelY = height - panelH - (this.FOOTER_GAP || 34);
 
     this.infoBg = this.add.graphics();
-    this.infoBg.fillStyle(0x0d0d1e, 0.92);
-    this.infoBg.fillRect(width / 2 - 200, panelY, 400, panelH);
-    this.infoBg.fillStyle(0x333366, 0.4);
-    this.infoBg.fillRect(width / 2 - 200, panelY, 400, 2);
-    this.infoBg.fillRect(width / 2 - 200, panelY + panelH - 2, 400, 2);
+    this.infoBg.fillStyle(0x0d0d1e, 0.95);
+    this.infoBg.fillRect(panelX, panelY, panelW, panelH);
+    this.infoBg.fillStyle(0x333366, 0.3);
+    this.infoBg.fillRect(panelX, panelY, panelW, 1);
 
-    this.infoTitle = this.add.text(width / 2, panelY + 14, '', {
+    this.infoTitle = this.add.text(panelX + 12, panelY + 12, '', {
       fontFamily: PIXEL_FONT, fontSize: '12px', color: '#ffffff'
-    }).setOrigin(0.5);
+    }).setOrigin(0, 0.5);
 
-    this.infoSub = this.add.text(width / 2, panelY + 34, '', {
-      fontFamily: PIXEL_FONT, fontSize: '8px', color: '#aaaacc'
-    }).setOrigin(0.5);
+    this.infoSub = this.add.text(panelX + 12, panelY + 30, '', {
+      fontFamily: PIXEL_FONT, fontSize: '8px', color: '#8888aa'
+    }).setOrigin(0, 0.5);
 
     this.infoStars = [];
     for (let s = 0; s < 3; s++) {
-      const star = this.add.image(width / 2 + 155 + s * 14, panelY + 14, 'star_empty')
+      const star = this.add.image(panelX + panelW - 36 + s * 14, panelY + panelH / 2, 'star_empty')
         .setScale(0.5);
       this.infoStars.push(star);
     }
@@ -674,8 +671,8 @@ export class MenuScene extends Phaser.Scene {
 
     this.infoSub.setText(
       unlocked
-        ? `${typeLabel}  |  ${diffLabel}  |  par: ${eq.par_time}s  |  ${completed ? 'COMPLETED' : 'not yet cleared'}`
-        : 'Earn more XP to unlock this region'
+        ? `${typeLabel}  ·  ${diffLabel}`
+        : 'Locked'
     );
 
     this.infoStars.forEach((star, s) => {
@@ -715,7 +712,7 @@ export class MenuScene extends Phaser.Scene {
     const blocker = _add(
       this.add.zone(cx, cy, width, height).setInteractive()
     );
-    blocker.on('pointerdown', () => {});
+    blocker.on('pointerdown', destroyPanel);
 
     // Panel background
     const bg = _add(this.add.graphics());
@@ -758,7 +755,7 @@ export class MenuScene extends Phaser.Scene {
     }).setOrigin(0.5).setInteractive({ useHandCursor: true }));
     resetBtn.on('pointerdown', () => {
       this.progression.resetAll();
-      this.settingsPanel = null;
+      destroyPanel();
       this.scene.restart({ progression: this.progression });
     });
     resetBtn.on('pointerover', () => resetBtn.setColor('#ff6666'));

@@ -120,6 +120,7 @@ export class BootScene extends Phaser.Scene {
     this._genProfessorAurum();
     this._genHPBarParts();
     this._genRPGFrames();
+    this._genStepperArrows();
   }
 
   // ───────────────────────────────────────────
@@ -132,8 +133,11 @@ export class BootScene extends Phaser.Scene {
       'F':  0x90E050, 'Na': 0xAB5CF2, 'Mg': 0x8AFF00,
       'Al': 0xBFA6A6, 'P':  0xFF8000, 'S':  0xFFFF30,
       'Cl': 0x1FF01F, 'K':  0x8F40D4, 'Ca': 0x3DFF00,
-      'Fe': 0xE06633, 'Cu': 0xC88033, 'Zn': 0x7D80B0,
-      'Ba': 0x00C900, 'Ag': 0xC0C0C0, 'Pb': 0x575961,
+      'Si': 0xF0C8A0, 'Ti': 0xBFC2C7, 'Cr': 0x8A99C7,
+      'Mn': 0x9C7AC7, 'Fe': 0xE06633, 'Cu': 0xC88033,
+      'Zn': 0x7D80B0, 'Br': 0xA62929, 'Sr': 0x00FF00,
+      'Sn': 0x668080, 'Ba': 0x00C900, 'Ag': 0xC0C0C0,
+      'Pb': 0x575961,
       'I':  0x940094
     };
 
@@ -863,6 +867,46 @@ export class BootScene extends Phaser.Scene {
       this._px(g, W - 4, H - 4, 4, 4, 0x5555aa, 0.6);
 
       g.generateTexture('rpg_frame', W, H);
+      g.destroy();
+    }
+  }
+
+  // ───────────────────────────────────────────
+  // 14. STEPPER ARROWS — small pixel-art chevrons for coefficient ▲/▼
+  // ───────────────────────────────────────────
+  _genStepperArrows() {
+    const S = 20;
+
+    // Arrow Up
+    {
+      const g = this.make.graphics({ add: false });
+      // Background pill
+      this._px(g, 2, 2, S - 4, S - 4, 0x22224a, 0.8);
+      // Chevron pointing up
+      this._px(g, 9, 5, 2, 2, 0x88aaff);   // tip
+      this._px(g, 7, 7, 2, 2, 0x88aaff);   // left arm
+      this._px(g, 11, 7, 2, 2, 0x88aaff);  // right arm
+      this._px(g, 5, 9, 2, 2, 0x88aaff);   // left base
+      this._px(g, 13, 9, 2, 2, 0x88aaff);  // right base
+      // Highlight
+      this._px(g, 9, 4, 2, 1, 0xccddff, 0.6);
+      g.generateTexture('arrow_up', S, S);
+      g.destroy();
+    }
+
+    // Arrow Down
+    {
+      const g = this.make.graphics({ add: false });
+      this._px(g, 2, 2, S - 4, S - 4, 0x22224a, 0.8);
+      // Chevron pointing down
+      this._px(g, 9, 13, 2, 2, 0x88aaff);  // tip
+      this._px(g, 7, 11, 2, 2, 0x88aaff);  // left arm
+      this._px(g, 11, 11, 2, 2, 0x88aaff); // right arm
+      this._px(g, 5, 9, 2, 2, 0x88aaff);   // left base
+      this._px(g, 13, 9, 2, 2, 0x88aaff);  // right base
+      // Shadow
+      this._px(g, 9, 14, 2, 1, 0x444466, 0.5);
+      g.generateTexture('arrow_down', S, S);
       g.destroy();
     }
   }

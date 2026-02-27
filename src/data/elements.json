@@ -1,20 +1,176 @@
 {
-  "H":  { "name": "Hydrogen",  "number": 1,  "color": "#FFFFFF", "size": 16 },
-  "He": { "name": "Helium",    "number": 2,  "color": "#D9FFFF", "size": 16 },
-  "Li": { "name": "Lithium",   "number": 3,  "color": "#CC80FF", "size": 18 },
-  "C":  { "name": "Carbon",    "number": 6,  "color": "#333333", "size": 20 },
-  "N":  { "name": "Nitrogen",  "number": 7,  "color": "#3050F8", "size": 18 },
-  "O":  { "name": "Oxygen",    "number": 8,  "color": "#FF0D0D", "size": 18 },
-  "F":  { "name": "Fluorine",  "number": 9,  "color": "#90E050", "size": 16 },
-  "Na": { "name": "Sodium",    "number": 11, "color": "#AB5CF2", "size": 22 },
-  "Mg": { "name": "Magnesium", "number": 12, "color": "#8AFF00", "size": 22 },
-  "Al": { "name": "Aluminum",  "number": 13, "color": "#BFA6A6", "size": 22 },
-  "P":  { "name": "Phosphorus","number": 15, "color": "#FF8000", "size": 20 },
-  "S":  { "name": "Sulfur",    "number": 16, "color": "#FFFF30", "size": 20 },
-  "Cl": { "name": "Chlorine",  "number": 17, "color": "#1FF01F", "size": 18 },
-  "K":  { "name": "Potassium", "number": 19, "color": "#8F40D4", "size": 24 },
-  "Ca": { "name": "Calcium",   "number": 20, "color": "#3DFF00", "size": 24 },
-  "Fe": { "name": "Iron",      "number": 26, "color": "#E06633", "size": 24 },
-  "Cu": { "name": "Copper",    "number": 29, "color": "#C88033", "size": 22 },
-  "Zn": { "name": "Zinc",      "number": 30, "color": "#7D80B0", "size": 22 }
+  "H": {
+    "name": "Hydrogen",
+    "number": 1,
+    "color": "#FFFFFF",
+    "size": 16
+  },
+  "He": {
+    "name": "Helium",
+    "number": 2,
+    "color": "#D9FFFF",
+    "size": 16
+  },
+  "Li": {
+    "name": "Lithium",
+    "number": 3,
+    "color": "#CC80FF",
+    "size": 18
+  },
+  "C": {
+    "name": "Carbon",
+    "number": 6,
+    "color": "#333333",
+    "size": 20
+  },
+  "N": {
+    "name": "Nitrogen",
+    "number": 7,
+    "color": "#3050F8",
+    "size": 18
+  },
+  "O": {
+    "name": "Oxygen",
+    "number": 8,
+    "color": "#FF0D0D",
+    "size": 18
+  },
+  "F": {
+    "name": "Fluorine",
+    "number": 9,
+    "color": "#90E050",
+    "size": 16
+  },
+  "Na": {
+    "name": "Sodium",
+    "number": 11,
+    "color": "#AB5CF2",
+    "size": 22
+  },
+  "Mg": {
+    "name": "Magnesium",
+    "number": 12,
+    "color": "#8AFF00",
+    "size": 22
+  },
+  "Al": {
+    "name": "Aluminum",
+    "number": 13,
+    "color": "#BFA6A6",
+    "size": 22
+  },
+  "P": {
+    "name": "Phosphorus",
+    "number": 15,
+    "color": "#FF8000",
+    "size": 20
+  },
+  "S": {
+    "name": "Sulfur",
+    "number": 16,
+    "color": "#FFFF30",
+    "size": 20
+  },
+  "Cl": {
+    "name": "Chlorine",
+    "number": 17,
+    "color": "#1FF01F",
+    "size": 18
+  },
+  "K": {
+    "name": "Potassium",
+    "number": 19,
+    "color": "#8F40D4",
+    "size": 24
+  },
+  "Ca": {
+    "name": "Calcium",
+    "number": 20,
+    "color": "#3DFF00",
+    "size": 24
+  },
+  "Fe": {
+    "name": "Iron",
+    "number": 26,
+    "color": "#E06633",
+    "size": 24
+  },
+  "Cu": {
+    "name": "Copper",
+    "number": 29,
+    "color": "#C88033",
+    "size": 22
+  },
+  "Zn": {
+    "name": "Zinc",
+    "number": 30,
+    "color": "#7D80B0",
+    "size": 22
+  },
+  "Si": {
+    "name": "Silicon",
+    "number": 14,
+    "color": "#F0C8A0",
+    "size": 20
+  },
+  "Ti": {
+    "name": "Titanium",
+    "number": 22,
+    "color": "#BFC2C7",
+    "size": 22
+  },
+  "Cr": {
+    "name": "Chromium",
+    "number": 24,
+    "color": "#8A99C7",
+    "size": 22
+  },
+  "Mn": {
+    "name": "Manganese",
+    "number": 25,
+    "color": "#9C7AC7",
+    "size": 22
+  },
+  "Br": {
+    "name": "Bromine",
+    "number": 35,
+    "color": "#A62929",
+    "size": 20
+  },
+  "Sr": {
+    "name": "Strontium",
+    "number": 38,
+    "color": "#00FF00",
+    "size": 24
+  },
+  "Ag": {
+    "name": "Silver",
+    "number": 47,
+    "color": "#C0C0C0",
+    "size": 24
+  },
+  "Sn": {
+    "name": "Tin",
+    "number": 50,
+    "color": "#668080",
+    "size": 24
+  },
+  "I": {
+    "name": "Iodine",
+    "number": 53,
+    "color": "#940094",
+    "size": 22
+  },
+  "Ba": {
+    "name": "Barium",
+    "number": 56,
+    "color": "#00C900",
+    "size": 24
+  },
+  "Pb": {
+    "name": "Lead",
+    "number": 82,
+    "color": "#575961",
+    "size": 24
+  }
 }

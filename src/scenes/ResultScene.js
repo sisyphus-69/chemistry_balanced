@@ -23,11 +23,15 @@ export class ResultScene extends Phaser.Scene {
     this.hintsUsed = data.hintsUsed;
     this.streak = data.streak;
     this.isLowest = data.isLowest;
+    this._transitioning = false;
+    this._buttonZones = [];
   }
 
   create() {
     const { width, height } = this.cameras.main;
     const cx = width / 2;
+
+    this.cameras.main.fadeIn(220, 0, 0, 0);
 
     // Background
     this.add.rectangle(cx, height / 2, width, height, 0x0d0d1a);
@@ -48,8 +52,8 @@ export class ResultScene extends Phaser.Scene {
     });
 
     // ── 2. EQUATION BADGE ───────────────────────
-    const badgeY = 80;
-    const badgeW = 320, badgeH = 28;
+    const badgeY = 82;
+    const badgeW = Math.min(520, width - 40), badgeH = 28;
     const badgeBg = this.add.graphics();
     badgeBg.fillStyle(0x222244, 0.8);
     badgeBg.fillRect(cx - badgeW / 2, badgeY - badgeH / 2, badgeW, badgeH);
@@ -58,7 +62,7 @@ export class ResultScene extends Phaser.Scene {
     badgeBg.setAlpha(0);
 
     const eqText = this.add.text(cx, badgeY, this.equation.display, {
-      fontFamily: PIXEL_FONT, fontSize: '14px', color: '#bbbbee'
+      fontFamily: PIXEL_FONT, fontSize: '11px', color: '#bbbbee'
     }).setOrigin(0.5).setAlpha(0);
 
     const lvlBadge = this.add.text(cx - badgeW / 2 + 10, badgeY, `Lv.${this.equation.level}`, {
@@ -71,8 +75,8 @@ export class ResultScene extends Phaser.Scene {
     });
 
     // ── 3. STARS ────────────────────────────────
-    const starY = 125;
-    const starSpacing = 52;
+    const starY = 148;
+    const starSpacing = 58;
     const starObjs = [];
 
     for (let i = 0; i < 3; i++) {
@@ -87,7 +91,7 @@ export class ResultScene extends Phaser.Scene {
 
       this.tweens.add({
         targets: star,
-        scaleX: 2.5, scaleY: 2.5,
+        scaleX: 1.8, scaleY: 1.8,
         angle: 0,
         duration: 400,
         delay: baseDelay,
@@ -98,7 +102,7 @@ export class ResultScene extends Phaser.Scene {
         onComplete: () => {
           this.tweens.add({
             targets: star,
-            scaleX: 2, scaleY: 2,
+            scaleX: 1.6, scaleY: 1.6,
             duration: 200,
             ease: 'Sine.easeInOut'
           });
@@ -127,7 +131,7 @@ export class ResultScene extends Phaser.Scene {
         if (i < this.stars) {
           this.tweens.add({
             targets: s,
-            scaleX: 2.15, scaleY: 2.15,
+            scaleX: 1.75, scaleY: 1.75,
             duration: 800 + i * 100,
             yoyo: true, repeat: -1,
             ease: 'Sine.easeInOut'
@@ -137,8 +141,8 @@ export class ResultScene extends Phaser.Scene {
     });
 
     // ── 4. STATS CARD ───────────────────────────
-    const cardY = 175;
-    const cardW = 320, cardH = 115;
+    const cardY = 195;
+    const cardW = Math.min(360, width - 40), cardH = 115;
     const cardX = cx - cardW / 2;
 
     const cardBg = this.add.graphics();
@@ -229,7 +233,7 @@ export class ResultScene extends Phaser.Scene {
     });
 
     // ── 5. XP AMOUNT ────────────────────────────
-    const xpY = cardY + cardH + 24;
+    const xpY = cardY + cardH + 30;
 
     const xpLabel = this.add.text(cx, xpY - 6, 'EXPERIENCE GAINED', {
       fontFamily: PIXEL_FONT, fontSize: '10px', color: '#555577'
@@ -263,7 +267,7 @@ export class ResultScene extends Phaser.Scene {
     let streakBannerH = 0;
     if (this.streak >= 3) {
       streakBannerH = 28;
-      const streakY = xpY + 36;
+      const streakY = xpY + 46;
       const streakLabel = ScoringSystem.getStreakLabel(this.streak);
       const streakColor = this.streak >= 10 ? '#ff4444' : this.streak >= 5 ? '#ff8844' : '#ffdd44';
 
@@ -292,7 +296,7 @@ export class ResultScene extends Phaser.Scene {
     }
 
     // ── 7. XP BAR + RANK ────────────────────────
-    const barSectionY = xpY + 46 + streakBannerH;
+    const barSectionY = xpY + 58 + streakBannerH;
     const rank = this.progression.getRank();
     const nextRank = this.progression.getNextRank();
     const xpTotal = this.progression.getXP();
@@ -364,25 +368,30 @@ export class ResultScene extends Phaser.Scene {
     }
 
     // ── 8. BUTTONS ──────────────────────────────
-    const btnY = height - 45;
-    const btnW = 150, btnH = 36;
+    const btnY = height - 56;
+    const btnW = 175, btnH = 36;
 
     // Next Level
     this._buildButton(
-      cx + 85, btnY, btnW, btnH,
+      cx + 100, btnY, btnW, btnH,
       'Next Level >', 0x006633, 0x00884a, 0x44dd88,
       3400,
-      () => { soundManager.buttonPress(); this._nextLevel(); }
+      () => {
+        soundManager.buttonPress();
+        this._startSceneTransition(() => this._nextLevel());
+      }
     );
 
     // Level Select
     this._buildButton(
-      cx - 85, btnY, btnW, btnH,
+      cx - 100, btnY, btnW, btnH,
       '< Levels', 0x222244, 0x333355, 0x6666aa,
       3500,
       () => {
         soundManager.buttonPress();
-        this.scene.start('MenuScene', { progression: this.progression });
+        this._startSceneTransition(() => {
+          this.scene.start('MenuScene', { progression: this.progression });
+        });
       }
     );
 
@@ -465,35 +474,44 @@ export class ResultScene extends Phaser.Scene {
     body.fillRect(w / 2 - 1, -h / 2, 1, h);
     container.add(body);
 
-    const text = this.add.text(0, 0, label, {
-      fontFamily: PIXEL_FONT, fontSize: '14px', color: '#ffffff'
+    const text = this.add.text(0, 1, label, {
+      fontFamily: PIXEL_FONT, fontSize: '12px', color: '#ffffff'
     }).setOrigin(0.5);
     container.add(text);
 
     // Hit zone
     const zone = this.add.zone(0, 0, w, h).setInteractive({ useHandCursor: true });
+    this._buttonZones.push(zone);
     container.add(zone);
 
     zone.on('pointerover', () => {
+      if (this._transitioning) return;
+      this.tweens.killTweensOf(container);
       this.tweens.add({
         targets: container,
         scaleX: 1.05, scaleY: 1.05,
-        duration: 100
+        duration: 120,
+        ease: 'Quad.easeOut'
       });
     });
     zone.on('pointerout', () => {
+      this.tweens.killTweensOf(container);
       this.tweens.add({
         targets: container,
         scaleX: 1, scaleY: 1,
-        duration: 100
+        duration: 120,
+        ease: 'Quad.easeOut'
       });
     });
     zone.on('pointerdown', () => {
+      if (this._transitioning) return;
+      this.tweens.killTweensOf(container);
       this.tweens.add({
         targets: container,
-        scaleX: 0.95, scaleY: 0.95,
-        duration: 50,
+        scaleX: 0.94, scaleY: 0.94,
+        duration: 70,
         yoyo: true,
+        ease: 'Quad.easeInOut',
         onComplete: onClick
       });
     });
@@ -504,6 +522,22 @@ export class ResultScene extends Phaser.Scene {
       y: cy, alpha: 1,
       duration: 400, delay, ease: 'Back.easeOut'
     });
+  }
+
+  _setButtonsEnabled(enabled) {
+    this._buttonZones.forEach((zone) => {
+      if (!zone) return;
+      if (enabled) zone.setInteractive({ useHandCursor: true });
+      else zone.disableInteractive();
+    });
+  }
+
+  _startSceneTransition(onComplete) {
+    if (this._transitioning) return;
+    this._transitioning = true;
+    this._setButtonsEnabled(false);
+    this.cameras.main.once('camerafadeoutcomplete', () => onComplete());
+    this.cameras.main.fadeOut(220, 0, 0, 0);
   }
 
   _startAmbientParticles(width, height) {

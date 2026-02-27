@@ -5,10 +5,8 @@ import { ScoringSystem } from '../systems/ScoringSystem.js';
 import { HintSystem } from '../systems/HintSystem.js';
 import { soundManager } from '../systems/SoundManager.js';
 import { PIXEL_FONT } from '../ui/PixelText.js';
-import { HPBar } from '../ui/HPBar.js';
 import { ProfessorAurum } from '../ui/ProfessorAurum.js';
 import { BattleUI } from '../ui/BattleUI.js';
-import elementsData from '../data/elements.json';
 import equationsData from '../data/equations.json';
 
 /**
@@ -34,21 +32,26 @@ export class BossScene extends Phaser.Scene {
     this.equationsToSolve = [];
     this._heartbeatTimer = null;
     this._heartbeatInterval = 1100;
-    this._prevBalancedSet = new Set();
     this.focusedSlotIdx = -1;
   }
 
   create() {
     const { width, height } = this.cameras.main;
     this.startTime = Date.now();
+    this.UI_PAD = 16;
 
-    // Layout constants
-    this.EQUATION_Y = height * 0.45;
-    this.HP_BAR_Y = 470;
-    this.GRID_CENTER_Y = 520;
-    this.CHECK_CENTER_Y = 520;
+    // New layout: slim bottom strip
+    this.STRIP_H = 54;
+    this.STRIP_Y = height - this.STRIP_H;
+    this.PANEL_Y = this.STRIP_Y; // compat alias
 
-    // Build the fixed boss environment (red-themed control panel)
+    // Layout constants — equation below HUD (~100px), tally below slots
+    this.EQUATION_Y = height * 0.38;
+    this.EQ_COUNTER_OFFSET = 36;
+    this.TALLY_Y = this.EQUATION_Y + 50;
+    this.DIVIDER_Y = this.STRIP_Y;
+
+    // Build the fixed boss environment
     this._buildBossEnvironment(width, height);
 
     this._setupBossEquations();
@@ -56,6 +59,8 @@ export class BossScene extends Phaser.Scene {
     this._showBossIntro(() => {
       this._startBossFight();
     });
+
+    this.events.once(Phaser.Scenes.Events.SHUTDOWN, this._cleanupInputHandlers, this);
   }
 
   update(time, delta) {
@@ -81,12 +86,12 @@ export class BossScene extends Phaser.Scene {
     // Red-tinted background
     this.add.rectangle(width / 2, height / 2, width, height, 0x1a0a0a);
 
-    // Control panel at the bottom (tinted red)
-    const panelY = height - 160;
-    const panel = this.add.image(0, panelY, 'control_panel').setOrigin(0, 0);
-    panel.setTint(0xffcccc);
-
-    this._buildBossHUD();
+    // Slim bottom strip
+    const g = this.add.graphics();
+    g.fillStyle(0x1a0505, 0.95);
+    g.fillRect(0, this.STRIP_Y, width, this.STRIP_H);
+    g.fillStyle(0x882222, 0.4);
+    g.fillRect(0, this.STRIP_Y, width, 1);
   }
 
   // ─────────────────────────────────────────────
@@ -118,7 +123,12 @@ export class BossScene extends Phaser.Scene {
       20: { name: 'The Combustion Engine', desc: 'Speed round! Each equation must be solved quickly.', color: '#ff8844' },
       30: { name: 'Professor Redox', desc: 'Triple challenge! Solve 3 equations in sequence.', color: '#cc44ff' },
       40: { name: 'The Acid King', desc: 'Prove your mastery with tough equations!', color: '#44ff44' },
-      50: { name: 'Chaos Reactor', desc: 'The ultimate challenge! Balance them all.', color: '#ff44ff' }
+      50: { name: 'Chaos Reactor', desc: 'The ultimate challenge! Balance them all.', color: '#ff44ff' },
+      60: { name: 'Crystal Regent', desc: 'Neutralize every path through the depths.', color: '#66f4ff' },
+      70: { name: 'Solar Titan', desc: 'Endure the furnace and master thermite.', color: '#ffcc55' },
+      80: { name: 'Marsh Warden', desc: 'Survive toxic gas clouds and precipitates.', color: '#9bff3f' },
+      90: { name: 'Quantum Overseer', desc: 'Complex reactions demand precise balance.', color: '#7be9ff' },
+      100: { name: 'Grand Chemist Prime', desc: 'Final frontier: perfect balancing under pressure.', color: '#ffd06b' }
     };
     const boss = bossNames[this.bossLevel] || { name: 'Boss', desc: 'Defeat the boss!', color: '#ff4444' };
 
@@ -220,13 +230,13 @@ export class BossScene extends Phaser.Scene {
   // START BOSS FIGHT
   // ─────────────────────────────────────────────
   _startBossFight() {
+    this.timeRemaining = 60 + this.bossLevel;
     this.currentEquationIdx = 0;
     this._loadCurrentEquation();
     this._buildBossHUD();
+    this._updateBossHUD();
     this._startHeartbeat();
     this._setupKeyboard();
-
-    this.timeRemaining = 60 + this.bossLevel;
     this.timerEvent = this.time.addEvent({
       delay: 1000,
       callback: () => {
@@ -301,6 +311,7 @@ export class BossScene extends Phaser.Scene {
   // ─────────────────────────────────────────────
   _loadCurrentEquation() {
     const { width, height } = this.cameras.main;
+    const pad = this.UI_PAD || 16;
 
     if (this.equationContainer) this.equationContainer.destroy();
 
@@ -311,41 +322,41 @@ export class BossScene extends Phaser.Scene {
     this.coeffManager = new CoefficientManager(this, eq);
     this.hintSystem = new HintSystem(eq.hints);
     this.professor = new ProfessorAurum(this);
-    this._prevBalancedSet = new Set();
     this.focusedSlotIdx = -1;
 
     this.equationContainer = this.add.container(0, 0);
 
     // Equation number indicator
-    const eqNum = this.add.text(width / 2, this.EQUATION_Y - 24, `Equation ${this.currentEquationIdx + 1} / ${this.bossMaxHealth}`, {
+    const eqNum = this.add.text(width / 2, this.EQUATION_Y - this.EQ_COUNTER_OFFSET, `Equation ${this.currentEquationIdx + 1} / ${this.bossMaxHealth}`, {
       fontFamily: PIXEL_FONT, fontSize: '10px', color: '#cc6666'
     }).setOrigin(0.5);
     this.equationContainer.add(eqNum);
 
-    // Equation display
-    const eqText = this.add.text(width / 2, this.EQUATION_Y, eq.display, {
-      fontFamily: PIXEL_FONT, fontSize: '16px', color: '#ffcccc'
-    }).setOrigin(0.5);
-    this.equationContainer.add(eqText);
-
-    // ── Coefficient slots ──
+    // ── Coefficient slots (no separate display text — slots ARE the equation) ──
     this.bossSlots = [];
     const allMols = [...eq.reactants, ...eq.products];
-    const totalSlots = allMols.length;
-    const spacing = Math.min(100, (width - 100) / (totalSlots + 1));
-    const startX = width / 2 - (totalSlots * spacing) / 2 + spacing / 2;
+    const arrowSlots = 1;
+    const plusCount = eq.reactants.length - 1 + eq.products.length - 1;
+    const totalVisual = allMols.length + arrowSlots + plusCount;
+    const usableWidth = width - pad * 2;
+    const spacing = Math.min(100, usableWidth / totalVisual);
+    const startX = width / 2 - (totalVisual * spacing) / 2 + spacing / 2;
+    let slotIdx = 0;
 
     allMols.forEach((mol, i) => {
       const isReactant = i < eq.reactants.length;
       const molIdx = isReactant ? i : i - eq.reactants.length;
-      const x = startX + i * spacing;
-      const y = this.EQUATION_Y + 40;
+      const x = startX + slotIdx * spacing;
+      const y = this.EQUATION_Y;
 
-      const slotBg = this.add.image(x, y, 'coeff_slot').setScale(0.9);
-      const slotText = this.add.text(x, y, '1', {
+      // Coefficient slot
+      const slotX = x - 14;
+      const formulaX = x + 10;
+      const slotBg = this.add.image(slotX, y, 'coeff_slot').setScale(0.9);
+      const slotText = this.add.text(slotX, y, '1', {
         fontFamily: PIXEL_FONT, fontSize: '16px', color: '#cc7777'
       }).setOrigin(0.5);
-      const cursor = this.add.rectangle(x, y + 14, 16, 2, 0xff4444).setAlpha(0);
+      const cursor = this.add.rectangle(slotX, y + 14, 16, 2, 0xff4444).setAlpha(0);
 
       const slotIndex = this.bossSlots.length;
       slotBg.setInteractive({ useHandCursor: true });
@@ -364,9 +375,10 @@ export class BossScene extends Phaser.Scene {
         }
       });
 
-      const formulaText = this.add.text(x, y + 28, mol.formula, {
-        fontFamily: PIXEL_FONT, fontSize: '14px', color: '#ddaaaa'
-      }).setOrigin(0.5);
+      // Formula label (right of the coefficient)
+      const formulaText = this.add.text(formulaX, y, mol.formula, {
+        fontFamily: PIXEL_FONT, fontSize: '14px', color: '#ffcccc'
+      }).setOrigin(0, 0.5);
 
       this.equationContainer.add(slotBg);
       this.equationContainer.add(slotText);
@@ -378,60 +390,61 @@ export class BossScene extends Phaser.Scene {
         side: isReactant ? 'reactant' : 'product',
         index: molIdx
       });
+
+      slotIdx++;
+
+      // Plus / arrow separators
+      const isLastReactant = isReactant && molIdx === eq.reactants.length - 1;
+      const isLastProduct = !isReactant && molIdx === eq.products.length - 1;
+
+      if (isLastReactant) {
+        const arrow = this.add.text(startX + slotIdx * spacing, y, '\u2192', {
+          fontFamily: PIXEL_FONT, fontSize: '18px', color: '#cc8888'
+        }).setOrigin(0.5);
+        this.equationContainer.add(arrow);
+        slotIdx++;
+      } else if (!isLastProduct) {
+        const plus = this.add.text(startX + slotIdx * spacing, y, '+', {
+          fontFamily: PIXEL_FONT, fontSize: '16px', color: '#cc8888'
+        }).setOrigin(0.5);
+        this.equationContainer.add(plus);
+        slotIdx++;
+      }
+    });
+
+    // ── Inline steppers (▲/▼) on each slot ──
+    this.bossSteppers = BattleUI.buildSteppers(this, this.bossSlots, this.coeffManager, {
+      arrowTint: 0xff6666,
+      soundCoeffChange: () => soundManager.coeffChange(),
+      container: this.equationContainer
     });
 
     // ── Divider ──
     const divider = BattleUI.drawDivider(this, this.DIVIDER_Y, width, 0x882222);
     this.equationContainer.add(divider);
 
-    // ── HP BARS ──
-    this._buildBossHPBars(eq);
-
-    // ── CHECK BUTTON ──
-    const checkX = width / 2; // Center of panel
-    const checkY = this.CHECK_CENTER_Y;
-
-    const checkBg = this.add.graphics();
-    checkBg.fillStyle(0x661111, 1);
-    checkBg.fillRect(checkX - 65, checkY - 18, 130, 36);
-    checkBg.fillStyle(0x882222, 1);
-    checkBg.fillRect(checkX - 63, checkY - 16, 126, 32);
-    checkBg.fillStyle(0xffffff, 0.06);
-    checkBg.fillRect(checkX - 58, checkY - 15, 116, 10);
-    // Border
-    checkBg.fillStyle(0xff4444, 0.5);
-    checkBg.fillRect(checkX - 65, checkY - 18, 130, 2);
-    checkBg.fillRect(checkX - 65, checkY + 16, 130, 2);
-    checkBg.fillRect(checkX - 65, checkY - 18, 2, 36);
-    checkBg.fillRect(checkX + 63, checkY - 18, 2, 36);
-    this.equationContainer.add(checkBg);
-
-    const checkText = this.add.text(checkX, checkY, 'CHECK', {
-      fontFamily: PIXEL_FONT, fontSize: '14px', color: '#ffffff'
-    }).setOrigin(0.5);
-    this.equationContainer.add(checkText);
-
-    const checkZone = this.add.zone(checkX, checkY, 130, 36)
-      .setInteractive({ useHandCursor: true });
-    checkZone.on('pointerdown', () => {
-      soundManager.buttonPress();
-      this._bossCheck();
+    // ── ATOM TALLY (visual balance bars, red-themed) ──
+    const tallyMaxW = Math.min(width - pad * 2, 460);
+    const tallyX = (width - tallyMaxW) / 2;
+    this.bossAtomTally = BattleUI.buildAtomTally(this, eq, {
+      x: tallyX,
+      y: this.TALLY_Y,
+      width: tallyMaxW,
+      labelColor: '#551111',
+      unbalancedBar: 0xff4433,
+      balancedBar: 0x00ff88,
+      dimTextColor: '#885555',
+      bgTint: 0x0e0000,
+      container: this.equationContainer
     });
-    this.equationContainer.add(checkZone);
 
-    // ── 3×3 GRID ──
-    const gridX = width - 150; // Right side of panel
-    const gridY = this.GRID_CENTER_Y;
-
-    const inst = this.add.text(gridX, gridY - 55, 'COEFFICIENT', {
-      fontFamily: PIXEL_FONT, fontSize: '10px', color: '#ddaaaa'
-    }).setOrigin(0.5);
-    this.equationContainer.add(inst);
-
-    const tokens = BattleUI.buildGrid(this, {
-      gridCenterX: gridX,
-      gridCenterY: gridY + 10,
+    // ── Number strip (compact 1-row picker, bottom strip, centered) ──
+    const stripCX = width / 2;
+    const { tokens: stripTokens } = BattleUI.buildNumberStrip(this, {
+      centerX: stripCX,
+      centerY: this.STRIP_Y + this.STRIP_H / 2,
       numColor: '#cc8888',
+      bgColor: 0x2a0a0a,
       onTap: (n) => {
         if (this.focusedSlotIdx >= 0 && !this.levelComplete && this.bossSlots) {
           const slot = this.bossSlots[this.focusedSlotIdx];
@@ -444,28 +457,43 @@ export class BossScene extends Phaser.Scene {
           }
         }
       },
-      onDragEnd: (n, pointer) => {
-        if (!this.bossSlots) return;
-        this.bossSlots.forEach(slot => {
-          const bounds = slot.bg.getBounds();
-          if (bounds.contains(pointer.x, pointer.y)) {
-            if (slot.side === 'reactant') this.coeffManager.setReactantCoeff(slot.index, n);
-            else this.coeffManager.setProductCoeff(slot.index, n);
-            soundManager.coeffChange();
-          }
-        });
-      }
+      container: this.equationContainer
     });
 
-    tokens.forEach(t => {
-      this.equationContainer.add(t.btn);
-      this.equationContainer.add(t.numText);
+    // ── CHECK BUTTON (below tally, above bottom strip) ──
+    const checkX = width / 2;
+    const checkY = this.STRIP_Y - 28;
+    const btnW = 120, btnH = 34;
+
+    const checkBg = this.add.graphics();
+    checkBg.fillStyle(0x661111, 1);
+    checkBg.fillRect(checkX - btnW / 2, checkY - btnH / 2, btnW, btnH);
+    checkBg.fillStyle(0x882222, 1);
+    checkBg.fillRect(checkX - btnW / 2 + 2, checkY - btnH / 2 + 2, btnW - 4, btnH - 4);
+    checkBg.fillStyle(0xff4444, 0.5);
+    checkBg.fillRect(checkX - btnW / 2, checkY - btnH / 2, btnW, 1);
+    checkBg.fillRect(checkX - btnW / 2, checkY + btnH / 2 - 1, btnW, 1);
+    checkBg.fillRect(checkX - btnW / 2, checkY - btnH / 2, 1, btnH);
+    checkBg.fillRect(checkX + btnW / 2 - 1, checkY - btnH / 2, 1, btnH);
+    this.equationContainer.add(checkBg);
+
+    const checkText = this.add.text(checkX, checkY, 'CHECK', {
+      fontFamily: PIXEL_FONT, fontSize: '14px', color: '#ffffff'
+    }).setOrigin(0.5);
+    this.equationContainer.add(checkText);
+
+    const checkZone = this.add.zone(checkX, checkY, btnW, btnH)
+      .setInteractive({ useHandCursor: true });
+    checkZone.on('pointerdown', () => {
+      soundManager.buttonPress();
+      this._bossCheck();
     });
+    this.equationContainer.add(checkZone);
 
     // Wire coefficient change
     this.coeffManager.onChange = () => {
       this._updateBossSlots();
-      this._updateBossHPBars();
+      this._updateBossAtomTally();
     };
     this.coeffManager._emitChange();
 
@@ -505,30 +533,15 @@ export class BossScene extends Phaser.Scene {
   }
 
   // ─────────────────────────────────────────────
-  // HP BARS (red-themed, replaces atom table)
+  // ATOM TALLY UPDATE (delegates to BattleUI)
   // ─────────────────────────────────────────────
-  _buildBossHPBars(eq) {
-    const { width } = this.cameras.main;
-    const elements = EquationEngine.getElements(eq);
-    const barWidth = 140; // Fixed width for panel
-    const rowH = 24;
-    const startY = this.HP_BAR_Y;
-    const barX = 40; // Left side of panel
-
-    // Title
-    const title = this.add.text(barX + barWidth / 2 + 20, startY - 10, 'ATOM COUNT', {
-      fontFamily: PIXEL_FONT, fontSize: '10px', color: '#cc4444'
-    }).setOrigin(0.5);
-    this.equationContainer.add(title);
-
-    this.bossHPBars = [];
-    elements.forEach((el, i) => {
-      const y = startY + i * rowH + rowH / 2;
-      const elData = elementsData[el] || {};
-      const bar = new HPBar(this, barX, y, barWidth, el, elData.color || '#ffcccc');
-      bar.addToContainer(this.equationContainer);
-      this.bossHPBars.push({ element: el, bar });
-    });
+  _updateBossAtomTally() {
+    if (!this.bossAtomTally || !this.currentEquation) return;
+    this.bossAtomTally.update(
+      this.coeffManager.reactantCoeffs,
+      this.coeffManager.productCoeffs,
+      () => soundManager.elementBalanced()
+    );
   }
 
   _updateBossSlots() {
@@ -544,79 +557,22 @@ export class BossScene extends Phaser.Scene {
     });
   }
 
-  _updateBossHPBars() {
-    if (!this.currentEquation || !this.bossHPBars) return;
-    const result = EquationEngine.validate(
-      this.currentEquation,
-      this.coeffManager.reactantCoeffs,
-      this.coeffManager.productCoeffs
-    );
-
-    this.bossHPBars.forEach(({ element, bar }) => {
-      const el = result.elements[element];
-      if (!el) return;
-      bar.update(el.left, el.right, el.balanced);
-
-      if (el.balanced) {
-        if (!this._prevBalancedSet.has(element)) {
-          this._prevBalancedSet.add(element);
-          soundManager.elementBalanced();
-          bar.flash();
-        }
-      } else {
-        this._prevBalancedSet.delete(element);
-      }
-    });
-  }
-
   // ─────────────────────────────────────────────
-  // BOSS HUD — Timer, health bar, retreat button
+  // BOSS HUD — Redesigned: header + depleting time bar + dramatic timer
   // ─────────────────────────────────────────────
   _buildBossHUD() {
     const { width } = this.cameras.main;
+    const pad = this.UI_PAD || 16;
 
-    // Timer
-    this.bossTimerText = this.add.text(width / 2, 24, `${this.timeRemaining}`, {
-      fontFamily: PIXEL_FONT, fontSize: '24px', color: '#ff4444'
-    }).setOrigin(0.5);
+    // ── Header bar ──
+    const hdr = this.add.graphics();
+    hdr.fillStyle(0x1a0000, 0.97);
+    hdr.fillRect(0, 0, width, 34);
+    hdr.fillStyle(0x881111, 0.5);
+    hdr.fillRect(0, 33, width, 1);
 
-    this.bossTimerLabel = this.add.text(width / 2, 48, 'SECONDS REMAINING', {
-      fontFamily: PIXEL_FONT, fontSize: '8px', color: '#993333'
-    }).setOrigin(0.5);
-
-    this.bossTimerGlow = this.add.text(width / 2, 24, `${this.timeRemaining}`, {
-      fontFamily: PIXEL_FONT, fontSize: '24px', color: '#ff0000'
-    }).setOrigin(0.5).setAlpha(0).setScale(1.1);
-
-    // Health bar
-    const barW = 240, barH = 14;
-    const barX = width / 2 - barW / 2;
-    const barY = 50;
-
-    const trackBg = this.add.graphics();
-    trackBg.fillStyle(0x1a0808, 0.9);
-    trackBg.fillRect(barX - 2, barY - 2, barW + 4, barH + 4);
-    trackBg.fillStyle(0x882222, 0.5);
-    trackBg.fillRect(barX - 2, barY - 2, barW + 4, 1);
-    trackBg.fillRect(barX - 2, barY + barH + 1, barW + 4, 1);
-
-    this.healthBarFill = this.add.graphics();
-    this._drawHealthBar();
-
-    // Segment dividers
-    const segDiv = this.add.graphics();
-    segDiv.fillStyle(0x1a0808, 1);
-    for (let s = 1; s < this.bossMaxHealth; s++) {
-      const sx = barX + (barW / this.bossMaxHealth) * s;
-      segDiv.fillRect(sx - 1, barY, 2, barH);
-    }
-
-    this.healthText = this.add.text(width / 2, barY + barH + 12, `${this.bossHealth} / ${this.bossMaxHealth} remaining`, {
-      fontFamily: PIXEL_FONT, fontSize: '8px', color: '#cc6666'
-    }).setOrigin(0.5);
-
-    // Back button
-    const backBtn = this.add.text(10, 10, '< Retreat', {
+    // Retreat button
+    const backBtn = this.add.text(pad, 10, '< Retreat', {
       fontFamily: PIXEL_FONT, fontSize: '10px', color: '#886666'
     }).setInteractive({ useHandCursor: true });
     backBtn.on('pointerdown', () => {
@@ -625,51 +581,106 @@ export class BossScene extends Phaser.Scene {
       if (this.timerEvent) this.timerEvent.remove();
       this.scene.start('MenuScene', { progression: this.progression });
     });
+
+    // Boss level label (center header)
+    this.add.text(width / 2, 10, `BOSS LV.${this.bossLevel}`, {
+      fontFamily: PIXEL_FONT, fontSize: '12px', color: '#ff3333'
+    }).setOrigin(0.5, 0);
+
+    // Equation health dots (right header)
+    this.healthDots = [];
+    for (let i = 0; i < this.bossMaxHealth; i++) {
+      const dx = width - pad - (this.bossMaxHealth - 1 - i) * 18;
+      const dot = this.add.graphics();
+      dot.fillStyle(0xff3333, 1);
+      dot.fillCircle(dx, 17, 6);
+      dot.fillStyle(0xff6666, 0.4);
+      dot.fillCircle(dx, 15, 3);
+      this.healthDots.push(dot);
+    }
+
+    // ── Full-width depleting TIME bar (below header) ──
+    const timeBarY = 34;
+    const timeBarH = 6;
+    const timeBarTrack = this.add.graphics();
+    timeBarTrack.fillStyle(0x1a0000, 1);
+    timeBarTrack.fillRect(0, timeBarY, width, timeBarH);
+    timeBarTrack.fillStyle(0x330000, 0.6);
+    timeBarTrack.fillRect(0, timeBarY + timeBarH - 1, width, 1);
+
+    this.timerBarGraphics = this.add.graphics();
+    this._drawTimerBar();
+
+    // ── Large countdown number ──
+    const timerY = 58;
+    this.bossTimerGlow = this.add.text(width / 2, timerY, `${this.timeRemaining}`, {
+      fontFamily: PIXEL_FONT, fontSize: '28px', color: '#ff0000'
+    }).setOrigin(0.5).setAlpha(0).setScale(1.15);
+
+    this.bossTimerText = this.add.text(width / 2, timerY, `${this.timeRemaining}`, {
+      fontFamily: PIXEL_FONT, fontSize: '28px', color: '#ff4444'
+    }).setOrigin(0.5);
+
+    this.bossTimerLabel = this.add.text(width / 2, timerY + 26, 'SECONDS', {
+      fontFamily: PIXEL_FONT, fontSize: '8px', color: '#661111'
+    }).setOrigin(0.5);
+
+    this.healthText = this.add.text(width / 2, timerY + 40, `${this.bossHealth} / ${this.bossMaxHealth} remaining`, {
+      fontFamily: PIXEL_FONT, fontSize: '8px', color: '#883333'
+    }).setOrigin(0.5);
   }
 
-  _drawHealthBar() {
+  _drawTimerBar() {
+    if (!this.timerBarGraphics) return;
     const { width } = this.cameras.main;
-    const barW = 240, barH = 14;
-    const barX = width / 2 - barW / 2;
-    const barY = 50;
-    const pct = this.bossHealth / this.bossMaxHealth;
+    const timeBarY = 34, timeBarH = 6;
+    const pct = Math.max(0, this.timeRemaining / 60);
+    const col = pct > 0.5 ? 0xff2222 : pct > 0.25 ? 0xff6622 : 0xff0000;
 
-    this.healthBarFill.clear();
-
-    let fillColor;
-    if (pct > 0.66) fillColor = 0xff2222;
-    else if (pct > 0.33) fillColor = 0xff6622;
-    else fillColor = 0x00ff88;
-
-    this.healthBarFill.fillStyle(fillColor, 1);
-    this.healthBarFill.fillRect(barX, barY, barW * pct, barH);
-    this.healthBarFill.fillStyle(0xffffff, 0.15);
-    this.healthBarFill.fillRect(barX, barY, barW * pct, 4);
+    this.timerBarGraphics.clear();
+    if (pct > 0) {
+      this.timerBarGraphics.fillStyle(col, 1);
+      this.timerBarGraphics.fillRect(0, timeBarY, width * pct, timeBarH);
+      this.timerBarGraphics.fillStyle(0xffffff, 0.12);
+      this.timerBarGraphics.fillRect(0, timeBarY, width * pct, 2);
+    }
   }
 
   _updateBossHUD() {
+    this._drawTimerBar();
+
     if (this.bossTimerText) {
       this.bossTimerText.setText(`${this.timeRemaining}`);
 
       if (this.timeRemaining <= 10) {
-        this.bossTimerText.setColor('#ff0000').setFontSize('20px');
+        this.bossTimerText.setColor('#ff0000').setFontSize('32px');
         soundManager.bossWarning();
         this.cameras.main.flash(100, 60, 0, 0);
       } else if (this.timeRemaining <= 20) {
-        this.bossTimerText.setColor('#ff2222').setFontSize('18px');
+        this.bossTimerText.setColor('#ff3333').setFontSize('30px');
       } else {
-        this.bossTimerText.setColor('#ff4444').setFontSize('16px');
+        this.bossTimerText.setColor('#ff4444').setFontSize('28px');
       }
 
       if (this.bossTimerGlow) {
         this.bossTimerGlow.setText(`${this.timeRemaining}`);
-        this.bossTimerGlow.setAlpha(0.3).setScale(1.1);
+        this.bossTimerGlow.setAlpha(0.35).setScale(1.15);
         this.tweens.add({
           targets: this.bossTimerGlow,
           alpha: 0, scaleX: 1.3, scaleY: 1.3,
-          duration: 400
+          duration: 350
         });
       }
+    }
+
+    if (this.healthText) {
+      this.healthText.setText(`${this.bossHealth} / ${this.bossMaxHealth} remaining`);
+    }
+
+    // Dim dots for defeated equations
+    if (this.healthDots) {
+      const defeated = this.bossMaxHealth - this.bossHealth;
+      this.healthDots.forEach((dot, i) => dot.setAlpha(i < defeated ? 0.18 : 1));
     }
   }
 
@@ -690,14 +701,12 @@ export class BossScene extends Phaser.Scene {
   _onBossCorrect() {
     this.bossHealth--;
     this.timeRemaining += 10;
+    this._updateBossHUD();
 
     soundManager.bossImpact();
     this.time.delayedCall(200, () => soundManager.success());
 
-    this._drawHealthBar();
-    if (this.healthText) {
-      this.healthText.setText(`${this.bossHealth} / ${this.bossMaxHealth} remaining`);
-    }
+    this._updateBossHUD();
 
     this.cameras.main.flash(200, 0, 200, 50);
     this.cameras.main.shake(150, 0.006);
@@ -727,6 +736,13 @@ export class BossScene extends Phaser.Scene {
   _onBossFail() {
     this.failedAttempts++;
     this.timeRemaining -= 3;
+    this._updateBossHUD();
+    if (this.timeRemaining <= 0) {
+      this.timeRemaining = 0;
+      this._updateBossHUD();
+      this._onBossTimeOut();
+      return;
+    }
     soundManager.fail();
 
     this.cameras.main.shake(200, 0.01);
@@ -737,21 +753,6 @@ export class BossScene extends Phaser.Scene {
       this.tweens.add({
         targets: this._edgeGlow,
         alpha: 0.15, duration: 400
-      });
-    }
-
-    // Shake unbalanced HP bars
-    if (this.bossHPBars) {
-      const result = EquationEngine.validate(
-        this.currentEquation,
-        this.coeffManager.reactantCoeffs,
-        this.coeffManager.productCoeffs
-      );
-      this.bossHPBars.forEach(({ element, bar }) => {
-        const el = result.elements[element];
-        if (el && !el.balanced) {
-          bar.shake();
-        }
       });
     }
 
@@ -959,8 +960,19 @@ export class BossScene extends Phaser.Scene {
   // ─────────────────────────────────────────────
   // KEYBOARD
   // ─────────────────────────────────────────────
+  _cleanupInputHandlers() {
+    if (this._onKeyDown && this.input?.keyboard) {
+      this.input.keyboard.off('keydown', this._onKeyDown);
+      this._onKeyDown = null;
+    }
+  }
+
   _setupKeyboard() {
-    this.input.keyboard.on('keydown', (event) => {
+    if (this._onKeyDown) {
+      this.input.keyboard.off('keydown', this._onKeyDown);
+    }
+
+    this._onKeyDown = (event) => {
       if (this.levelComplete) return;
       const key = event.key;
 
@@ -1013,6 +1025,8 @@ export class BossScene extends Phaser.Scene {
       if (key === 'Escape') {
         this._defocusBossSlot();
       }
-    });
+    };
+
+    this.input.keyboard.on('keydown', this._onKeyDown);
   }
 }

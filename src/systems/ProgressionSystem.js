@@ -7,7 +7,12 @@ const RANKS = [
   { title: 'Lab Technician', xp: 500, levelsUnlocked: 20 },
   { title: 'Molecule Engineer', xp: 1500, levelsUnlocked: 30 },
   { title: 'Reaction Specialist', xp: 3000, levelsUnlocked: 40 },
-  { title: 'Master Chemist', xp: 5000, levelsUnlocked: 50 }
+  { title: 'Master Chemist', xp: 5000, levelsUnlocked: 50 },
+  { title: 'Element Sage', xp: 8000, levelsUnlocked: 60 },
+  { title: 'Reaction Virtuoso', xp: 12000, levelsUnlocked: 70 },
+  { title: 'Bond Breaker', xp: 17000, levelsUnlocked: 80 },
+  { title: 'Quantum Alchemist', xp: 23000, levelsUnlocked: 90 },
+  { title: 'Grand Chemist', xp: 30000, levelsUnlocked: 100 }
 ];
 
 const SAVE_KEY = 'chemquest_save';
@@ -76,7 +81,19 @@ export class ProgressionSystem {
   }
 
   getMaxUnlockedLevel() {
-    return this.getRank().levelsUnlocked;
+    const rankUnlocked = this.getRank().levelsUnlocked;
+
+    // Also unlock the next sequential level based on completion progress.
+    // This prevents players from getting hard-stuck behind XP thresholds.
+    const highestCompleted = Object.keys(this.data.levelsCompleted).reduce((max, levelId) => {
+      const m = /^lvl_(\d+)$/.exec(levelId);
+      if (!m) return max;
+      const n = Number(m[1]);
+      return Number.isFinite(n) ? Math.max(max, n) : max;
+    }, 0);
+
+    const progressUnlocked = highestCompleted > 0 ? highestCompleted + 1 : 1;
+    return Math.max(rankUnlocked, progressUnlocked);
   }
 
   isLevelUnlocked(levelNum) {
